@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["dimstack", "stackups"],
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "python.formatting.provider": "black",
+  "python.languageServer": "Pylance",
+  "editor.formatOnSave": true,
+  "python.linting.mypyEnabled": false
+}
