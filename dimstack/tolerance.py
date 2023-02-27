@@ -26,11 +26,11 @@ def sigma_i(T_i: int, sigma: int) -> float:
 
 
 def standard_deviation(sigma_i: float, n: int) -> float:
-    return sigma_i / n ** 0.5
+    return sigma_i / n**0.5
 
 
 def RSS(*args):
-    return (sum([arg ** 2 for arg in args])) ** 0.5
+    return (sum([arg**2 for arg in args])) ** 0.5
 
 
 def round(x, n=DECIMALS):
@@ -38,7 +38,7 @@ def round(x, n=DECIMALS):
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
 class Bilateral:
@@ -271,6 +271,9 @@ class Stack:
     def results_text_RSS_simple(self):
         # Dimensioning and Tolerancing Handbook, McGraw Hill
         # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
+        """This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
+        It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
+        """
         s = "--[RSS simple]---------------------------------------\n"
         s += f"{round(self.d_g)} +{round(self.t_wc_upper)}/-{round(self.t_wc_lower)} [{round(self.d_g-self.t_wc_lower)} {round(self.d_g+self.t_wc_upper)}] Worst Case \n"
         s += f"{round(self.d_g)} +{round(self.t_mrss_upper)}/-{round(self.t_mrss_lower)} [{round(self.d_g-self.t_mrss_lower)} {round(self.d_g+self.t_mrss_upper)}] Modified RSS \n"
@@ -279,13 +282,16 @@ class Stack:
 
     def results_text_RSS(self):
         # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
-        mu = sum([item.nominal for item in self.items])
-        sigma = RSS(*[sigma_i(item.T, item.process_sigma * 2) for item in self.items])
+        # mu = sum([item.nominal for item in self.items])
+        # sigma = RSS(*[sigma_i(item.T, item.process_sigma * 2) for item in self.items])
+        mu = sum([item.mu_eff * item.j for item in self.items])
+        sigma = RSS(*[item.sigma_eff * item.j for item in self.items])
         s = "--[RSS]---------------------------------------\n"
         s += f"μ = {round(mu)}\n"
         s += f"σ = {round(sigma)}\n"
         s += f"{round(mu)} ± {round(sigma*6)} [{round(mu-sigma*6)} {round(mu+sigma*6)}] 6σ \n"
         # s += f"{round(mu)} ± {round(sigma*5)} [{round(mu-sigma*5)} {round(mu+sigma*5)}] 5sigma"
+        s += f"{round(mu)} ± {round(sigma*4.5)} [{round(mu-sigma*4.5)} {round(mu+sigma*4.5)}] 4.5σ \n"
         s += f"{round(mu)} ± {round(sigma*4)} [{round(mu-sigma*4)} {round(mu+sigma*4)}] 4σ \n"
         s += f"{round(mu)} ± {round(sigma*3)} [{round(mu-sigma*3)} {round(mu+sigma*3)}] 3σ \n"
         s += f"{round(mu)} ± {round(sigma*2)} [{round(mu-sigma)} {round(mu+sigma*2)}] 2σ \n"
