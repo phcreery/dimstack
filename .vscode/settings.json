@@ -1,9 +1,10 @@
 {
-  "cSpell.words": ["dimstack", "stackups"],
+  "cSpell.words": ["dimstack", "piecepart", "stackups", "Tolerancing"],
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
   "python.formatting.provider": "black",
   "python.languageServer": "Pylance",
   "editor.formatOnSave": true,
-  "python.linting.mypyEnabled": false
+  "python.linting.mypyEnabled": false,
+  "python.analysis.typeCheckingMode": "off"
 }
