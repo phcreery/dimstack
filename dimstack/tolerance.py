@@ -290,8 +290,10 @@ class Stack:
                     "process_sigma": f"± {str(item.process_sigma)}σ",
                     "sensitivity": str(item.a),
                     "σ": round(item.sigma),
-                    # "min_rel": round(item.min_rel),
-                    # "max_rel": round(item.max_rel),
+                    # "relative bounds": f"[{round(item.min_rel)}, {round(item.max_rel)}]",
+                    # "absolute bounds": f"[{round(item.min_abs)}, {round(item.max_abs)}]",
+                    "min_rel": round(item.min_rel),
+                    "max_rel": round(item.max_rel),
                     "min_abs": round(item.min_abs),
                     "max_abs": round(item.max_abs),
                     "C_p": round(item.C_p),
@@ -315,9 +317,25 @@ class Stack:
 
     def results_WC(self):
         """This is a simple Worst-Case calculation"""
-        s = "--[Worst Case]--------------------------------\n"
-        s += f"{round(self.nominal)} + {round(self.t_wc_upper)} / - {round(self.t_wc_lower)} [{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}] Worst Case"
-        print(s)
+        title = f"Worst Case - {self.title}"
+        df = pd.DataFrame(
+            [
+                {
+                    "Value": round(self.nominal),
+                    "Tolerance": f"+ {round(self.t_wc_upper)} / - {round(self.t_wc_lower)}",
+                    "Bounds": f"[{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}]",
+                }
+            ]
+        ).astype(str)
+
+        if DISPLAY_MODE == "text":
+            print(title)
+            print(df.to_string(index=False))
+            print()
+        elif DISPLAY_MODE == "plot":
+            return display(df.style.hide(axis="index").set_caption(title))
+        elif DISPLAY_MODE == "df":
+            return df
 
     def results_RSS_simple(self):
         """This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
@@ -358,13 +376,7 @@ class Stack:
         C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
         t_mrss = C_f * t_rss
 
-        # s = "--[RSS assuming uniform process variation]----\n"
-        # s += f"{round(d_g)} ± {round(t_wc)} [{round(d_g-t_wc)} {round(d_g+t_wc)}] Worst Case \n"
-        # s += f"{round(d_g)} ± {round(t_mrss)} [{round(d_g-t_mrss)} {round(d_g+t_mrss)}] Modified RSS \n"
-        # s += (
-        #     f"{round(d_g)} ± {round(t_rss)} [{round(d_g-t_rss)} {round(d_g+t_rss)}] RSS"
-        # )
-        # print(s)
+        title = f"RSS - {self.title}"
         df = pd.DataFrame(
             [
                 {
@@ -397,31 +409,21 @@ class Stack:
         ).astype(str)
 
         if DISPLAY_MODE == "text":
-            print(f"{self.title}")
+            print(title)
             print(df.to_string(index=False))
             print()
         elif DISPLAY_MODE == "plot":
-            return display(
-                df.style.hide(axis="index").set_caption(
-                    f"Simplified RSS - {self.title}"
-                )
-            )
+            return display(df.style.hide(axis="index").set_caption(title))
         elif DISPLAY_MODE == "df":
             return df
 
     def results_RSS(self):
         # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
-        # sigma = RSS(*[item.sigma_eff * item.a for item in self.items])
         sigma = self.sigma
-        # s = "--['6 Sigma']---------------------------------\n"
-        # s += f"μ = {round(self.mu)}\n"
-        # s += f"σ = {round(sigma)}\n"
-        # for i in [6, 5, 4.5, 4, 3]:
-        #     s += f"{round(self.mu)} ± {round(sigma*i)} [{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}] ±{i}σ \n"
-        # print(s)
 
         print(f"μ = {round(self.mu)}\n")
         print(f"σ = {round(sigma)}\n")
+        title = f"'6 sigma' - {self.title}"
         df = pd.DataFrame(
             [
                 {
@@ -435,13 +437,11 @@ class Stack:
         ).astype(str)
 
         if DISPLAY_MODE == "text":
-            print(f"{self.title}")
+            print(title)
             print(df.to_string(index=False))
             print()
         elif DISPLAY_MODE == "plot":
-            return display(
-                df.style.hide(axis="index").set_caption(f"'6 Sigma' - {self.title}")
-            )
+            return display(df.style.hide(axis="index").set_caption(title))
         elif DISPLAY_MODE == "df":
             return df
 
