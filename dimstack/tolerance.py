@@ -3,6 +3,7 @@ import numpy as np
 import itertools
 import pandas as pd
 import matplotlib.pyplot as plt
+from IPython.display import display
 
 POSITIVE = "+"
 NEGATIVE = "-"
@@ -12,6 +13,19 @@ DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. 
 DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used
 DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
 DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
+
+DISPLAY_MODE = "plot"  # "text" or "plot"
+FIGSIZE = (6, 3)
+
+
+def display_mode(mode: str):
+    """Set the display mode for the stack.
+
+    Args:
+        mode (str): "text" or "plot"
+    """
+    global DISPLAY_MODE
+    DISPLAY_MODE = mode
 
 
 def round(x, n=DECIMALS):
@@ -61,12 +75,12 @@ def C_pk(C_p: float, k: float) -> float:
     return (1 - k) * C_p
 
 
-def sigma_i(T_i: float, sigma: float) -> float:
-    return T_i / sigma
+# def sigma_i(T_i: float, sigma: float) -> float:
+#     return T_i / sigma
 
 
-def standard_deviation(sigma_i: float, n: float) -> float:
-    return sigma_i / n ** 0.5
+# def standard_deviation(sigma_i: float, n: float) -> float:
+#     return sigma_i / n**0.5
 
 
 def RSS(*args):
@@ -130,8 +144,8 @@ class Dimension:
         nom (float, optional): The nominal value of the measurement. Defaults to 0.
         tol (Union[SymmetricBilateral, UnequalBilateral], optional): The tolerance of the measurement. Defaults to SymmetricBilateral(0).
         a (float, optional): The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1 and the nominal value will be made positive.
-        process_sigma (float, optional): The standard deviation of the process. Defaults to 3.
-        k (float, optional): The ratio of the amount the center of the distribution is shifted from the nominal value to the standard deviation. Defaults to 0.
+        process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
+        k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process standard deviation. Defaults to 0σ.
         distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
         name (str, optional): The name of the measurement. Defaults to "Dimension".
         desc (str, optional): The description of the measurement. Defaults to "Dimension".
@@ -264,14 +278,16 @@ class Stack:
 
     def df(self):
         # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
-        return pd.DataFrame(
+        df = pd.DataFrame(
             [
                 {
                     "id": item.id,
+                    "name": item.name,
+                    "description": (item.description),
                     "dir": item.direction,
                     "nominal": round(item.nominal),
                     "tolerance": (repr(item.tolerance)).ljust(14, " "),
-                    "process_sigma": str(item.process_sigma) + "σ",
+                    "process_sigma": "±" + str(item.process_sigma) + "σ",
                     "sensitivity": str(item.a),
                     "σ": round(item.sigma),
                     # "min_rel": round(item.min_rel),
@@ -283,15 +299,18 @@ class Stack:
                     "C_pk": round(item.C_pk),
                     "μ_eff": round(item.mu_eff),
                     "σ_eff": round(item.sigma_eff),
-                    "name": item.name,
-                    "description": (item.description),
                 }
                 for item in self.items
             ]
         )
+        return df
 
-    def show_dimensions_text(self):
-        print(self.df().to_string(index=False))
+    def show(self):
+        if DISPLAY_MODE == "text":
+            print(f"{self.title}")
+            print(self.df().to_string(index=False))
+        elif DISPLAY_MODE == "plot":
+            return display(self.df())
 
     def show_results_text_WC(self):
         """This is a simple Worst-Case calculation"""
@@ -354,7 +373,7 @@ class Stack:
         s += f"μ = {round(self.mu)}\n"
         s += f"σ = {round(sigma)}\n"
         for i in [6, 5, 4.5, 4, 3]:
-            s += f"{round(self.mu)} ± {round(sigma*i)} [{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}] {i}σ \n"
+            s += f"{round(self.mu)} ± {round(sigma*i)} [{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}] ±{i}σ \n"
         print(s)
 
     # def show_results_text_six_sigma(self):
@@ -363,7 +382,7 @@ class Stack:
     #     # s += f"{}\n"
 
     def show_length_chart(self):
-        fig, axs = plt.subplots(1, 1, figsize=(6, 3), dpi=200)
+        fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
         axs.grid()
         axs.set_axisbelow(True)
         axs.axvline(0, label="DATUM", alpha=0.6)

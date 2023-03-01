@@ -8,5 +8,10 @@
 .\.venv\Scripts\activate
 ```
 
-
 UnequalBilateral & EqualBilateral
+
+# Acknowledgements
+
+- http://www.newconceptzdesign.com/stackups/
+- https://github.com/slightlynybbled/tol-stack
+-
