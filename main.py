@@ -4,7 +4,7 @@ import reference.stackups.stackups as stackups
 SymmetricBilateral = dimstack.tolerance.SymmetricBilateral
 UnequalBilateral = dimstack.tolerance.UnequalBilateral
 
-dimstack.tolerance.display_mode("plot")
+dimstack.tolerance.display_mode("text")
 
 stacks = stackups.Stacks()
 stacks.title("Example stacks, i.e. an example for stackups.py")
@@ -86,12 +86,10 @@ items = [m1, m2, m3]
 # )
 # items = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = dimstack.tolerance.Stack(
-    title="Example stacks, i.e. an example for stackups.py", items=items
-)
+stack = dimstack.tolerance.Stack(title="stacks on stacks", items=items)
 
 # stack.show_dimensions_text()
 stack.show()
-stack.show_results_text_WC()
-stack.show_results_text_RSS_simple()
-stack.show_results_text_RSS()
+stack.results_WC()
+stack.results_RSS_simple()
+stack.results_RSS()

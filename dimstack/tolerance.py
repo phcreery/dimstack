@@ -7,14 +7,14 @@ from IPython.display import display
 
 POSITIVE = "+"
 NEGATIVE = "-"
-DECIMALS = 5
+DECIMALS = 4
 DIST_NORMAL = "Normal"  # Normal distribution.
 DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
 DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used
 DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
 DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
 
-DISPLAY_MODE = "plot"  # "text" or "plot"
+DISPLAY_MODE = "plot"  # "text" or "plot" or "df"
 FIGSIZE = (6, 3)
 
 
@@ -276,7 +276,7 @@ class Stack:
     def t_wc_lower(self) -> float:
         return sum(filter(None, self.tol_stack_lower))
 
-    def df(self):
+    def show(self):
         # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
         df = pd.DataFrame(
             [
@@ -287,7 +287,7 @@ class Stack:
                     "dir": item.direction,
                     "nominal": round(item.nominal),
                     "tolerance": (repr(item.tolerance)).ljust(14, " "),
-                    "process_sigma": "±" + str(item.process_sigma) + "σ",
+                    "process_sigma": f"± {str(item.process_sigma)}σ",
                     "sensitivity": str(item.a),
                     "σ": round(item.sigma),
                     # "min_rel": round(item.min_rel),
@@ -295,30 +295,31 @@ class Stack:
                     "min_abs": round(item.min_abs),
                     "max_abs": round(item.max_abs),
                     "C_p": round(item.C_p),
-                    "k": item.k,
+                    "k": round(item.k),
                     "C_pk": round(item.C_pk),
                     "μ_eff": round(item.mu_eff),
                     "σ_eff": round(item.sigma_eff),
                 }
                 for item in self.items
             ]
-        )
-        return df
+        ).astype(str)
 
-    def show(self):
         if DISPLAY_MODE == "text":
             print(f"{self.title}")
-            print(self.df().to_string(index=False))
+            print(df.to_string(index=False))
+            print()
         elif DISPLAY_MODE == "plot":
-            return display(self.df())
+            return display(df.style.hide(axis="index").set_caption(self.title))
+        elif DISPLAY_MODE == "df":
+            return df
 
-    def show_results_text_WC(self):
+    def results_WC(self):
         """This is a simple Worst-Case calculation"""
         s = "--[Worst Case]--------------------------------\n"
-        s += f"{round(self.nominal)} +{round(self.t_wc_upper)}/-{round(self.t_wc_lower)} [{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}] Worst Case"
+        s += f"{round(self.nominal)} + {round(self.t_wc_upper)} / - {round(self.t_wc_lower)} [{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}] Worst Case"
         print(s)
 
-    def show_results_text_RSS_simple(self):
+    def results_RSS_simple(self):
         """This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
         It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
         Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
@@ -357,24 +358,92 @@ class Stack:
         C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
         t_mrss = C_f * t_rss
 
-        s = "--[RSS assuming uniform process variation]----\n"
-        s += f"{round(d_g)} ± {round(t_wc)} [{round(d_g-t_wc)} {round(d_g+t_wc)}] Worst Case \n"
-        s += f"{round(d_g)} ± {round(t_mrss)} [{round(d_g-t_mrss)} {round(d_g+t_mrss)}] Modified RSS \n"
-        s += (
-            f"{round(d_g)} ± {round(t_rss)} [{round(d_g-t_rss)} {round(d_g+t_rss)}] RSS"
-        )
-        print(s)
+        # s = "--[RSS assuming uniform process variation]----\n"
+        # s += f"{round(d_g)} ± {round(t_wc)} [{round(d_g-t_wc)} {round(d_g+t_wc)}] Worst Case \n"
+        # s += f"{round(d_g)} ± {round(t_mrss)} [{round(d_g-t_mrss)} {round(d_g+t_mrss)}] Modified RSS \n"
+        # s += (
+        #     f"{round(d_g)} ± {round(t_rss)} [{round(d_g-t_rss)} {round(d_g+t_rss)}] RSS"
+        # )
+        # print(s)
+        df = pd.DataFrame(
+            [
+                {
+                    "Name": "Worst Case",
+                    "Value": round(d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(t_wc))}".ljust(14, " "),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(d_g-t_wc)} {round(d_g+t_wc)}]".ljust(20, " "),
+                },
+                {
+                    "Name": "Modified RSS",
+                    "Value": round(d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(t_mrss))}".ljust(
+                        14, " "
+                    ),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(d_g-t_mrss)} {round(d_g+t_mrss)}]".ljust(20, " "),
+                },
+                {
+                    "Name": "RSS",
+                    "Value": round(d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(t_rss))}".ljust(14, " "),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(d_g-t_rss)} {round(d_g+t_rss)}]".ljust(20, " "),
+                },
+            ]
+        ).astype(str)
 
-    def show_results_text_RSS(self):
+        if DISPLAY_MODE == "text":
+            print(f"{self.title}")
+            print(df.to_string(index=False))
+            print()
+        elif DISPLAY_MODE == "plot":
+            return display(
+                df.style.hide(axis="index").set_caption(
+                    f"Simplified RSS - {self.title}"
+                )
+            )
+        elif DISPLAY_MODE == "df":
+            return df
+
+    def results_RSS(self):
         # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
         # sigma = RSS(*[item.sigma_eff * item.a for item in self.items])
         sigma = self.sigma
-        s = "--['6 Sigma']---------------------------------\n"
-        s += f"μ = {round(self.mu)}\n"
-        s += f"σ = {round(sigma)}\n"
-        for i in [6, 5, 4.5, 4, 3]:
-            s += f"{round(self.mu)} ± {round(sigma*i)} [{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}] ±{i}σ \n"
-        print(s)
+        # s = "--['6 Sigma']---------------------------------\n"
+        # s += f"μ = {round(self.mu)}\n"
+        # s += f"σ = {round(sigma)}\n"
+        # for i in [6, 5, 4.5, 4, 3]:
+        #     s += f"{round(self.mu)} ± {round(sigma*i)} [{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}] ±{i}σ \n"
+        # print(s)
+
+        print(f"μ = {round(self.mu)}\n")
+        print(f"σ = {round(sigma)}\n")
+        df = pd.DataFrame(
+            [
+                {
+                    "Sigma": f"± {i}σ",
+                    "Mean": round(self.mu),
+                    "Tolerance": f"± {round(sigma * i)}",
+                    "Bounds": f"[{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}]",
+                }
+                for i in [6, 5, 4.5, 4, 3]
+            ]
+        ).astype(str)
+
+        if DISPLAY_MODE == "text":
+            print(f"{self.title}")
+            print(df.to_string(index=False))
+            print()
+        elif DISPLAY_MODE == "plot":
+            return display(
+                df.style.hide(axis="index").set_caption(f"'6 Sigma' - {self.title}")
+            )
+        elif DISPLAY_MODE == "df":
+            return df
 
     # def show_results_text_six_sigma(self):
     #     # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
