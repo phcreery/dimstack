@@ -404,16 +404,9 @@ class Stack:
         # Convert all dimensions to mean dimensions with an equal bilateral tolerance
         n = len(self.items)
         d_g = self.mu
-        t_wc = []
-        t_rss = []
-        for item in self.items:
-            a = item.a
-            t = item.tolerance.T / 2
-            t_wc.append(abs(a * t))
-            t_rss.append(a * t)
 
-        t_wc = sum(t_wc)
-        t_rss = RSS(*t_rss)
+        t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
+        t_rss = RSS(*[item.a * (item.tolerance.T / 2) for item in self.items])
         C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
         t_mrss = C_f * t_rss
 
