@@ -250,8 +250,16 @@ class Dimension:
         return self.nominal + self.tolerance.upper
 
     @property
+    def mu(self):
+        return self.nominal
+
+    @property
     def sigma(self):
         return abs(self.tolerance.T / 2) / self.process_sigma
+
+    @property
+    def variance(self):
+        return self.sigma**2
 
     @property
     def C_p(self):
@@ -335,13 +343,13 @@ class Stack:
                     "tolerance": (repr(item.tolerance)).ljust(14, " "),
                     "process_sigma": f"± {str(item.process_sigma)}σ",
                     "sensitivity": str(item.a),
-                    "σ": round(item.sigma),
                     # "relative bounds": f"[{round(item.min_rel)}, {round(item.max_rel)}]",
                     # "absolute bounds": f"[{round(item.min_abs)}, {round(item.max_abs)}]",
                     "min_rel": round(item.min_rel),
                     "max_rel": round(item.max_rel),
                     "min_abs": round(item.min_abs),
                     "max_abs": round(item.max_abs),
+                    "σ": round(item.sigma),
                     "C_p": round(item.C_p),
                     "k": round(item.k),
                     "C_pk": round(item.C_pk),
@@ -370,7 +378,8 @@ class Stack:
         display_df(df, title)
 
     def results_RSS_simple(self):
-        """This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
+        """
+        This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
         It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
         Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
         manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
@@ -401,7 +410,7 @@ class Stack:
             a = item.a
             t = item.tolerance.T / 2
             t_wc.append(abs(a * t))
-            t_rss.append((a**2) * (t**2))
+            t_rss.append(a * t)
 
         t_wc = sum(t_wc)
         t_rss = RSS(*t_rss)
