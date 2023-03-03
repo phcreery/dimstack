@@ -1,17 +1,17 @@
 import dimstack.tolerance
-import reference.stackups.stackups as stackups
+# import reference.stackups.stackups as stackups
 
 SymmetricBilateral = dimstack.tolerance.SymmetricBilateral
 UnequalBilateral = dimstack.tolerance.UnequalBilateral
 
 dimstack.tolerance.display_mode("text")
 
-stacks = stackups.Stacks()
-stacks.title("Example stacks, i.e. an example for stackups.py")
-stacks.append(stackups.Stack())
-stacks[1].append(-0.3190, 0.0050, "PN16", "Mounting face to rt. end")
-stacks[1].append(10.4860, 0.0100, "PN07", "Overall width")
-stacks[1].append(-0.3190, 0.0050, "PN16", "Mounting face to rt. end")
+# stacks = stackups.Stacks()
+# stacks.title("Example stacks, i.e. an example for stackups.py")
+# stacks.append(stackups.Stack())
+# stacks[1].append(-0.3190, 0.0050, "PN16", "Mounting face to rt. end")
+# stacks[1].append(10.4860, 0.0100, "PN07", "Overall width")
+# stacks[1].append(-0.3190, 0.0050, "PN16", "Mounting face to rt. end")
 # print(stacks[1].stack[0]["j"])
 # print(f"RSS: {(0.0050**2 + 0.0100**2 + 0.0050**2)**0.5}")
 

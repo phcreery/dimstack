@@ -3,7 +3,6 @@ import numpy as np
 import itertools
 import pandas as pd
 import matplotlib.pyplot as plt
-from IPython.display import display
 
 POSITIVE = "+"
 NEGATIVE = "-"
@@ -26,6 +25,22 @@ def display_mode(mode: str):
     """
     global DISPLAY_MODE
     DISPLAY_MODE = mode
+
+
+def display_df(df: pd.DataFrame, title: str = None):
+    """Display a dataframe.
+
+    Args:
+        df (pd.DataFrame): _description_
+    """
+    if DISPLAY_MODE == "text":
+        print(f"{title}")
+        print(df.to_string(index=False))
+        print()
+    elif DISPLAY_MODE == "plot":
+        return df.style.hide(axis="index").set_caption(title)
+    elif DISPLAY_MODE == "df":
+        return df
 
 
 def round(x, n=DECIMALS):
@@ -84,11 +99,11 @@ def C_pk(C_p: float, k: float) -> float:
 
 
 def RSS(*args):
-    return (sum([arg ** 2 for arg in args])) ** 0.5
+    return (sum([arg**2 for arg in args])) ** 0.5
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
 class SymmetricBilateral:
@@ -97,22 +112,22 @@ class SymmetricBilateral:
     """
 
     def __init__(self, tol: float):
-        self.tol = tol
+        self._tol = tol
 
     def __repr__(self) -> str:
-        return f"± {round(self.tol)}"
+        return f"± {round(self.T/2)}"
 
     @property
     def lower(self):
-        return self.tol
+        return self._tol
 
     @property
     def upper(self):
-        return self.tol
+        return self._tol
 
     @property
     def T(self):
-        return 2 * self.tol
+        return 2 * self._tol
 
 
 class UnequalBilateral:
@@ -127,9 +142,9 @@ class UnequalBilateral:
     def __repr__(self) -> str:
         return f"+ {round(self.upper)} / - {round(self.lower)}"
 
-    @property
-    def tol(self):
-        return (self.upper - self.lower) / 2
+    # @property
+    # def tol(self):
+    #     return (self.upper - self.lower) / 2
 
     @property
     def T(self):
@@ -175,7 +190,7 @@ class Dimension:
         self.description = desc
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.direction}{round(self.nominal)} {repr(self.tolerance)} {self.sigma}σ {self.name} {self.description}"
+        return f"{self.id}: {self.direction}{round(self.nominal)} {repr(self.tolerance)} ± {self.sigma}σ {self.name} {self.description}"
 
     @property
     def direction(self):
@@ -306,14 +321,7 @@ class Stack:
             ]
         ).astype(str)
 
-        if DISPLAY_MODE == "text":
-            print(f"{self.title}")
-            print(df.to_string(index=False))
-            print()
-        elif DISPLAY_MODE == "plot":
-            return display(df.style.hide(axis="index").set_caption(self.title))
-        elif DISPLAY_MODE == "df":
-            return df
+        display_df(df, self.title)
 
     def results_WC(self):
         """This is a simple Worst-Case calculation"""
@@ -328,14 +336,7 @@ class Stack:
             ]
         ).astype(str)
 
-        if DISPLAY_MODE == "text":
-            print(title)
-            print(df.to_string(index=False))
-            print()
-        elif DISPLAY_MODE == "plot":
-            return display(df.style.hide(axis="index").set_caption(title))
-        elif DISPLAY_MODE == "df":
-            return df
+        display_df(df, title)
 
     def results_RSS_simple(self):
         """This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
@@ -366,9 +367,9 @@ class Stack:
         t_rss = []
         for item in self.items:
             a = item.a
-            t = item.tolerance.tol
+            t = item.tolerance.T / 2
             t_wc.append(abs(a * t))
-            t_rss.append((a ** 2) * (t ** 2))
+            t_rss.append((a**2) * (t**2))
 
         t_wc = sum(t_wc)
         t_rss = RSS(*t_rss)
@@ -408,14 +409,7 @@ class Stack:
             ]
         ).astype(str)
 
-        if DISPLAY_MODE == "text":
-            print(title)
-            print(df.to_string(index=False))
-            print()
-        elif DISPLAY_MODE == "plot":
-            return display(df.style.hide(axis="index").set_caption(title))
-        elif DISPLAY_MODE == "df":
-            return df
+        display_df(df, title)
 
     def results_RSS(self):
         # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
@@ -436,14 +430,7 @@ class Stack:
             ]
         ).astype(str)
 
-        if DISPLAY_MODE == "text":
-            print(title)
-            print(df.to_string(index=False))
-            print()
-        elif DISPLAY_MODE == "plot":
-            return display(df.style.hide(axis="index").set_caption(title))
-        elif DISPLAY_MODE == "df":
-            return df
+        display_df(df, title)
 
     # def show_results_text_six_sigma(self):
     #     # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
