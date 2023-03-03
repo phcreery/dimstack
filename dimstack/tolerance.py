@@ -190,8 +190,8 @@ class Dimension:
 
     def __init__(
         self,
-        nom: float = 0,
-        tol: Union[SymmetricBilateral, UnequalBilateral] = SymmetricBilateral(0),
+        nom: float,
+        tol: Union[SymmetricBilateral, UnequalBilateral],
         a: float = 1,
         process_sigma: float = 3,
         k: float = 0,
