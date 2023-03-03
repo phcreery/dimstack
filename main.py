@@ -1,4 +1,5 @@
 import dimstack.tolerance
+
 # import reference.stackups.stackups as stackups
 
 SymmetricBilateral = dimstack.tolerance.SymmetricBilateral
@@ -92,4 +93,4 @@ stack = dimstack.tolerance.Stack(title="stacks on stacks", items=items)
 stack.show()
 stack.results_WC()
 stack.results_RSS_simple()
-stack.results_RSS()
+stack.results_6sigma()

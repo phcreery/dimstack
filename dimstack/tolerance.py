@@ -3,6 +3,7 @@ import numpy as np
 import itertools
 import pandas as pd
 import matplotlib.pyplot as plt
+from IPython.display import display
 
 POSITIVE = "+"
 NEGATIVE = "-"
@@ -38,7 +39,7 @@ def display_df(df: pd.DataFrame, title: str = None):
         print(df.to_string(index=False))
         print()
     elif DISPLAY_MODE == "plot":
-        return df.style.hide(axis="index").set_caption(title)
+        return display(df.style.hide(axis="index").set_caption(title))
     elif DISPLAY_MODE == "df":
         return df
 
@@ -60,8 +61,12 @@ def sign(x):
     return (x > 0) - (x < 0)
 
 
+# "6 Sigma" equations.
+
+
 def C_p(UL: float, LL: float, sigma: float) -> float:
-    """Process capability index.
+    """
+    Process capability index.
 
     Args:
         UL (int): _description_
@@ -70,12 +75,18 @@ def C_p(UL: float, LL: float, sigma: float) -> float:
 
     Returns:
         float: _description_
+
+    >>> C_p(1, 0, 1)
+    0.16666666666666666
+    >>> C_p(6, -6, 1)
+    2.0
     """
     return (UL - LL) / (6 * sigma)
 
 
 def C_pk(C_p: float, k: float) -> float:
-    """Process capability index. adjusted for centering.
+    """
+    Process capability index. adjusted for centering.
     Cpl = (mu - L)/3*sigma
     Cpu = (U - mu)/3*sigma
     C_pk = min(Cpl, Cpu) = (1 - k) * C_p
@@ -86,6 +97,9 @@ def C_pk(C_p: float, k: float) -> float:
 
     Returns:
         float: Process capability index.
+
+    >>> C_pk(1, 0)
+    1
     """
     return (1 - k) * C_p
 
@@ -99,6 +113,12 @@ def C_pk(C_p: float, k: float) -> float:
 
 
 def RSS(*args):
+    """
+    Root sum square.
+
+    >>> RSS(1, 2, 3)
+    3.7416573867739413
+    """
     return (sum([arg**2 for arg in args])) ** 0.5
 
 
@@ -248,8 +268,19 @@ class Dimension:
 
     @property
     def sigma_eff(self):
-        """effective standard deviation"""
+        """
+        effective standard deviation
+        "6 sigma" is the standard deviation of the distribution
+        """
         return abs(self.tolerance.T) / (6 * self.C_pk)
+
+    @property
+    def Z_min(self):
+        return self.mu_eff - self.tolerance.T / 2
+
+    @property
+    def Z_max(self):
+        return self.mu_eff + self.tolerance.T / 2
 
 
 class Stack:
@@ -362,6 +393,7 @@ class Stack:
         #     )
 
         # Convert all dimensions to mean dimensions with an equal bilateral tolerance
+        n = len(self.items)
         d_g = self.mu
         t_wc = []
         t_rss = []
@@ -373,7 +405,6 @@ class Stack:
 
         t_wc = sum(t_wc)
         t_rss = RSS(*t_rss)
-        n = len(self.items)
         C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
         t_mrss = C_f * t_rss
 
@@ -411,31 +442,24 @@ class Stack:
 
         display_df(df, title)
 
-    def results_RSS(self):
+    def results_6sigma(self):
         # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
-        sigma = self.sigma
-
-        print(f"μ = {round(self.mu)}\n")
-        print(f"σ = {round(sigma)}\n")
         title = f"'6 sigma' - {self.title}"
         df = pd.DataFrame(
             [
                 {
                     "Sigma": f"± {i}σ",
                     "Mean": round(self.mu),
-                    "Tolerance": f"± {round(sigma * i)}",
-                    "Bounds": f"[{round(self.mu-sigma*i)} {round(self.mu+sigma*i)}]",
+                    "Tolerance": f"± {round(self.sigma * i)}",
+                    "Bounds": f"[{round(self.mu-self.sigma*i)} {round(self.mu+self.sigma*i)}]",
                 }
                 for i in [6, 5, 4.5, 4, 3]
             ]
         ).astype(str)
 
         display_df(df, title)
-
-    # def show_results_text_six_sigma(self):
-    #     # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
-    #     s = "----------------------------------------\n"
-    #     # s += f"{}\n"
+        print(f"μ = {round(self.mu)}")
+        print(f"σ = {round(self.sigma)}")
 
     def show_length_chart(self):
         fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
