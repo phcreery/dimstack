@@ -119,11 +119,11 @@ def RSS(*args):
     >>> RSS(1, 2, 3)
     3.7416573867739413
     """
-    return (sum([arg**2 for arg in args])) ** 0.5
+    return (sum([arg ** 2 for arg in args])) ** 0.5
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
 
 
 class SymmetricBilateral:
@@ -132,7 +132,7 @@ class SymmetricBilateral:
     """
 
     def __init__(self, tol: float):
-        self._tol = tol
+        self._tol = abs(tol)
 
     def __repr__(self) -> str:
         return f"± {round(self.T/2)}"
@@ -156,8 +156,8 @@ class UnequalBilateral:
     """
 
     def __init__(self, upper: float, lower: float):
-        self.upper = upper
-        self.lower = lower
+        self.upper = abs(upper)
+        self.lower = abs(lower)
 
     def __repr__(self) -> str:
         return f"+ {round(self.upper)} / - {round(self.lower)}"
@@ -259,7 +259,7 @@ class Dimension:
 
     @property
     def variance(self):
-        return self.sigma**2
+        return self.sigma ** 2
 
     @property
     def C_p(self):
