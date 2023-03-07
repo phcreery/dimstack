@@ -119,11 +119,50 @@ def RSS_func(*args):
     >>> RSS_func(1, 2, 3)
     3.7416573867739413
     """
-    return (sum([arg**2 for arg in args])) ** 0.5
+    return (sum([arg ** 2 for arg in args])) ** 0.5
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+
+
+class Closed:
+    def __init__(self, stack: "Stack"):
+        self.stack = stack
+
+    @property
+    def nominal(self):
+        return sum([item.nominal * item.a for item in self.stack.items])
+
+    @property
+    def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
+        return Bilateral(
+            sum(
+                filter(
+                    None, [item.tolerance_absolute.upper for item in self.stack.items]
+                )
+            ),
+            sum(
+                filter(
+                    None, [item.tolerance_absolute.lower for item in self.stack.items]
+                )
+            ),
+        )
+
+    def show(self):
+        """This is a simple Worst-Case calculation"""
+        title = f"Closed Stack - {self.stack.title}"
+        df = pd.DataFrame(
+            [
+                {
+                    "Value": round(self.nominal),
+                    "Tolerance": f"{self.tolerance}",
+                    "Bounds": f"[{round(self.nominal-self.tolerance.lower)} {round(self.nominal+self.tolerance.upper)}]",
+                }
+            ]
+        ).astype(str)
+
+        display_df(df, title)
 
 
 class WC:
@@ -135,30 +174,36 @@ class WC:
         return self.stack.mu
 
     @property
-    def tol_stack_upper(self):
-        return [item.upper_rel for item in self.stack.items]
+    def sigma(self):
+        return self.stack.sigma
 
     @property
-    def tol_stack_lower(self):
-        return [item.lower_rel for item in self.stack.items]
+    def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
+        upper = sum(
+            filter(None, [item.tolerance_absolute.upper for item in self.stack.items])
+        )
+        lower = sum(
+            filter(None, [item.tolerance_absolute.lower for item in self.stack.items])
+        )
+        return Bilateral((upper + lower) / 2)
 
     @property
-    def t_wc_upper(self) -> float:
-        return sum(filter(None, self.tol_stack_upper))
+    def Z_min(self):
+        return self.mu - self.tolerance.lower
 
     @property
-    def t_wc_lower(self) -> float:
-        return sum(filter(None, self.tol_stack_lower))
+    def Z_max(self):
+        return self.mu + self.tolerance.upper
 
-    def results_WC(self):
+    def show(self):
         """This is a simple Worst-Case calculation"""
         title = f"Worst Case - {self.stack.title}"
         df = pd.DataFrame(
             [
                 {
-                    "Value": round(self.nominal),
-                    "Tolerance": f"+ {round(self.t_wc_upper)} / - {round(self.t_wc_lower)}",
-                    "Bounds": f"[{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}]",
+                    "Value": round(self.mu),
+                    "Tolerance": f"{self.tolerance}",
+                    "Bounds": f"[{round(self.Z_min)} {round(self.Z_max)}]",
                 }
             ]
         ).astype(str)
@@ -276,11 +321,11 @@ class SymmetricBilateral:
         return f"± {round(self.T/2)}"
 
     @property
-    def lower(self):
+    def upper(self):
         return self._tol
 
     @property
-    def upper(self):
+    def lower(self):
         return self._tol
 
     @property
@@ -297,8 +342,8 @@ class UnequalBilateral:
     def __init__(self, upper: float, lower: float):
         upper = abs(upper)
         lower = abs(lower)
-        if upper < lower:
-            upper, lower = lower, upper
+        # if upper < lower:
+        #     upper, lower = lower, upper
         self.upper = upper
         self.lower = lower
 
@@ -363,7 +408,7 @@ class Dimension:
         self.description = desc
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.direction}{round(self.nominal)} {repr(self.tolerance)} ± {self.sigma}σ {self.name} {self.description}"
+        return f"{self.id}: {self.name} {self.description} {self.direction}{round(self.nominal)} {repr(self.tolerance)} @ ± {self.process_sigma}σ (σ={self.sigma})"
 
     @property
     def direction(self):
@@ -371,6 +416,13 @@ class Dimension:
             return POSITIVE
         else:
             return NEGATIVE
+
+    @property
+    def tolerance_absolute(self):
+        if self.direction == POSITIVE:
+            return self.tolerance
+        elif self.direction == NEGATIVE:
+            return Bilateral(self.tolerance.lower, self.tolerance.upper)
 
     # @property
     # def min_abs(self):
@@ -411,7 +463,7 @@ class Dimension:
     @property
     def mu_eff(self):
         """effective mean"""
-        return (self.lower_rel + self.lower_rel) / 2
+        return (self.lower_rel + self.upper_rel) / 2
 
     @property
     def sigma_eff(self):
@@ -441,9 +493,9 @@ class Stack:
     def append(self, measurement: Dimension):
         self.items.append(measurement)
 
-    @property
-    def nominal(self):
-        return sum([item.nominal * item.a for item in self.items])
+    # @property
+    # def nominal(self):
+    #     return sum([item.nominal * item.a for item in self.items])
 
     @property
     def mu(self):
@@ -452,6 +504,10 @@ class Stack:
     @property
     def sigma(self):
         return RSS_func(*[item.sigma_eff * item.a for item in self.items])
+
+    @property
+    def Closed(self) -> Closed:
+        return Closed(self)
 
     @property
     def WC(self) -> WC:
@@ -493,7 +549,7 @@ class Stack:
                     "tolerance": (repr(item.tolerance)).ljust(14, " "),
                     "process_sigma": f"± {str(item.process_sigma)}σ",
                     "sensitivity": str(item.a),
-                    # "relative bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
+                    "relative bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
                     # "absolute bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
                     # "lower_rel": round(item.lower_rel),
                     # "max_rel": round(item.max_rel),
