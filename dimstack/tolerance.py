@@ -112,18 +112,156 @@ def C_pk(C_p: float, k: float) -> float:
 #     return sigma_i / n**0.5
 
 
-def RSS(*args):
+def RSS_func(*args):
     """
     Root sum square.
 
-    >>> RSS(1, 2, 3)
+    >>> RSS_func(1, 2, 3)
     3.7416573867739413
     """
-    return (sum([arg ** 2 for arg in args])) ** 0.5
+    return (sum([arg**2 for arg in args])) ** 0.5
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
+
+
+class WC:
+    def __init__(self, stack: "Stack"):
+        self.stack = stack
+
+    @property
+    def mu(self):
+        return self.stack.mu
+
+    @property
+    def tol_stack_upper(self):
+        return [item.upper_rel for item in self.stack.items]
+
+    @property
+    def tol_stack_lower(self):
+        return [item.lower_rel for item in self.stack.items]
+
+    @property
+    def t_wc_upper(self) -> float:
+        return sum(filter(None, self.tol_stack_upper))
+
+    @property
+    def t_wc_lower(self) -> float:
+        return sum(filter(None, self.tol_stack_lower))
+
+    def results_WC(self):
+        """This is a simple Worst-Case calculation"""
+        title = f"Worst Case - {self.stack.title}"
+        df = pd.DataFrame(
+            [
+                {
+                    "Value": round(self.nominal),
+                    "Tolerance": f"+ {round(self.t_wc_upper)} / - {round(self.t_wc_lower)}",
+                    "Bounds": f"[{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}]",
+                }
+            ]
+        ).astype(str)
+
+        display_df(df, title)
+
+
+class RSS:
+    """
+    This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
+    It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
+    Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
+    manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
+    probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
+    normal and the probability that it is ±t_rss between is 99.73%.
+    Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
+    for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
+    manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
+    The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
+    equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
+    plus the RSS variation at the gap.
+
+    # Dimensioning and Tolerancing Handbook, McGraw Hill
+    # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
+    """
+
+    def __init__(self, stack: "Stack") -> None:
+        self.stack = stack
+
+        # check if all items are the same process_sigma
+        # if len(set([item.process_sigma for item in self.items])) > 1:
+        #     raise ValueError(
+        #         "For simple RSS analysis, all items must have the same process_sigma"
+        #     )
+
+        # Convert all dimensions to mean dimensions with an equal bilateral tolerance
+
+    @property
+    def d_g(self):
+        return self.stack.mu
+
+    @property
+    def mu(self):
+        return self.stack.mu
+
+    @property
+    def t_wc(self):
+        return sum([abs(item.a * (item.tolerance.T / 2)) for item in self.stack.items])
+
+    @property
+    def t_rss(self):
+        return RSS_func(*[item.a * (item.tolerance.T / 2) for item in self.stack.items])
+
+    @property
+    def t_mrss(self):
+        n = len(self.stack.items)
+        C_f = (0.5 * (self.t_wc - self.t_rss)) / (self.t_rss * (np.sqrt(n) - 1)) + 1
+        return C_f * self.t_rss
+
+    def show(self):
+        title = f"RSS - {self.stack.title}"
+        df = pd.DataFrame(
+            [
+                {
+                    "Name": "Worst Case",
+                    "Value": round(self.d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
+                        14, " "
+                    ),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
+                        20, " "
+                    ),
+                },
+                {
+                    "Name": "Modified RSS",
+                    "Value": round(self.d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_mrss))}".ljust(
+                        14, " "
+                    ),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(self.d_g-self.t_mrss)} {round(self.d_g+self.t_mrss)}]".ljust(
+                        20, " "
+                    ),
+                },
+                {
+                    "Name": "RSS",
+                    "Value": round(self.d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_rss))}".ljust(
+                        14, " "
+                    ),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(self.d_g-self.t_rss)} {round(self.d_g+self.t_rss)}]".ljust(
+                        20, " "
+                    ),
+                },
+            ]
+        ).astype(str)
+
+        display_df(df, title)
 
 
 class SymmetricBilateral:
@@ -151,13 +289,18 @@ class SymmetricBilateral:
 
 
 class UnequalBilateral:
-    """Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
+    """
+    Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
     This can also be used for Unilateral tolerancing.
     """
 
     def __init__(self, upper: float, lower: float):
-        self.upper = abs(upper)
-        self.lower = abs(lower)
+        upper = abs(upper)
+        lower = abs(lower)
+        if upper < lower:
+            upper, lower = lower, upper
+        self.upper = upper
+        self.lower = lower
 
     def __repr__(self) -> str:
         return f"+ {round(self.upper)} / - {round(self.lower)}"
@@ -169,6 +312,16 @@ class UnequalBilateral:
     @property
     def T(self):
         return self.upper - self.lower
+
+
+def Bilateral(upper: float, lower: float = None):
+    if lower is None:
+        return SymmetricBilateral(upper)
+    else:
+        if upper == lower:
+            return SymmetricBilateral(upper)
+        else:
+            return UnequalBilateral(upper, lower)
 
 
 class Dimension:
@@ -219,34 +372,20 @@ class Dimension:
         else:
             return NEGATIVE
 
-    @property
-    def upper_abs(self):
-        if self.direction == POSITIVE:
-            return self.tolerance.upper
-        elif self.direction == NEGATIVE:
-            return self.tolerance.lower
+    # @property
+    # def min_abs(self):
+    #     return self.a * (self.nominal - self.tolerance.lower)
+
+    # @property
+    # def max_abs(self):
+    #     return self.a * (self.nominal + self.tolerance.upper)
 
     @property
-    def lower_abs(self):
-        if self.direction == POSITIVE:
-            return self.tolerance.lower
-        elif self.direction == NEGATIVE:
-            return self.tolerance.upper
-
-    @property
-    def min_rel(self):
-        return self.a * (self.nominal - self.tolerance.lower)
-
-    @property
-    def max_rel(self):
-        return self.a * (self.nominal + self.tolerance.upper)
-
-    @property
-    def min_abs(self):
+    def lower_rel(self):
         return self.nominal - self.tolerance.lower
 
     @property
-    def max_abs(self):
+    def upper_rel(self):
         return self.nominal + self.tolerance.upper
 
     @property
@@ -257,13 +396,13 @@ class Dimension:
     def sigma(self):
         return abs(self.tolerance.T / 2) / self.process_sigma
 
-    @property
-    def variance(self):
-        return self.sigma ** 2
+    # @property
+    # def variance(self):
+    #     return self.sigma ** 2
 
     @property
     def C_p(self):
-        return C_p(self.max_abs, self.min_abs, self.sigma)
+        return C_p(self.upper_rel, self.lower_rel, self.sigma)
 
     @property
     def C_pk(self):
@@ -272,7 +411,7 @@ class Dimension:
     @property
     def mu_eff(self):
         """effective mean"""
-        return (self.max_abs + self.min_abs) / 2
+        return (self.lower_rel + self.lower_rel) / 2
 
     @property
     def sigma_eff(self):
@@ -312,137 +451,15 @@ class Stack:
 
     @property
     def sigma(self):
-        return RSS(*[item.sigma_eff * item.a for item in self.items])
+        return RSS_func(*[item.sigma_eff * item.a for item in self.items])
 
     @property
-    def tol_stack_upper(self):
-        return [item.upper_abs for item in self.items]
+    def WC(self) -> WC:
+        return WC(self)
 
     @property
-    def tol_stack_lower(self):
-        return [item.lower_abs for item in self.items]
-
-    @property
-    def t_wc_upper(self) -> float:
-        return sum(filter(None, self.tol_stack_upper))
-
-    @property
-    def t_wc_lower(self) -> float:
-        return sum(filter(None, self.tol_stack_lower))
-
-    def show(self):
-        # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
-        df = pd.DataFrame(
-            [
-                {
-                    "id": item.id,
-                    "name": item.name,
-                    "description": (item.description),
-                    "dir": item.direction,
-                    "nominal": round(item.nominal),
-                    "tolerance": (repr(item.tolerance)).ljust(14, " "),
-                    "process_sigma": f"± {str(item.process_sigma)}σ",
-                    "sensitivity": str(item.a),
-                    # "relative bounds": f"[{round(item.min_rel)}, {round(item.max_rel)}]",
-                    # "absolute bounds": f"[{round(item.min_abs)}, {round(item.max_abs)}]",
-                    "min_rel": round(item.min_rel),
-                    "max_rel": round(item.max_rel),
-                    "min_abs": round(item.min_abs),
-                    "max_abs": round(item.max_abs),
-                    "σ": round(item.sigma),
-                    "C_p": round(item.C_p),
-                    "k": round(item.k),
-                    "C_pk": round(item.C_pk),
-                    "μ_eff": round(item.mu_eff),
-                    "σ_eff": round(item.sigma_eff),
-                }
-                for item in self.items
-            ]
-        ).astype(str)
-
-        display_df(df, self.title)
-
-    def results_WC(self):
-        """This is a simple Worst-Case calculation"""
-        title = f"Worst Case - {self.title}"
-        df = pd.DataFrame(
-            [
-                {
-                    "Value": round(self.nominal),
-                    "Tolerance": f"+ {round(self.t_wc_upper)} / - {round(self.t_wc_lower)}",
-                    "Bounds": f"[{round(self.nominal-self.t_wc_lower)} {round(self.nominal+self.t_wc_upper)}]",
-                }
-            ]
-        ).astype(str)
-
-        display_df(df, title)
-
-    def results_RSS_simple(self):
-        """
-        This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
-        It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
-        Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
-        manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
-        probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
-        normal and the probability that it is ±t_rss between is 99.73%.
-        Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
-        for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
-        manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
-        The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
-        equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
-        plus the RSS variation at the gap.
-        """
-        # Dimensioning and Tolerancing Handbook, McGraw Hill
-        # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
-
-        # check if all items are the same process_sigma
-        # if len(set([item.process_sigma for item in self.items])) > 1:
-        #     raise ValueError(
-        #         "For simple RSS analysis, all items must have the same process_sigma"
-        #     )
-
-        # Convert all dimensions to mean dimensions with an equal bilateral tolerance
-        n = len(self.items)
-        d_g = self.mu
-
-        t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
-        t_rss = RSS(*[item.a * (item.tolerance.T / 2) for item in self.items])
-        C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
-        t_mrss = C_f * t_rss
-
-        title = f"RSS - {self.title}"
-        df = pd.DataFrame(
-            [
-                {
-                    "Name": "Worst Case",
-                    "Value": round(d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(t_wc))}".ljust(14, " "),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(d_g-t_wc)} {round(d_g+t_wc)}]".ljust(20, " "),
-                },
-                {
-                    "Name": "Modified RSS",
-                    "Value": round(d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(t_mrss))}".ljust(
-                        14, " "
-                    ),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(d_g-t_mrss)} {round(d_g+t_mrss)}]".ljust(20, " "),
-                },
-                {
-                    "Name": "RSS",
-                    "Value": round(d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(t_rss))}".ljust(14, " "),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(d_g-t_rss)} {round(d_g+t_rss)}]".ljust(20, " "),
-                },
-            ]
-        ).astype(str)
-
-        display_df(df, title)
+    def RSS(self) -> RSS:
+        return RSS(self)
 
     def results_6sigma(self):
         # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
@@ -462,6 +479,38 @@ class Stack:
         display_df(df, title)
         print(f"μ = {round(self.mu)}")
         print(f"σ = {round(self.sigma)}")
+
+    def show(self):
+        # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
+        df = pd.DataFrame(
+            [
+                {
+                    "id": item.id,
+                    "name": item.name,
+                    "description": (item.description),
+                    "dir": item.direction,
+                    "nominal": round(item.nominal),
+                    "tolerance": (repr(item.tolerance)).ljust(14, " "),
+                    "process_sigma": f"± {str(item.process_sigma)}σ",
+                    "sensitivity": str(item.a),
+                    # "relative bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
+                    # "absolute bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
+                    # "lower_rel": round(item.lower_rel),
+                    # "max_rel": round(item.max_rel),
+                    # "lower_rel": round(item.lower_rel),
+                    # "max_rel": round(item.max_rel),
+                    "σ": round(item.sigma),
+                    "C_p": round(item.C_p),
+                    "k": round(item.k),
+                    "C_pk": round(item.C_pk),
+                    "μ_eff": round(item.mu_eff),
+                    "σ_eff": round(item.sigma_eff),
+                }
+                for item in self.items
+            ]
+        ).astype(str)
+
+        display_df(df, self.title)
 
     def show_length_chart(self):
         fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
