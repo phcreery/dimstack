@@ -70,12 +70,12 @@ def C_p(UL: float, LL: float, sigma: float) -> float:
     Process capability index.
 
     Args:
-        UL (int): _description_
-        LL (int): _description_
-        sigma (int): _description_
+        UL (int): Upper limit.
+        LL (int): Lower limit.
+        sigma (int): Standard deviation.
 
     Returns:
-        float: _description_
+        float: Process capability index.
 
     >>> C_p(1, 0, 1)
     0.16666666666666666
