@@ -57,6 +57,7 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(ds.round(stack.Closed.nominal), 0.25)
         self.assertEqual(ds.round(stack.Closed.tolerance.upper), 0.533)
         self.assertEqual(ds.round(stack.Closed.tolerance.lower), 0.233)
+        # self.assertEqual(ds.round(stack.RSS.sigma, 6), 0.059417)
 
     def test_wc(self):
         self.assertEqual(ds.round(stack.WC.mu), 0.4)
@@ -67,19 +68,21 @@ class MITCalc(unittest.TestCase):
     def test_RSS(self):
         self.assertEqual(ds.round(stack.RSS.mu), 0.4)
         self.assertEqual(ds.round(stack.RSS.d_g), 0.4)
+        self.assertEqual(ds.round(stack.RSS.t_rss), 0.1782)  # 0.176085
+        self.assertEqual(ds.round(stack.RSS.t_mrss), 0.2405)  # 0.176085
         # self.assertEqual(ds.round(stack.RSS.sigma, 6), 0.059417)
 
     def test_sixsigma(self):
         self.assertEqual(ds.round(stack.items[0].C_p), 2)
         self.assertEqual(ds.round(stack.items[0].k), 0.25)
         self.assertEqual(ds.round(stack.items[0].C_pk), 1.5)
-        # self.assertEqual(ds.round(stack.items[0].mu_eff), 0.008)
+        self.assertEqual(ds.round(stack.items[0].mu_eff), 208.0)
         self.assertEqual(ds.round(stack.items[0].sigma_eff), 0.008)
 
-        # self.assertEqual(ds.round(stack.6sigma.mu), 0.4)
-        # self.assertEqual(ds.round(stack.6sigma.sigma, 6), 0.05874)
-        # self.assertEqual(ds.round(stack.6sigma.C_p), 2.12804)
-        # self.assertEqual(ds.round(stack.6sigma.C_pk, 6), 1.98617)
+        self.assertEqual(ds.round(stack.SixSigma.mu), 0.4)
+        self.assertEqual(ds.round(stack.SixSigma.sigma, 6), 0.05874)
+        # self.assertEqual(ds.round(stack.SixSigma.C_p), 2.12804)
+        # self.assertEqual(ds.round(stack.SixSigma.C_pk, 6), 1.98617)
 
     # def test_sixsigma_assembly(self):
     # self.assertEqual(ds.round(stack.Z_min), 0.017)

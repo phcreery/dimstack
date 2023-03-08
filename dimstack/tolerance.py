@@ -1,4 +1,5 @@
 from typing import List, Union
+import math
 import numpy as np
 import itertools
 import pandas as pd
@@ -124,6 +125,20 @@ def RSS_func(*args):
 
 def C_f(t_rss, t_wc, n):
     return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+
+
+def norm_cdf(x, mu=0, sigma=1):
+    """
+    Cumulative distribution function for the normal distribution.
+
+    >>> norm_cdf(0)
+    0.5
+    >>> norm_cdf(1)
+    0.8413447460685428
+    >>> norm_cdf(2)
+    0.9772498680518209
+    """
+    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2 ** 0.5))))
 
 
 class Closed:
@@ -263,22 +278,28 @@ class RSS:
         C_f = (0.5 * (self.t_wc - self.t_rss)) / (self.t_rss * (np.sqrt(n) - 1)) + 1
         return C_f * self.t_rss
 
+    # def yield_loss_probability(self, UL, LL):
+    #     return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
+
+    # def yield_probability(self, UL, LL):
+    #     return 1 - self.yield_loss_probability(UL, LL)
+
     def show(self):
         title = f"RSS - {self.stack.title}"
         df = pd.DataFrame(
             [
-                {
-                    "Name": "Worst Case",
-                    "Value": round(self.d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
-                        14, " "
-                    ),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
-                        20, " "
-                    ),
-                },
+                # {
+                #     "Name": "Worst Case",
+                #     "Value": round(self.d_g),
+                #     "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
+                #         14, " "
+                #     ),
+                #     "Bounds".ljust(
+                #         20, " "
+                #     ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
+                #         20, " "
+                #     ),
+                # },
                 {
                     "Name": "Modified RSS",
                     "Value": round(self.d_g),
@@ -307,6 +328,46 @@ class RSS:
         ).astype(str)
 
         display_df(df, title)
+
+
+class SixSigma:
+    def __init__(self, stack: "Stack") -> None:
+        self.stack = stack
+
+    @property
+    def mu(self):
+        return self.stack.mu
+
+    @property
+    def sigma(self):
+        return self.stack.sigma
+
+    def yield_loss_probability(self, UL, LL):
+        return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
+
+    def yield_probability(self, UL, LL):
+        return 1 - self.yield_loss_probability(UL, LL)
+
+    def show(self):
+        # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
+        title = f"'6 sigma' - {self.stack.title}"
+        df = pd.DataFrame(
+            [
+                {
+                    "Sigma": f"± {i}σ",
+                    "Mean": round(self.mu),
+                    "Tolerance": f"± {round(self.sigma * i)}",
+                    "Bounds": f"[{round(self.mu-self.sigma*i)} {round(self.mu+self.sigma*i)}]",
+                    "Yield Probability": f"{round(self.yield_probability(self.mu+self.sigma*i, self.mu-self.sigma*i)*100, 8)}",
+                    "Reject PPM": f"{round(self.yield_loss_probability(self.mu+self.sigma*i, self.mu-self.sigma*i)*1000000, 2)}",
+                }
+                for i in [6, 5, 4.5, 4, 3]
+            ]
+        ).astype(str)
+
+        display_df(df, title)
+        print(f"μ = {round(self.mu)}")
+        print(f"σ = {round(self.sigma)}")
 
 
 class SymmetricBilateral:
@@ -424,14 +485,6 @@ class Dimension:
         elif self.direction == NEGATIVE:
             return Bilateral(self.tolerance.lower, self.tolerance.upper)
 
-    # @property
-    # def min_abs(self):
-    #     return self.a * (self.nominal - self.tolerance.lower)
-
-    # @property
-    # def max_abs(self):
-    #     return self.a * (self.nominal + self.tolerance.upper)
-
     @property
     def lower_rel(self):
         return self.nominal - self.tolerance.lower
@@ -473,14 +526,6 @@ class Dimension:
         """
         return abs(self.tolerance.T) / (6 * self.C_pk)
 
-    @property
-    def Z_min(self):
-        return self.mu_eff - self.tolerance.T / 2
-
-    @property
-    def Z_max(self):
-        return self.mu_eff + self.tolerance.T / 2
-
 
 class Stack:
     def __init__(self, title: str = "Stack", items: List[Dimension] = []):
@@ -492,10 +537,6 @@ class Stack:
 
     def append(self, measurement: Dimension):
         self.items.append(measurement)
-
-    # @property
-    # def nominal(self):
-    #     return sum([item.nominal * item.a for item in self.items])
 
     @property
     def mu(self):
@@ -517,24 +558,9 @@ class Stack:
     def RSS(self) -> RSS:
         return RSS(self)
 
-    def results_6sigma(self):
-        # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
-        title = f"'6 sigma' - {self.title}"
-        df = pd.DataFrame(
-            [
-                {
-                    "Sigma": f"± {i}σ",
-                    "Mean": round(self.mu),
-                    "Tolerance": f"± {round(self.sigma * i)}",
-                    "Bounds": f"[{round(self.mu-self.sigma*i)} {round(self.mu+self.sigma*i)}]",
-                }
-                for i in [6, 5, 4.5, 4, 3]
-            ]
-        ).astype(str)
-
-        display_df(df, title)
-        print(f"μ = {round(self.mu)}")
-        print(f"σ = {round(self.sigma)}")
+    @property
+    def SixSigma(self) -> SixSigma:
+        return SixSigma(self)
 
     def show(self):
         # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
