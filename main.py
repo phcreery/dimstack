@@ -89,8 +89,8 @@ items = [m1, m2, m3]
 
 stack = dimstack.tolerance.Stack(title="stacks on stacks", items=items)
 
-# stack.show_dimensions_text()
 stack.show()
-stack.results_WC()
-stack.results_RSS_simple()
-stack.results_6sigma()
+stack.Closed.show()
+stack.WC.show()
+stack.RSS.show()
+stack.SixSigma.show()

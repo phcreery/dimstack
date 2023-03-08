@@ -189,10 +189,6 @@ class WC:
         return self.stack.mu
 
     @property
-    def sigma(self):
-        return self.stack.sigma
-
-    @property
     def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
         upper = sum(
             filter(None, [item.tolerance_absolute.upper for item in self.stack.items])
@@ -278,28 +274,35 @@ class RSS:
         C_f = (0.5 * (self.t_wc - self.t_rss)) / (self.t_rss * (np.sqrt(n) - 1)) + 1
         return C_f * self.t_rss
 
-    # def yield_loss_probability(self, UL, LL):
-    #     return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
+    @property
+    def sigma(self):
+        return self.stack.sigma
 
-    # def yield_probability(self, UL, LL):
-    #     return 1 - self.yield_loss_probability(UL, LL)
+    def yield_loss_probability(self, UL, LL):
+        return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
+
+    def yield_probability(self, UL, LL):
+        return 1 - self.yield_loss_probability(UL, LL)
 
     def show(self):
-        title = f"RSS - {self.stack.title}"
+        title = f"RSS (assuming uniform mfg. process standard deviation of ±3σ) - {self.stack.title}"
         df = pd.DataFrame(
             [
-                # {
-                #     "Name": "Worst Case",
-                #     "Value": round(self.d_g),
-                #     "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
-                #         14, " "
-                #     ),
-                #     "Bounds".ljust(
-                #         20, " "
-                #     ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
-                #         20, " "
-                #     ),
-                # },
+                {
+                    "Name": "Worst Case",
+                    "Value": round(self.d_g),
+                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
+                        14, " "
+                    ),
+                    "Bounds".ljust(
+                        20, " "
+                    ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
+                        20, " "
+                    ),
+                    "sigma": f"{round(self.sigma)}",
+                    "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*100, 8)}",
+                    "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*1000000, 2)}",
+                },
                 {
                     "Name": "Modified RSS",
                     "Value": round(self.d_g),
@@ -311,6 +314,9 @@ class RSS:
                     ): f"[{round(self.d_g-self.t_mrss)} {round(self.d_g+self.t_mrss)}]".ljust(
                         20, " "
                     ),
+                    "sigma": f"{round(self.sigma)}",
+                    "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_mrss, self.d_g-self.t_mrss)*100, 8)}",
+                    "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_mrss, self.d_g-self.t_mrss)*1000000, 2)}",
                 },
                 {
                     "Name": "RSS",
@@ -323,11 +329,16 @@ class RSS:
                     ): f"[{round(self.d_g-self.t_rss)} {round(self.d_g+self.t_rss)}]".ljust(
                         20, " "
                     ),
+                    "sigma": f"{round(self.sigma)}",
+                    "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_rss, self.d_g-self.t_rss)*100, 8)}",
+                    "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_rss, self.d_g-self.t_rss)*1000000, 2)}",
                 },
             ]
         ).astype(str)
 
         display_df(df, title)
+        print(f"μ = {round(self.mu)}")
+        print(f"σ = {round(self.sigma)}")
 
 
 class SixSigma:

@@ -57,7 +57,6 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(ds.round(stack.Closed.nominal), 0.25)
         self.assertEqual(ds.round(stack.Closed.tolerance.upper), 0.533)
         self.assertEqual(ds.round(stack.Closed.tolerance.lower), 0.233)
-        # self.assertEqual(ds.round(stack.RSS.sigma, 6), 0.059417)
 
     def test_wc(self):
         self.assertEqual(ds.round(stack.WC.mu), 0.4)
@@ -70,7 +69,7 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(ds.round(stack.RSS.d_g), 0.4)
         self.assertEqual(ds.round(stack.RSS.t_rss), 0.1782)  # 0.176085
         self.assertEqual(ds.round(stack.RSS.t_mrss), 0.2405)  # 0.176085
-        # self.assertEqual(ds.round(stack.RSS.sigma, 6), 0.059417)
+        self.assertEqual(ds.round(stack.RSS.sigma, 6), 0.05874)
 
     def test_sixsigma(self):
         self.assertEqual(ds.round(stack.items[0].C_p), 2)
