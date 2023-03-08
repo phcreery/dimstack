@@ -288,21 +288,21 @@ class RSS:
         title = f"RSS (assuming uniform mfg. process standard deviation of ±3σ) - {self.stack.title}"
         df = pd.DataFrame(
             [
-                {
-                    "Name": "Worst Case",
-                    "Value": round(self.d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
-                        14, " "
-                    ),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
-                        20, " "
-                    ),
-                    "sigma": f"{round(self.sigma)}",
-                    "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*100, 8)}",
-                    "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*1000000, 2)}",
-                },
+                # {
+                #     "Name": "Worst Case",
+                #     "Value": round(self.d_g),
+                #     "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
+                #         14, " "
+                #     ),
+                #     "Bounds".ljust(
+                #         20, " "
+                #     ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
+                #         20, " "
+                #     ),
+                #     "sigma": f"{round(self.sigma)}",
+                #     "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*100, 8)}",
+                #     "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*1000000, 2)}",
+                # },
                 {
                     "Name": "Modified RSS",
                     "Value": round(self.d_g),
