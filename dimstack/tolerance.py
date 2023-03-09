@@ -186,7 +186,6 @@ class WC:
 
     @property
     def mu(self):
-        # return self.stack.mu
         return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
@@ -255,7 +254,6 @@ class RSS:
 
     @property
     def mu(self):
-        # return self.stack.mu
         return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
@@ -350,12 +348,10 @@ class SixSigma:
 
     @property
     def mu(self):
-        # return self.stack.mu
         return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
     def sigma(self):
-        # return self.stack.sigma
         return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
 
     def yield_loss_probability(self, UL, LL):
@@ -417,19 +413,11 @@ class UnequalBilateral:
     """
 
     def __init__(self, upper: float, lower: float):
-        upper = abs(upper)
-        lower = abs(lower)
-        # if upper < lower:
-        #     upper, lower = lower, upper
-        self.upper = upper
-        self.lower = lower
+        self.upper = abs(upper)
+        self.lower = abs(lower)
 
     def __repr__(self) -> str:
         return f"+ {round(self.upper)} / - {round(self.lower)}"
-
-    # @property
-    # def tol(self):
-    #     return (self.upper - self.lower) / 2
 
     @property
     def T(self):
@@ -509,10 +497,6 @@ class Dimension:
     def upper_rel(self):
         return self.nominal + self.tolerance.upper
 
-    # @property
-    # def mu(self):
-    #     return self.nominal
-
     @property
     def sigma(self):
         return abs(self.tolerance.T / 2) / self.process_sigma
@@ -554,14 +538,6 @@ class Stack:
     def append(self, measurement: Dimension):
         self.items.append(measurement)
 
-    # @property
-    # def mu(self):
-    #     return sum([item.mu_eff * item.a for item in self.items])
-
-    # @property
-    # def sigma(self):
-    #     return RSS_func(*[item.sigma_eff * item.a for item in self.items])
-
     @property
     def Closed(self) -> Closed:
         return Closed(self)
@@ -583,20 +559,16 @@ class Stack:
         df = pd.DataFrame(
             [
                 {
-                    "id": item.id,
-                    "name": item.name,
-                    "description": (item.description),
+                    "ID": item.id,
+                    "Name": item.name,
+                    "Description": (item.description),
                     "dir": item.direction,
-                    "nominal": round(item.nominal),
-                    "tolerance": (repr(item.tolerance)).ljust(14, " "),
-                    "process_sigma": f"± {str(item.process_sigma)}σ",
-                    "sensitivity": str(item.a),
-                    "relative bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
-                    # "absolute bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
-                    # "lower_rel": round(item.lower_rel),
-                    # "max_rel": round(item.max_rel),
-                    # "lower_rel": round(item.lower_rel),
-                    # "max_rel": round(item.max_rel),
+                    "Nominal": round(item.nominal),
+                    "Tolerance": (repr(item.tolerance)).ljust(14, " "),
+                    "Process Sigma": f"± {str(item.process_sigma)}σ",
+                    "Sensitivity": str(item.a),
+                    "Relative Bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
+                    # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
                     "σ": round(item.sigma),
                     "C_p": round(item.C_p),
                     "k": round(item.k),
