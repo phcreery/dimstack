@@ -120,11 +120,11 @@ def RSS_func(*args):
     >>> RSS_func(1, 2, 3)
     3.7416573867739413
     """
-    return (sum([arg ** 2 for arg in args])) ** 0.5
+    return (sum([arg**2 for arg in args])) ** 0.5
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
 def norm_cdf(x, mu=0, sigma=1):
@@ -138,7 +138,7 @@ def norm_cdf(x, mu=0, sigma=1):
     >>> norm_cdf(2)
     0.9772498680518209
     """
-    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2 ** 0.5))))
+    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2**0.5))))
 
 
 class Closed:
@@ -186,7 +186,8 @@ class WC:
 
     @property
     def mu(self):
-        return self.stack.mu
+        # return self.stack.mu
+        return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
     def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
@@ -253,12 +254,13 @@ class RSS:
         # Convert all dimensions to mean dimensions with an equal bilateral tolerance
 
     @property
-    def d_g(self):
-        return self.stack.mu
+    def mu(self):
+        # return self.stack.mu
+        return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
-    def mu(self):
-        return self.stack.mu
+    def d_g(self):
+        return self.mu
 
     @property
     def t_wc(self):
@@ -276,7 +278,8 @@ class RSS:
 
     @property
     def sigma(self):
-        return self.stack.sigma
+        # return self.stack.sigma
+        return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
 
     def yield_loss_probability(self, UL, LL):
         return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
@@ -347,11 +350,13 @@ class SixSigma:
 
     @property
     def mu(self):
-        return self.stack.mu
+        # return self.stack.mu
+        return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
     def sigma(self):
-        return self.stack.sigma
+        # return self.stack.sigma
+        return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
 
     def yield_loss_probability(self, UL, LL):
         return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
@@ -504,9 +509,9 @@ class Dimension:
     def upper_rel(self):
         return self.nominal + self.tolerance.upper
 
-    @property
-    def mu(self):
-        return self.nominal
+    # @property
+    # def mu(self):
+    #     return self.nominal
 
     @property
     def sigma(self):
@@ -549,13 +554,13 @@ class Stack:
     def append(self, measurement: Dimension):
         self.items.append(measurement)
 
-    @property
-    def mu(self):
-        return sum([item.mu_eff * item.a for item in self.items])
+    # @property
+    # def mu(self):
+    #     return sum([item.mu_eff * item.a for item in self.items])
 
-    @property
-    def sigma(self):
-        return RSS_func(*[item.sigma_eff * item.a for item in self.items])
+    # @property
+    # def sigma(self):
+    #     return RSS_func(*[item.sigma_eff * item.a for item in self.items])
 
     @property
     def Closed(self) -> Closed:
