@@ -120,11 +120,11 @@ def RSS_func(*args):
     >>> RSS_func(1, 2, 3)
     3.7416573867739413
     """
-    return (sum([arg ** 2 for arg in args])) ** 0.5
+    return (sum([arg**2 for arg in args])) ** 0.5
 
 
 def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n ** 0.5 - 1))) + 1
+    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
 def norm_cdf(x, mu=0, sigma=1):
@@ -138,7 +138,7 @@ def norm_cdf(x, mu=0, sigma=1):
     >>> norm_cdf(2)
     0.9772498680518209
     """
-    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2 ** 0.5))))
+    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2**0.5))))
 
 
 class Closed:
@@ -186,7 +186,7 @@ class WC:
 
     @property
     def mu(self):
-        return self.stack.mu
+        return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
     def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
@@ -253,12 +253,12 @@ class RSS:
         # Convert all dimensions to mean dimensions with an equal bilateral tolerance
 
     @property
-    def d_g(self):
-        return self.stack.mu
+    def mu(self):
+        return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
-    def mu(self):
-        return self.stack.mu
+    def d_g(self):
+        return self.mu
 
     @property
     def t_wc(self):
@@ -276,7 +276,8 @@ class RSS:
 
     @property
     def sigma(self):
-        return self.stack.sigma
+        # return self.stack.sigma
+        return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
 
     def yield_loss_probability(self, UL, LL):
         return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
@@ -348,11 +349,11 @@ class SixSigma:
 
     @property
     def mu(self):
-        return self.stack.mu
+        return sum([item.mu_eff * item.a for item in self.stack.items])
 
     @property
     def sigma(self):
-        return self.stack.sigma
+        return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
 
     def yield_loss_probability(self, UL, LL):
         return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
@@ -414,19 +415,11 @@ class UnequalBilateral:
     """
 
     def __init__(self, upper: float, lower: float):
-        upper = abs(upper)
-        lower = abs(lower)
-        # if upper < lower:
-        #     upper, lower = lower, upper
-        self.upper = upper
-        self.lower = lower
+        self.upper = abs(upper)
+        self.lower = abs(lower)
 
     def __repr__(self) -> str:
         return f"+ {round(self.upper)} / - {round(self.lower)}"
-
-    # @property
-    # def tol(self):
-    #     return (self.upper - self.lower) / 2
 
     @property
     def T(self):
@@ -507,10 +500,6 @@ class Dimension:
         return self.nominal + self.tolerance.upper
 
     @property
-    def mu(self):
-        return self.nominal
-
-    @property
     def sigma(self):
         return abs(self.tolerance.T / 2) / self.process_sigma
 
@@ -552,14 +541,6 @@ class Stack:
         self.items.append(measurement)
 
     @property
-    def mu(self):
-        return sum([item.mu_eff * item.a for item in self.items])
-
-    @property
-    def sigma(self):
-        return RSS_func(*[item.sigma_eff * item.a for item in self.items])
-
-    @property
     def Closed(self) -> Closed:
         return Closed(self)
 
@@ -580,20 +561,16 @@ class Stack:
         df = pd.DataFrame(
             [
                 {
-                    "id": item.id,
-                    "name": item.name,
-                    "description": (item.description),
+                    "ID": item.id,
+                    "Name": item.name,
+                    "Description": (item.description),
                     "dir": item.direction,
-                    "nominal": round(item.nominal),
-                    "tolerance": (repr(item.tolerance)).ljust(14, " "),
-                    "process_sigma": f"± {str(item.process_sigma)}σ",
-                    "sensitivity": str(item.a),
-                    "relative bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
-                    # "absolute bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
-                    # "lower_rel": round(item.lower_rel),
-                    # "max_rel": round(item.max_rel),
-                    # "lower_rel": round(item.lower_rel),
-                    # "max_rel": round(item.max_rel),
+                    "Nominal": round(item.nominal),
+                    "Tolerance": (repr(item.tolerance)).ljust(14, " "),
+                    "Process Sigma": f"± {str(item.process_sigma)}σ",
+                    "Sensitivity": str(item.a),
+                    "Relative Bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
+                    # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
                     "σ": round(item.sigma),
                     "C_p": round(item.C_p),
                     "k": round(item.k),
