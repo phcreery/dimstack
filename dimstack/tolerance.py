@@ -339,6 +339,7 @@ class RSS:
         display_df(df, title)
         print(f"μ = {round(self.mu)}")
         print(f"σ = {round(self.sigma)}")
+        print()
 
 
 class SixSigma:
@@ -379,6 +380,7 @@ class SixSigma:
         display_df(df, title)
         print(f"μ = {round(self.mu)}")
         print(f"σ = {round(self.sigma)}")
+        print()
 
 
 class SymmetricBilateral:
