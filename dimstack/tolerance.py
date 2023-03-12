@@ -1,48 +1,22 @@
-from typing import List, Union
-import math
 import numpy as np
 import itertools
-import pandas as pd
-import matplotlib.pyplot as plt
-from IPython.display import display
+
+# import pandas as pd
+from typing import List, Union
+
+from dimstack.stats import C_p, C_pk, RSS_func, norm_cdf
+
+# from dimstack.analysis import Closed, WC, RSS, SixSigma
+from dimstack.display import display_df
 
 POSITIVE = "+"
 NEGATIVE = "-"
-DECIMALS = 4
+DECIMALS = 5
 DIST_NORMAL = "Normal"  # Normal distribution.
 DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
 DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used
 DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
 DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
-
-DISPLAY_MODE = "plot"  # "text" or "plot" or "df"
-FIGSIZE = (6, 3)
-
-
-def display_mode(mode: str):
-    """Set the display mode for the stack.
-
-    Args:
-        mode (str): "text" or "plot"
-    """
-    global DISPLAY_MODE
-    DISPLAY_MODE = mode
-
-
-def display_df(df: pd.DataFrame, title: str = None):
-    """Display a dataframe.
-
-    Args:
-        df (pd.DataFrame): _description_
-    """
-    if DISPLAY_MODE == "text":
-        print(f"{title}")
-        print(df.to_string(index=False))
-        print()
-    elif DISPLAY_MODE == "plot":
-        return display(df.style.hide(axis="index").set_caption(title))
-    elif DISPLAY_MODE == "df":
-        return df
 
 
 def round(x, n=DECIMALS):
@@ -60,328 +34,6 @@ def sign(x):
     -1
     """
     return (x > 0) - (x < 0)
-
-
-# "6 Sigma" equations.
-
-
-def C_p(UL: float, LL: float, sigma: float) -> float:
-    """
-    Process capability index.
-
-    Args:
-        UL (int): Upper limit.
-        LL (int): Lower limit.
-        sigma (int): Standard deviation.
-
-    Returns:
-        float: Process capability index.
-
-    >>> C_p(1, 0, 1)
-    0.16666666666666666
-    >>> C_p(6, -6, 1)
-    2.0
-    """
-    return (UL - LL) / (6 * sigma)
-
-
-def C_pk(C_p: float, k: float) -> float:
-    """
-    Process capability index. adjusted for centering.
-    Cpl = (mu - L)/3*sigma
-    Cpu = (U - mu)/3*sigma
-    C_pk = min(Cpl, Cpu) = (1 - k) * C_p
-
-    Args:
-        C_p (float): Process capability index.
-        k (float): ratio of the amount the center of the distribution is shifted from the nominal value to the standard deviation.
-
-    Returns:
-        float: Process capability index.
-
-    >>> C_pk(1, 0)
-    1
-    """
-    return (1 - k) * C_p
-
-
-# def sigma_i(T_i: float, sigma: float) -> float:
-#     return T_i / sigma
-
-
-# def standard_deviation(sigma_i: float, n: float) -> float:
-#     return sigma_i / n**0.5
-
-
-def RSS_func(*args):
-    """
-    Root sum square.
-
-    >>> RSS_func(1, 2, 3)
-    3.7416573867739413
-    """
-    return (sum([arg**2 for arg in args])) ** 0.5
-
-
-def C_f(t_rss, t_wc, n):
-    return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
-
-
-def norm_cdf(x, mu=0, sigma=1):
-    """
-    Cumulative distribution function for the normal distribution.
-
-    >>> norm_cdf(0)
-    0.5
-    >>> norm_cdf(1)
-    0.8413447460685428
-    >>> norm_cdf(2)
-    0.9772498680518209
-    """
-    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2**0.5))))
-
-
-class Closed:
-    def __init__(self, stack: "Stack"):
-        self.stack = stack
-
-    @property
-    def nominal(self):
-        return sum([item.nominal * item.a for item in self.stack.items])
-
-    @property
-    def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
-        return Bilateral(
-            sum(
-                filter(
-                    None, [item.tolerance_absolute.upper for item in self.stack.items]
-                )
-            ),
-            sum(
-                filter(
-                    None, [item.tolerance_absolute.lower for item in self.stack.items]
-                )
-            ),
-        )
-
-    def show(self):
-        """This is a simple Worst-Case calculation"""
-        title = f"Closed Stack - {self.stack.title}"
-        df = pd.DataFrame(
-            [
-                {
-                    "Value": round(self.nominal),
-                    "Tolerance": f"{self.tolerance}",
-                    "Bounds": f"[{round(self.nominal-self.tolerance.lower)} {round(self.nominal+self.tolerance.upper)}]",
-                }
-            ]
-        ).astype(str)
-
-        display_df(df, title)
-
-
-class WC:
-    def __init__(self, stack: "Stack"):
-        self.stack = stack
-
-    @property
-    def mu(self):
-        return sum([item.mu_eff * item.a for item in self.stack.items])
-
-    @property
-    def tolerance(self) -> Union["SymmetricBilateral", "UnequalBilateral"]:
-        upper = sum(
-            filter(None, [item.tolerance_absolute.upper for item in self.stack.items])
-        )
-        lower = sum(
-            filter(None, [item.tolerance_absolute.lower for item in self.stack.items])
-        )
-        return Bilateral((upper + lower) / 2)
-
-    @property
-    def Z_min(self):
-        return self.mu - self.tolerance.lower
-
-    @property
-    def Z_max(self):
-        return self.mu + self.tolerance.upper
-
-    def show(self):
-        """This is a simple Worst-Case calculation"""
-        title = f"Worst Case - {self.stack.title}"
-        df = pd.DataFrame(
-            [
-                {
-                    "Value": round(self.mu),
-                    "Tolerance": f"{self.tolerance}",
-                    "Bounds": f"[{round(self.Z_min)} {round(self.Z_max)}]",
-                }
-            ]
-        ).astype(str)
-
-        display_df(df, title)
-
-
-class RSS:
-    """
-    This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
-    It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
-    Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
-    manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
-    probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
-    normal and the probability that it is ±t_rss between is 99.73%.
-    Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
-    for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
-    manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
-    The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
-    equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
-    plus the RSS variation at the gap.
-
-    # Dimensioning and Tolerancing Handbook, McGraw Hill
-    # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
-    """
-
-    def __init__(self, stack: "Stack") -> None:
-        self.stack = stack
-
-        # check if all items are the same process_sigma
-        # if len(set([item.process_sigma for item in self.items])) > 1:
-        #     raise ValueError(
-        #         "For simple RSS analysis, all items must have the same process_sigma"
-        #     )
-
-        # Convert all dimensions to mean dimensions with an equal bilateral tolerance
-
-    @property
-    def mu(self):
-        return sum([item.mu_eff * item.a for item in self.stack.items])
-
-    @property
-    def d_g(self):
-        return self.mu
-
-    @property
-    def t_wc(self):
-        return sum([abs(item.a * (item.tolerance.T / 2)) for item in self.stack.items])
-
-    @property
-    def t_rss(self):
-        return RSS_func(*[item.a * (item.tolerance.T / 2) for item in self.stack.items])
-
-    @property
-    def t_mrss(self):
-        n = len(self.stack.items)
-        C_f = (0.5 * (self.t_wc - self.t_rss)) / (self.t_rss * (np.sqrt(n) - 1)) + 1
-        return C_f * self.t_rss
-
-    @property
-    def sigma(self):
-        # return self.stack.sigma
-        return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
-
-    def yield_loss_probability(self, UL, LL):
-        return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
-
-    def yield_probability(self, UL, LL):
-        return 1 - self.yield_loss_probability(UL, LL)
-
-    def show(self):
-        title = f"RSS (assuming uniform mfg. process standard deviation of ±3σ) - {self.stack.title}"
-        df = pd.DataFrame(
-            [
-                # {
-                #     "Name": "Worst Case",
-                #     "Value": round(self.d_g),
-                #     "Tolerance".ljust(14, " "): f"± {str(round(self.t_wc))}".ljust(
-                #         14, " "
-                #     ),
-                #     "Bounds".ljust(
-                #         20, " "
-                #     ): f"[{round(self.d_g-self.t_wc)} {round(self.d_g+self.t_wc)}]".ljust(
-                #         20, " "
-                #     ),
-                #     "sigma": f"{round(self.sigma)}",
-                #     "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*100, 8)}",
-                #     "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_wc, self.d_g-self.t_wc)*1000000, 2)}",
-                # },
-                {
-                    "Name": "Modified RSS",
-                    "Value": round(self.d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_mrss))}".ljust(
-                        14, " "
-                    ),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(self.d_g-self.t_mrss)} {round(self.d_g+self.t_mrss)}]".ljust(
-                        20, " "
-                    ),
-                    "sigma": f"{round(self.sigma)}",
-                    "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_mrss, self.d_g-self.t_mrss)*100, 8)}",
-                    "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_mrss, self.d_g-self.t_mrss)*1000000, 2)}",
-                },
-                {
-                    "Name": "RSS",
-                    "Value": round(self.d_g),
-                    "Tolerance".ljust(14, " "): f"± {str(round(self.t_rss))}".ljust(
-                        14, " "
-                    ),
-                    "Bounds".ljust(
-                        20, " "
-                    ): f"[{round(self.d_g-self.t_rss)} {round(self.d_g+self.t_rss)}]".ljust(
-                        20, " "
-                    ),
-                    "sigma": f"{round(self.sigma)}",
-                    "Yield Probability": f"{round(self.yield_probability(self.d_g+self.t_rss, self.d_g-self.t_rss)*100, 8)}",
-                    "Reject PPM": f"{round(self.yield_loss_probability(self.d_g+self.t_rss, self.d_g-self.t_rss)*1000000, 2)}",
-                },
-            ]
-        ).astype(str)
-
-        display_df(df, title)
-        print(f"μ = {round(self.mu)}")
-        print(f"σ = {round(self.sigma)}")
-        print()
-
-
-class SixSigma:
-    def __init__(self, stack: "Stack") -> None:
-        self.stack = stack
-
-    @property
-    def mu(self):
-        return sum([item.mu_eff * item.a for item in self.stack.items])
-
-    @property
-    def sigma(self):
-        return RSS_func(*[item.sigma_eff * item.a for item in self.stack.items])
-
-    def yield_loss_probability(self, UL, LL):
-        return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
-
-    def yield_probability(self, UL, LL):
-        return 1 - self.yield_loss_probability(UL, LL)
-
-    def show(self):
-        # https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
-        title = f"'6 sigma' - {self.stack.title}"
-        df = pd.DataFrame(
-            [
-                {
-                    "Sigma": f"± {i}σ",
-                    "Mean": round(self.mu),
-                    "Tolerance": f"± {round(self.sigma * i)}",
-                    "Bounds": f"[{round(self.mu-self.sigma*i)} {round(self.mu+self.sigma*i)}]",
-                    "Yield Probability": f"{round(self.yield_probability(self.mu+self.sigma*i, self.mu-self.sigma*i)*100, 8)}",
-                    "Reject PPM": f"{round(self.yield_loss_probability(self.mu+self.sigma*i, self.mu-self.sigma*i)*1000000, 2)}",
-                }
-                for i in [6, 5, 4.5, 4, 3]
-            ]
-        ).astype(str)
-
-        display_df(df, title)
-        print(f"μ = {round(self.mu)}")
-        print(f"σ = {round(self.sigma)}")
-        print()
 
 
 class SymmetricBilateral:
@@ -436,7 +88,7 @@ def Bilateral(upper: float, lower: float = None):
             return UnequalBilateral(upper, lower)
 
 
-class Dimension:
+class BasicDimension:
     """
     A measurement is a single measurement of a part.
 
@@ -458,28 +110,40 @@ class Dimension:
         nom: float,
         tol: Union[SymmetricBilateral, UnequalBilateral],
         a: float = 1,
-        process_sigma: float = 3,
-        k: float = 0,
-        distribution: str = "Normal",
         name: str = "Dimension",
         desc: str = "Dimension",
     ):
-        self.id = Dimension.newID()
+        self.id = BasicDimension.newID()
+        self.dirMul = sign(nom)
         self.nominal = abs(nom)
         self.tolerance = tol
         self.a = a * sign(nom)  # sensitivity
-        self.process_sigma = process_sigma
-        self.k = k
-        self.distribution = distribution
         self.name = name
         self.description = desc
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.direction}{round(self.nominal)} {repr(self.tolerance)} @ ± {self.process_sigma}σ (σ={self.sigma})"
+        return f"{self.id}: {self.name} {self.description} {self.direction}{round(self.nominal)} {repr(self.tolerance)}"
+
+    def show(self):
+        data = [
+            {
+                "ID": self.id,
+                "Name": self.name,
+                "Description": (self.description),
+                "dir": self.direction,
+                "Nom.": round(self.nominal),
+                "Tol.": (repr(self.tolerance)).ljust(14, " "),
+                "Sen.": str(self.a),
+                "Relative Bounds": f"[{round(self.lower_rel)}, {round(self.upper_rel)}]",
+                "μ": round(self.mu),
+            }
+        ]
+
+        display_df(data, self.name)
 
     @property
     def direction(self):
-        if self.a >= 0:
+        if self.dirMul >= 0:
             return POSITIVE
         else:
             return NEGATIVE
@@ -492,12 +156,91 @@ class Dimension:
             return Bilateral(self.tolerance.lower, self.tolerance.upper)
 
     @property
+    def Z_min(self):
+        """The minimum value of the measurement. AKA, absolute upper"""
+        return self.dirMul * (self.nominal - self.tolerance.lower)
+
+    @property
+    def Z_max(self):
+        """The maximum value of the measurement. AKA, absolute lower"""
+        return self.dirMul * (self.nominal + self.tolerance.upper)
+
+    @property
     def lower_rel(self):
         return self.nominal - self.tolerance.lower
 
     @property
     def upper_rel(self):
         return self.nominal + self.tolerance.upper
+
+    @property
+    def mu(self):
+        return (self.lower_rel + self.upper_rel) / 2
+
+
+class StatisticalDimension(BasicDimension):
+    def __init__(
+        self,
+        process_sigma: float = 3,
+        k: float = 0,
+        distribution: str = "Normal",
+        *args,
+        **kwargs,
+    ):
+        super(StatisticalDimension, self).__init__(*args, **kwargs)
+        self.distribution = distribution
+        self.process_sigma = process_sigma
+        self.k = k
+
+    def __repr__(self) -> str:
+        return f"{self.id}: {self.name} {self.description} {self.direction}{round(self.nominal)} {repr(self.tolerance)} @ ±{self.process_sigma}σ & k={self.k}"
+
+    @classmethod
+    def fromBasic(
+        cls,
+        basic: BasicDimension,
+        process_sigma: float = 3,
+        k: float = 0,
+        distribution: str = "Normal",
+    ):
+        if type(basic) is StatisticalDimension:
+            return basic
+        return cls(
+            nom=basic.nominal,
+            tol=basic.tolerance,
+            a=basic.a,
+            name=basic.name,
+            desc=basic.description,
+            process_sigma=process_sigma,
+            k=k,
+            distribution=distribution,
+        )
+
+    def show(self):
+        data = [
+            {
+                "ID": self.id,
+                "Name": self.name,
+                "Description": (self.description),
+                "dir": self.direction,
+                "Nom.": round(self.nominal),
+                "Tol.": (repr(self.tolerance)).ljust(14, " "),
+                "Sen.": str(self.a),
+                "Relative Bounds": f"[{round(self.lower_rel)}, {round(self.upper_rel)}]",
+                "Process Sigma": f"± {str(round(self.process_sigma))}σ",
+                "μ": round(self.mu),
+                "σ": round(self.sigma),
+                "C_p": round(self.C_p),
+                "k": round(self.k),
+                "C_pk": round(self.C_pk),
+                "μ_eff": round(self.mu_eff),
+                "σ_eff": round(self.sigma_eff),
+                "Yield Probability": f"{round(self.yield_probability*100, 8)}",
+                "Reject PPM": f"{round(self.yield_loss_probability*1000000, 2)}",
+            }
+        ]
+
+        display_df(data, self.name)
 
     @property
     def sigma(self):
@@ -509,7 +252,8 @@ class Dimension:
 
     @property
     def C_p(self):
-        return C_p(self.upper_rel, self.lower_rel, self.sigma)
+        sigma = abs(self.tolerance.T / 2) / self.process_sigma
+        return C_p(self.upper_rel, self.lower_rel, sigma)
 
     @property
     def C_pk(self):
@@ -528,108 +272,289 @@ class Dimension:
         """
         return abs(self.tolerance.T) / (6 * self.C_pk)
 
+    @property
+    def yield_loss_probability(self):
+        UL = self.upper_rel
+        LL = self.lower_rel
+        return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
+
+    @property
+    def yield_probability(self):
+        return 1 - self.yield_loss_probability
+
 
 class Stack:
-    def __init__(self, title: str = "Stack", items: List[Dimension] = []):
+    def __init__(
+        self,
+        title: str = "Stack",
+        items: List[Union[BasicDimension, StatisticalDimension]] = [],
+    ):
         self.title = title
         self.items = items
 
     def __repr__(self) -> str:
         return f"{self.title}"
 
-    def append(self, measurement: Dimension):
+    def append(self, measurement: Union[BasicDimension, StatisticalDimension]):
         self.items.append(measurement)
 
     @property
-    def Closed(self) -> Closed:
-        return Closed(self)
+    def Closed(self) -> BasicDimension:
+        nominal = sum([item.nominal * item.a for item in self.items])
+        tolerance = Bilateral(
+            sum(filter(None, [item.tolerance_absolute.upper for item in self.items])),
+            sum(filter(None, [item.tolerance_absolute.lower for item in self.items])),
+        )
+        return BasicDimension(
+            nominal,
+            tolerance,
+            name="Closed",
+            desc=f"{self.title}",
+        )
 
     @property
-    def WC(self) -> WC:
-        return WC(self)
+    def WC(self) -> BasicDimension:
+        mu = sum([item.mu * item.a for item in self.items])
+        upper = sum(
+            filter(None, [item.tolerance_absolute.upper for item in self.items])
+        )
+        lower = sum(
+            filter(None, [item.tolerance_absolute.lower for item in self.items])
+        )
+        tolerance = Bilateral((upper + lower) / 2)
+        return BasicDimension(
+            nom=mu,
+            tol=tolerance,
+            name="WC",
+            desc=f"{self.title}",
+        )
 
     @property
-    def RSS(self) -> RSS:
-        return RSS(self)
+    def RSS(self) -> StatisticalDimension:
+        """
+        This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
+        It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
+        Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
+        manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
+        probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
+        normal and the probability that it is ±t_rss between is 99.73%.
+        Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
+        for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
+        manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
+        The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
+        equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
+        plus the RSS variation at the gap.
+
+        # Dimensioning and Tolerancing Handbook, McGraw Hill
+        # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
+        """
+        items: List[StatisticalDimension] = [
+            StatisticalDimension.fromBasic(item) for item in self.items
+        ]
+        d_g = sum([item.mu_eff * item.a for item in items])
+        t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
+        tolerance = Bilateral(t_rss)
+        return StatisticalDimension(
+            nom=d_g,
+            tol=tolerance,
+            name="RSS",
+            desc=f"{self.title}",
+        )
 
     @property
-    def SixSigma(self) -> SixSigma:
-        return SixSigma(self)
+    def MRSS(self) -> StatisticalDimension:
+        items: List[StatisticalDimension] = [
+            StatisticalDimension.fromBasic(item) for item in self.items
+        ]
+        d_g = sum([item.mu_eff * item.a for item in items])
+        t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
+        t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
+        n = len(self.items)
+        C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
+        t_mrss = C_f * t_rss
+        tolerance = Bilateral(t_mrss)
+        return StatisticalDimension(
+            nom=d_g,
+            tol=tolerance,
+            name="MRSS",
+            desc=f"{self.title}",
+        )
+
+    def SixSigma(self, at: float = 3) -> StatisticalDimension:
+        items: List[StatisticalDimension] = [
+            StatisticalDimension.fromBasic(item) for item in self.items
+        ]
+        mu = sum([item.mu_eff * item.dirMul for item in items])
+        sigma = RSS_func(*[item.sigma_eff * item.dirMul for item in items])
+        tolerance = Bilateral(sigma * at)
+        return StatisticalDimension(
+            nom=mu,
+            tol=tolerance,
+            process_sigma=at,
+            name="'6 Sigma'",
+            desc=f"{self.title}",
+        )
+
+    def show(self):
+        data = [
+            {
+                "ID": item.id,
+                "Name": item.name,
+                "Description": (item.description),
+                "dir": item.direction,
+                "Nom.": round(item.nominal),
+                "Tol.": (repr(item.tolerance)).ljust(14, " "),
+                "Sen.": str(item.a),
+                "Relative Bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
+                # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
+                "Process Sigma": f"± {str(round(item.process_sigma))}σ"
+                if hasattr(item, "process_sigma")
+                else "",
+                "μ": round(item.mu),
+                "σ": round(item.sigma) if hasattr(item, "sigma") else "",
+                "C_p": round(item.C_p) if hasattr(item, "C_p") else "",
+                "k": round(item.k) if hasattr(item, "k") else "",
+                "C_pk": round(item.C_pk) if hasattr(item, "C_pk") else "",
+                "μ_eff": round(item.mu_eff) if hasattr(item, "mu_eff") else "",
+                "σ_eff": round(item.sigma_eff) if hasattr(item, "sigma_eff") else "",
+                "Yield Probability": f"{round(item.yield_probability*100, 8)}"
+                if hasattr(item, "yield_probability")
+                else "",
+                "Reject PPM": f"{round(item.yield_loss_probability*1000000, 2)}"
+                if hasattr(item, "yield_loss_probability")
+                else "",
+            }
+            for item in self.items
+        ]
+
+        display_df(data, self.title)
+
+    # def show_length_chart(self):
+    #     fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
+    #     axs.grid()
+    #     axs.set_axisbelow(True)
+    #     axs.axvline(0, label="DATUM", alpha=0.6)
+
+    #     # determine rough plot length to size the arrow heads
+    #     max = 0
+    #     min = 0
+    #     last_part_x = 0
+    #     for item in self.items:
+    #         last_part_x = last_part_x + item.nominal * item.a
+    #         if last_part_x > max:
+    #             max = last_part_x
+    #         if last_part_x < min:
+    #             min = last_part_x
+    #     head_width = (max + min) * 0.001
+    #     # head_width = 0.1
+
+    #     # draw arrows
+    #     num_of_parts = len(self.items)
+    #     last_part_x = 0
+    #     for i in range(num_of_parts):
+    #         item = self.items[i]
+    #         axs.arrow(
+    #             x=last_part_x,
+    #             dx=item.nominal * item.a,
+    #             y=i,
+    #             dy=0,
+    #             width=head_width / 5,
+    #             length_includes_head=True,
+    #             head_width=head_width,
+    #             head_length=head_width * 50,
+    #             color=(0, 0, 0),
+    #         )
+
+    #         last_part_x = last_part_x + item.nominal * item.a
+    #     axs.set_yticks(range(len(self.items)))
+    #     axs.set_yticklabels([item.name for item in self.items])
+    #     axs.invert_yaxis()
+    #     axs.set_title("Nominal Stackup Flow Chart")
+    #     axs.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
+
+    #     fig.tight_layout()
+
+    # return fig
+
+
+class Assembly:
+    def __init__(
+        self, name, description, dim: StatisticalDimension, LL, UL, process_sigma=3
+    ):
+        self.name = name
+        self.description = description
+        self.dim = dim
+        self.LL = LL
+        self.UL = UL
+        self.process_sigma = process_sigma
+
+    @property
+    def mu(self):
+        """mean"""
+        return (self.LL + self.UL) / 2
+
+    # @property
+    # def sigma(self):
+    #     """standard deviation"""
+    #     return (self.UL - self.LL) / self.process_sigma
+
+    @property
+    def k(self):
+        """k"""
+        return abs((self.dim.mu - self.mu) / (3 * self.dim.sigma))
+
+    @property
+    def C_p(self):
+        return C_p(self.UL, self.LL, self.dim.sigma)
+
+    @property
+    def C_pk(self):
+        # return C_pk(self.C_p, self.k)
+        return min(
+            (self.UL - self.dim.mu) / (3 * self.dim.sigma),
+            (self.dim.mu - self.LL) / (3 * self.dim.sigma),
+        )
+
+    @property
+    def yield_loss_probability(self):
+        return (
+            1
+            - norm_cdf(self.UL, self.dim.mu, self.dim.sigma)
+            + norm_cdf(self.LL, self.dim.mu, self.dim.sigma)
+        )
+
+    @property
+    def yield_probability(self):
+        return 1 - self.yield_loss_probability
+
+    @property
+    def R(self):
+        """Return the yield loss probability in PPM"""
+        return self.yield_loss_probability * 1000000
 
     def show(self):
         # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
-        df = pd.DataFrame(
-            [
-                {
-                    "ID": item.id,
-                    "Name": item.name,
-                    "Description": (item.description),
-                    "dir": item.direction,
-                    "Nominal": round(item.nominal),
-                    "Tolerance": (repr(item.tolerance)).ljust(14, " "),
-                    "Process Sigma": f"± {str(item.process_sigma)}σ",
-                    "Sensitivity": str(item.a),
-                    "Relative Bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
-                    # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
-                    "σ": round(item.sigma),
-                    "C_p": round(item.C_p),
-                    "k": round(item.k),
-                    "C_pk": round(item.C_pk),
-                    "μ_eff": round(item.mu_eff),
-                    "σ_eff": round(item.sigma_eff),
-                }
-                for item in self.items
-            ]
-        ).astype(str)
+        data = [
+            {
+                "Name": self.name,
+                "Description": (self.description),
+                # "dir": self.direction,
+                # "Nom.": round(self.nominal),
+                # "Tol.": (repr(self.tolerance)).ljust(14, " "),
+                "Relative Bounds": f"[{round(self.LL)}, {round(self.UL)}]",
+                # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
+                "Process Sigma": f"± {str(round(self.process_sigma))}σ",
+                "μ": round(self.mu),
+                # "σ": round(self.sigma),
+                "C_p": round(self.C_p),
+                "k": round(self.k),
+                "C_pk": round(self.C_pk),
+                "Yield Probability": f"{round(self.yield_probability*100, 8)}",
+                "Reject PPM": f"{round(self.R, 2)}",
+            }
+        ]
 
-        display_df(df, self.title)
-
-    def show_length_chart(self):
-        fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
-        axs.grid()
-        axs.set_axisbelow(True)
-        axs.axvline(0, label="DATUM", alpha=0.6)
-
-        # determine rough plot length to size the arrow heads
-        max = 0
-        min = 0
-        last_part_x = 0
-        for item in self.items:
-            last_part_x = last_part_x + item.nominal * item.a
-            if last_part_x > max:
-                max = last_part_x
-            if last_part_x < min:
-                min = last_part_x
-        head_width = (max + min) * 0.001
-        # head_width = 0.1
-
-        # draw arrows
-        num_of_parts = len(self.items)
-        last_part_x = 0
-        for i in range(num_of_parts):
-            item = self.items[i]
-            axs.arrow(
-                x=last_part_x,
-                dx=item.nominal * item.a,
-                y=i,
-                dy=0,
-                width=head_width / 5,
-                length_includes_head=True,
-                head_width=head_width,
-                head_length=head_width * 50,
-                color=(0, 0, 0),
-            )
-
-            last_part_x = last_part_x + item.nominal * item.a
-        axs.set_yticks(range(len(self.items)))
-        axs.set_yticklabels([item.name for item in self.items])
-        axs.invert_yaxis()
-        axs.set_title("Nominal Stackup Flow Chart")
-        axs.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
-
-        fig.tight_layout()
-
-        # return fig
+        display_df(data, self.name)
 
 
 if __name__ == "__main__":
