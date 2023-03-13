@@ -138,6 +138,12 @@ OR
 .\.venv\Scripts\activate
 ```
 
+### Testing 
+
+```
+python -m unittest discover .\tests\
+```
+
 # Acknowledgements
 
 - http://www.newconceptzdesign.com/stackups/
