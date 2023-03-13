@@ -84,14 +84,13 @@ class McGrawHill(unittest.TestCase):
     # self.assertEqual(dimstack.utils.nround(stack.Closed.tolerance.lower), 0.233)
 
     def test_WC(self):
-        # self.assertEqual(dimstack.utils.nround(stack.WC.mu), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.WC.mu), 0.0615)
         self.assertEqual(dimstack.utils.nround(stack.WC.tolerance.T / 2), 0.0955)
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_min, 5), -0.034)
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_max, 3), 0.157)
 
     def test_RSS(self):
-        # self.assertEqual(dimstack.utils.nround(stack.RSS.mu), 0.4)
-        # self.assertEqual(dimstack.utils.nround(stack.RSS.nominal), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.RSS.mu), 0.0615)
         self.assertEqual(dimstack.utils.nround(stack.RSS.tolerance.T / 2, 3), 0.038)  # 0.0381
         self.assertEqual(dimstack.utils.nround(stack.RSS.Z_min), 0.02395)  # 0.0234
         self.assertEqual(dimstack.utils.nround(stack.RSS.Z_max), 0.09905)  # 0.0996
@@ -103,12 +102,12 @@ class McGrawHill(unittest.TestCase):
 
     #     self.assertEqual(dimstack.utils.nround(assy.R, 1), 0.0)
 
-    # def test_MRSS(self):
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.mu), 0.4)
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.nominal), 0.4)
-    #     # self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.17825)
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.2405)
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.sigma, 6), 0.059417)
+    def test_MRSS(self):
+        self.assertEqual(dimstack.utils.nround(stack.MRSS.mu), 0.0615)
+        self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.04919)  # 0.0505
+        self.assertEqual(dimstack.utils.nround(stack.MRSS.Z_min, 3), 0.012)  # 0.0110
+        self.assertEqual(dimstack.utils.nround(stack.MRSS.Z_max, 3), 0.111)  # 0.1120
+        # self.assertEqual(dimstack.utils.nround(stack.MRSS.sigma, 6), 0.059417)
 
     # def test_SixSigma(self):
     #     self.assertEqual(dimstack.utils.nround(stack.items[0].C_p), 2)
