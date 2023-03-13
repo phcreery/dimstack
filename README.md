@@ -3,9 +3,33 @@
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 
 https://pdm.fming.dev/latest/
-`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py -UseBasicParsing).Content | python -`
-`C:\Users\phcre\AppData\Roaming\Python\Scripts\pdm.exe install`
-`C:\Users\phcre\AppData\Roaming\Python\Scripts\pdm.exe add `
+
+## Notebooks
+
+```
+cd notebooks
+jupyter lite init
+
+jupyter lite build --contents .
+jupyter lite serve
+```
+
+```
+import piplite
+await piplite.install('dimstack', keep_going=True)
+```
+
+OR
+
+```
+%pip install -q dimstack
+```
+
+## Dev
+
+`C:\Users\phcre\AppData\Roaming\Python\Scripts\pdm.exe add [package]`
+
+`C:\Users\phcre\AppData\Roaming\Python\Scripts\pdm.exe build`
 
 ```
 .\.venv\Scripts\activate

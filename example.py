@@ -1,5 +1,6 @@
-import dimstack.tolerance
 import dimstack.display
+import dimstack.tolerance
+import dimstack.eval
 
 # import reference.stackups.stackups as stackups
 
@@ -48,7 +49,7 @@ dimstack.display.display_mode("text")
 # )
 # items = [m1, m2, m3, m4]
 
-m1 = dimstack.tolerance.StatisticalDimension(
+m1 = dimstack.eval.StatisticalDimension(
     nom=208,
     tol=SymmetricBilateral(0.036),
     process_sigma=6,
@@ -56,39 +57,33 @@ m1 = dimstack.tolerance.StatisticalDimension(
     name="a",
     desc="Shaft",
 )
-m2 = dimstack.tolerance.StatisticalDimension(
+m2 = dimstack.eval.StatisticalDimension(
     nom=-1.75,
     tol=UnequalBilateral(0, 0.06),
     process_sigma=3,
     name="b",
     desc="Retainer ring",
 )
-m3 = dimstack.tolerance.StatisticalDimension(
-    nom=-23, tol=UnequalBilateral(0, 0.12), process_sigma=3, name="c", desc="Bearing"
-)
-m4 = dimstack.tolerance.StatisticalDimension(
+m3 = dimstack.eval.StatisticalDimension(nom=-23, tol=UnequalBilateral(0, 0.12), process_sigma=3, name="c", desc="Bearing")
+m4 = dimstack.eval.StatisticalDimension(
     nom=20,
     tol=SymmetricBilateral(0.026),
     process_sigma=3,
     name="d",
     desc="Bearing Sleeve",
 )
-m5 = dimstack.tolerance.StatisticalDimension(
-    nom=-200, tol=SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case"
-)
-m6 = dimstack.tolerance.BasicDimension(
+m5 = dimstack.eval.StatisticalDimension(nom=-200, tol=SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case")
+m6 = dimstack.eval.BasicDimension(
     nom=20,
     tol=SymmetricBilateral(0.026),
     # process_sigma=3,
     name="f",
     desc="Bearing Sleeve",
 )
-m7 = dimstack.tolerance.StatisticalDimension(
-    nom=-23, tol=UnequalBilateral(0, 0.12), process_sigma=3, name="g", desc="Bearing"
-)
+m7 = dimstack.eval.StatisticalDimension(nom=-23, tol=UnequalBilateral(0, 0.12), process_sigma=3, name="g", desc="Bearing")
 items = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = dimstack.tolerance.Stack(title="stacks on stacks", items=items)
+stack = dimstack.eval.Stack(title="stacks on stacks", items=items)
 
 stack.show()
 stack.Closed.show()
@@ -102,7 +97,5 @@ stack.MRSS.show()
 eval = stack.SixSigma(at=4.5)
 eval.show()
 
-assy = dimstack.tolerance.Assembly(
-    "assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5
-)
+assy = dimstack.eval.Assembly("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
 assy.show()

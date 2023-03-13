@@ -1,91 +1,19 @@
-import numpy as np
 import itertools
 
-# import pandas as pd
 from typing import List, Union
 
-from dimstack.stats import C_p, C_pk, RSS_func, norm_cdf
-
-# from dimstack.analysis import Closed, WC, RSS, SixSigma
-from dimstack.display import display_df
+from .display import display_df
+from .stats import C_p, C_pk, RSS_func, norm_cdf
+from .tolerance import SymmetricBilateral, UnequalBilateral, Bilateral
+from .utils import nround, sign
 
 POSITIVE = "+"
 NEGATIVE = "-"
-DECIMALS = 5
-DIST_NORMAL = "Normal"  # Normal distribution.
-DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
-DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used
-DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
-DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
-
-
-def round(x, n=DECIMALS):
-    return np.around(x, decimals=n)
-
-
-def sign(x):
-    """Return the sign of x, i.e. -1, 0 or 1.
-
-    >>> sign(0)
-    0
-    >>> sign(10)
-    1
-    >>> sign(-10)
-    -1
-    """
-    return (x > 0) - (x < 0)
-
-
-class SymmetricBilateral:
-    """Bilateral tolerancing is a method of specifying a tolerance that is symmetrical about the nominal value.
-    This is the most common type of tolerancing.
-    """
-
-    def __init__(self, tol: float):
-        self._tol = abs(tol)
-
-    def __repr__(self) -> str:
-        return f"± {round(self.T/2)}"
-
-    @property
-    def upper(self):
-        return self._tol
-
-    @property
-    def lower(self):
-        return self._tol
-
-    @property
-    def T(self):
-        return 2 * self._tol
-
-
-class UnequalBilateral:
-    """
-    Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
-    This can also be used for Unilateral tolerancing.
-    """
-
-    def __init__(self, upper: float, lower: float):
-        self.upper = abs(upper)
-        self.lower = abs(lower)
-
-    def __repr__(self) -> str:
-        return f"+ {round(self.upper)} / - {round(self.lower)}"
-
-    @property
-    def T(self):
-        return self.upper - self.lower
-
-
-def Bilateral(upper: float, lower: float = None):
-    if lower is None:
-        return SymmetricBilateral(upper)
-    else:
-        if upper == lower:
-            return SymmetricBilateral(upper)
-        else:
-            return UnequalBilateral(upper, lower)
+# DIST_NORMAL = "Normal"  # Normal distribution.
+# DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
+# DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used.
+# DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
+# DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
 
 
 class BasicDimension:
@@ -95,9 +23,11 @@ class BasicDimension:
     Args:
         nom (float, optional): The nominal value of the measurement. Defaults to 0.
         tol (Union[SymmetricBilateral, UnequalBilateral], optional): The tolerance of the measurement. Defaults to SymmetricBilateral(0).
-        a (float, optional): The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1 and the nominal value will be made positive.
+        a (float, optional): The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
+                            and the nominal value will be made positive.
         process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
-        k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process standard deviation. Defaults to 0σ.
+        k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
+                            standard deviation. Defaults to 0σ.
         distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
         name (str, optional): The name of the measurement. Defaults to "Dimension".
         desc (str, optional): The description of the measurement. Defaults to "Dimension".
@@ -122,7 +52,7 @@ class BasicDimension:
         self.description = desc
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.direction}{round(self.nominal)} {repr(self.tolerance)}"
+        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)}"
 
     def show(self):
         data = [
@@ -131,11 +61,11 @@ class BasicDimension:
                 "Name": self.name,
                 "Description": (self.description),
                 "dir": self.direction,
-                "Nom.": round(self.nominal),
+                "Nom.": nround(self.nominal),
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": str(self.a),
-                "Relative Bounds": f"[{round(self.lower_rel)}, {round(self.upper_rel)}]",
-                "μ": round(self.mu),
+                "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+                "μ": nround(self.mu),
             }
         ]
 
@@ -193,12 +123,12 @@ class StatisticalDimension(BasicDimension):
         self.k = k
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.direction}{round(self.nominal)} {repr(self.tolerance)} @ ±{self.process_sigma}σ & k={self.k}"
+        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)} @ ±{self.process_sigma}σ & k={self.k}"
 
     @classmethod
     def fromBasic(
         cls,
-        basic: BasicDimension,
+        basic: Union[BasicDimension, "StatisticalDimension"],
         process_sigma: float = 3,
         k: float = 0,
         distribution: str = "Normal",
@@ -223,20 +153,20 @@ class StatisticalDimension(BasicDimension):
                 "Name": self.name,
                 "Description": (self.description),
                 "dir": self.direction,
-                "Nom.": round(self.nominal),
+                "Nom.": nround(self.nominal),
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": str(self.a),
-                "Relative Bounds": f"[{round(self.lower_rel)}, {round(self.upper_rel)}]",
-                "Process Sigma": f"± {str(round(self.process_sigma))}σ",
-                "μ": round(self.mu),
-                "σ": round(self.sigma),
-                "C_p": round(self.C_p),
-                "k": round(self.k),
-                "C_pk": round(self.C_pk),
-                "μ_eff": round(self.mu_eff),
-                "σ_eff": round(self.sigma_eff),
-                "Yield Probability": f"{round(self.yield_probability*100, 8)}",
-                "Reject PPM": f"{round(self.yield_loss_probability*1000000, 2)}",
+                "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+                "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
+                "μ": nround(self.mu),
+                "σ": nround(self.sigma),
+                "C_p": nround(self.C_p),
+                "k": nround(self.k),
+                "C_pk": nround(self.C_pk),
+                "μ_eff": nround(self.mu_eff),
+                "σ_eff": nround(self.sigma_eff),
+                "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
+                "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
             }
         ]
 
@@ -315,12 +245,8 @@ class Stack:
     @property
     def WC(self) -> BasicDimension:
         mu = sum([item.mu * item.a for item in self.items])
-        upper = sum(
-            filter(None, [item.tolerance_absolute.upper for item in self.items])
-        )
-        lower = sum(
-            filter(None, [item.tolerance_absolute.lower for item in self.items])
-        )
+        upper = sum(filter(None, [item.tolerance_absolute.upper for item in self.items]))
+        lower = sum(filter(None, [item.tolerance_absolute.lower for item in self.items]))
         tolerance = Bilateral((upper + lower) / 2)
         return BasicDimension(
             nom=mu,
@@ -348,9 +274,7 @@ class Stack:
         # Dimensioning and Tolerancing Handbook, McGraw Hill
         # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
         """
-        items: List[StatisticalDimension] = [
-            StatisticalDimension.fromBasic(item) for item in self.items
-        ]
+        items: List[StatisticalDimension] = [StatisticalDimension.fromBasic(item) for item in self.items]
         d_g = sum([item.mu_eff * item.a for item in items])
         t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
         tolerance = Bilateral(t_rss)
@@ -363,14 +287,12 @@ class Stack:
 
     @property
     def MRSS(self) -> StatisticalDimension:
-        items: List[StatisticalDimension] = [
-            StatisticalDimension.fromBasic(item) for item in self.items
-        ]
+        items: List[StatisticalDimension] = [StatisticalDimension.fromBasic(item) for item in self.items]
         d_g = sum([item.mu_eff * item.a for item in items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
         t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
         n = len(self.items)
-        C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (np.sqrt(n) - 1)) + 1
+        C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1)) + 1
         t_mrss = C_f * t_rss
         tolerance = Bilateral(t_mrss)
         return StatisticalDimension(
@@ -381,9 +303,7 @@ class Stack:
         )
 
     def SixSigma(self, at: float = 3) -> StatisticalDimension:
-        items: List[StatisticalDimension] = [
-            StatisticalDimension.fromBasic(item) for item in self.items
-        ]
+        items: List[StatisticalDimension] = [StatisticalDimension.fromBasic(item) for item in self.items]
         mu = sum([item.mu_eff * item.dirMul for item in items])
         sigma = RSS_func(*[item.sigma_eff * item.dirMul for item in items])
         tolerance = Bilateral(sigma * at)
@@ -402,27 +322,21 @@ class Stack:
                 "Name": item.name,
                 "Description": (item.description),
                 "dir": item.direction,
-                "Nom.": round(item.nominal),
+                "Nom.": nround(item.nominal),
                 "Tol.": (repr(item.tolerance)).ljust(14, " "),
                 "Sen.": str(item.a),
-                "Relative Bounds": f"[{round(item.lower_rel)}, {round(item.upper_rel)}]",
-                # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
-                "Process Sigma": f"± {str(round(item.process_sigma))}σ"
-                if hasattr(item, "process_sigma")
-                else "",
-                "μ": round(item.mu),
-                "σ": round(item.sigma) if hasattr(item, "sigma") else "",
-                "C_p": round(item.C_p) if hasattr(item, "C_p") else "",
-                "k": round(item.k) if hasattr(item, "k") else "",
-                "C_pk": round(item.C_pk) if hasattr(item, "C_pk") else "",
-                "μ_eff": round(item.mu_eff) if hasattr(item, "mu_eff") else "",
-                "σ_eff": round(item.sigma_eff) if hasattr(item, "sigma_eff") else "",
-                "Yield Probability": f"{round(item.yield_probability*100, 8)}"
-                if hasattr(item, "yield_probability")
-                else "",
-                "Reject PPM": f"{round(item.yield_loss_probability*1000000, 2)}"
-                if hasattr(item, "yield_loss_probability")
-                else "",
+                "Relative Bounds": f"[{nround(item.lower_rel)}, {nround(item.upper_rel)}]",
+                # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
+                "Process Sigma": f"± {str(nround(item.process_sigma))}σ" if hasattr(item, "process_sigma") else "",
+                "μ": nround(item.mu),
+                "σ": nround(item.sigma) if hasattr(item, "sigma") else "",
+                "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
+                "k": nround(item.k) if hasattr(item, "k") else "",
+                "C_pk": nround(item.C_pk) if hasattr(item, "C_pk") else "",
+                "μ_eff": nround(item.mu_eff) if hasattr(item, "mu_eff") else "",
+                "σ_eff": nround(item.sigma_eff) if hasattr(item, "sigma_eff") else "",
+                "Yield Probability": f"{nround(item.yield_probability*100, 8)}" if hasattr(item, "yield_probability") else "",
+                "Reject PPM": f"{nround(item.yield_loss_probability*1000000, 2)}" if hasattr(item, "yield_loss_probability") else "",
             }
             for item in self.items
         ]
@@ -478,9 +392,7 @@ class Stack:
 
 
 class Assembly:
-    def __init__(
-        self, name, description, dim: StatisticalDimension, LL, UL, process_sigma=3
-    ):
+    def __init__(self, name, description, dim: StatisticalDimension, LL, UL, process_sigma=3):
         self.name = name
         self.description = description
         self.dim = dim
@@ -517,11 +429,7 @@ class Assembly:
 
     @property
     def yield_loss_probability(self):
-        return (
-            1
-            - norm_cdf(self.UL, self.dim.mu, self.dim.sigma)
-            + norm_cdf(self.LL, self.dim.mu, self.dim.sigma)
-        )
+        return 1 - norm_cdf(self.UL, self.dim.mu, self.dim.sigma) + norm_cdf(self.LL, self.dim.mu, self.dim.sigma)
 
     @property
     def yield_probability(self):
@@ -539,18 +447,18 @@ class Assembly:
                 "Name": self.name,
                 "Description": (self.description),
                 # "dir": self.direction,
-                # "Nom.": round(self.nominal),
+                # "Nom.": nround(self.nominal),
                 # "Tol.": (repr(self.tolerance)).ljust(14, " "),
-                "Relative Bounds": f"[{round(self.LL)}, {round(self.UL)}]",
-                # "Absolute Bounds": f"[{round(item.lower_rel)}, {round(item.max_rel)}]",
-                "Process Sigma": f"± {str(round(self.process_sigma))}σ",
-                "μ": round(self.mu),
-                # "σ": round(self.sigma),
-                "C_p": round(self.C_p),
-                "k": round(self.k),
-                "C_pk": round(self.C_pk),
-                "Yield Probability": f"{round(self.yield_probability*100, 8)}",
-                "Reject PPM": f"{round(self.R, 2)}",
+                "Relative Bounds": f"[{nround(self.LL)}, {nround(self.UL)}]",
+                # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
+                "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
+                "μ": nround(self.mu),
+                # "σ": nround(self.sigma),
+                "C_p": nround(self.C_p),
+                "k": nround(self.k),
+                "C_pk": nround(self.C_pk),
+                "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
+                "Reject PPM": f"{nround(self.R, 2)}",
             }
         ]
 

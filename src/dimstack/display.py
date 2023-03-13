@@ -1,5 +1,6 @@
 import pandas as pd
-from IPython.display import display
+
+# from IPython.display import display
 
 # import matplotlib.pyplot as plt
 
@@ -32,7 +33,7 @@ def display_df(data: dict, title: str = None):
             print(f"{title}")
         print(df.to_string(index=False))
         print()
-    elif DISPLAY_MODE == "plot":
-        return display(df.style.hide(axis="index").set_caption(title))
+    # elif DISPLAY_MODE == "plot":
+    #     return display(df.style.hide(axis="index").set_caption(title))
     elif DISPLAY_MODE == "df":
         return df
