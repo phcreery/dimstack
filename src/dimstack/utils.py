@@ -1,8 +1,30 @@
+import math
+from decimal import Decimal, ROUND_HALF_UP
+
 DECIMALS = 5
 
 
-def nround(x, n=DECIMALS):
-    return round(x, n)
+def nround(number, ndigits=DECIMALS):
+    """
+    Always round off
+    >>> nround(4.114, 2)
+    4.11
+    >>> nround(4.115, 2)
+    4.12
+    >>> nround(4.116, 2)
+    4.12
+    >>> nround(-0.03401, 3)
+    -0.034
+    """
+    # return round(number, ndigits)
+    # https://stackoverflow.com/questions/43851273/how-to-round-float-0-5-up-to-1-0-while-still-rounding-0-45-to-0-0-as-the-usual
+    # exp = number * 10**ndigits
+    # if abs(exp) - abs(math.floor(exp)) < 0.5:
+    #     return type(number)(math.floor(exp) / 10**ndigits)
+    # return type(number)(math.ceil(exp) / 10**ndigits)
+
+    exp = Decimal("1.{}".format(ndigits * "0")) if ndigits else Decimal("1")
+    return type(number)(Decimal(number).quantize(exp, ROUND_HALF_UP))
 
 
 def sign(x):
@@ -16,3 +38,9 @@ def sign(x):
     -1
     """
     return (x > 0) - (x < 0)
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
