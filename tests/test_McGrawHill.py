@@ -107,7 +107,6 @@ class McGrawHill(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.04919)  # 0.0505
         self.assertEqual(dimstack.utils.nround(stack.MRSS.Z_min, 3), 0.012)  # 0.0110
         self.assertEqual(dimstack.utils.nround(stack.MRSS.Z_max, 3), 0.111)  # 0.1120
-        # self.assertEqual(dimstack.utils.nround(stack.MRSS.sigma, 6), 0.059417)
 
     # def test_SixSigma(self):
     #     self.assertEqual(dimstack.utils.nround(stack.items[0].C_p), 2)
