@@ -81,3 +81,7 @@ def norm_cdf(x, mu=0, sigma=1):
     0.9772498680518209
     """
     return 0.5 * (1 + math.erf((x - mu) / (sigma * (2**0.5))))
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

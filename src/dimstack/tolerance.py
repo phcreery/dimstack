@@ -51,3 +51,9 @@ def Bilateral(upper: float, lower: float = None):
             return SymmetricBilateral(upper)
         else:
             return UnequalBilateral(upper, lower)
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
