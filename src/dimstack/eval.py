@@ -69,7 +69,7 @@ class BasicDimension:
             }
         ]
 
-        display_df(data, self.name)
+        display_df(data, f"Dimension: {self.name} - {self.description}")
 
     @property
     def direction(self):
@@ -195,7 +195,7 @@ class StatisticalDimension(BasicDimension):
             }
         ]
 
-        display_df(data, self.name)
+        display_df(data, f"Dimension: {self.name} - {self.description}")
 
     @property
     def stdev(self):
@@ -365,7 +365,7 @@ class Stack:
             for item in self.items
         ]
 
-        display_df(data, self.title)
+        display_df(data, f"Stack: {self.title}")
 
     # def show_length_chart(self):
     #     fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
@@ -469,13 +469,14 @@ class Assembly:
         data = [
             {
                 "Name": self.name,
-                "Description": (self.description),
+                "Description": self.description,
+                "Dimension": f"{self.dim}",
                 # "dir": self.direction,
                 # "Nom.": nround(self.nominal),
                 # "Tol.": (repr(self.tolerance)).ljust(14, " "),
-                "Relative Bounds": f"[{nround(self.LL)}, {nround(self.UL)}]",
+                "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
                 # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
-                "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
+                "Spec. Process Sigma": f"± {str(nround(self.process_sigma))}σ",
                 "k": nround(self.k),
                 "C_p": nround(self.C_p),
                 "C_pk": nround(self.C_pk),
@@ -486,7 +487,7 @@ class Assembly:
             }
         ]
 
-        display_df(data, self.name)
+        display_df(data, f"Assembly: {self.name}")
 
 
 if __name__ == "__main__":
