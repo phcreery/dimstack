@@ -25,10 +25,6 @@ class BasicDimension:
         tol (Union[SymmetricBilateral, UnequalBilateral], optional): The tolerance of the measurement. Defaults to SymmetricBilateral(0).
         a (float, optional): The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
                             and the nominal value will be made positive.
-        process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
-        k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
-                            standard deviation. Defaults to 0σ.
-        distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
         name (str, optional): The name of the measurement. Defaults to "Dimension".
         desc (str, optional): The description of the measurement. Defaults to "Dimension".
     """
@@ -124,7 +120,7 @@ class BasicDimension:
             return stat
         # print(f"WARNING: Converting {stat} to BasicDimension")
         return cls(
-            nom=stat.nominal,
+            nom=stat.nominal * stat.dir,
             tol=stat.tolerance,
             a=stat.a,
             name=stat.name,
@@ -133,6 +129,15 @@ class BasicDimension:
 
 
 class StatisticalDimension(BasicDimension):
+    """StatisticalDimension
+
+    Args:
+        process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
+        k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
+                            standard deviation. Defaults to 0σ.
+        distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
+    """
+
     def __init__(
         self,
         process_sigma: float = 3,
@@ -161,7 +166,7 @@ class StatisticalDimension(BasicDimension):
             return basic
         # print(f"WARNING: Converting {basic} to StatisticalDimension")
         return cls(
-            nom=basic.nominal,
+            nom=basic.nominal * basic.dir,
             tol=basic.tolerance,
             a=basic.a,
             name=basic.name,
@@ -329,7 +334,7 @@ class Stack:
     def SixSigma(self, at: float = 3) -> StatisticalDimension:
         items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
         mean = sum([item.mean_eff * item.dir for item in items])
-        stdev = RSS_func(*[item.stdev_eff * item.dir for item in items])
+        stdev = RSS_func(*[item.stdev_eff for item in items])
         tolerance = Bilateral(stdev * at)
         return StatisticalDimension(
             nom=mean,

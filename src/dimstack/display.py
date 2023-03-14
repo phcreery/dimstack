@@ -5,7 +5,7 @@ import pandas as pd
 # import matplotlib.pyplot as plt
 
 
-DISPLAY_MODE = "plot"  # "text" or "plot" or "df"
+DISPLAY_MODE = "text"  # "text" or "plot" or "df"
 FIGSIZE = (6, 3)
 
 

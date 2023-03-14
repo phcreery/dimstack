@@ -148,4 +148,4 @@ python -m unittest discover .\tests\
 
 - http://www.newconceptzdesign.com/stackups/
 - https://github.com/slightlynybbled/tol-stack
--
+- https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
