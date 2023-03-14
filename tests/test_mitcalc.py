@@ -56,16 +56,16 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.Closed.tolerance.lower), 0.233)
 
     def test_WC(self):
-        self.assertEqual(dimstack.utils.nround(stack.WC.mu), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.WC.mean), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.WC.tolerance.T / 2), 0.383)
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_min), 0.017)
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_max), 0.783)
 
     def test_RSS(self):
-        self.assertEqual(dimstack.utils.nround(stack.RSS.mu), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.RSS.mean), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.RSS.nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.RSS.tolerance.T / 2), 0.17825)
-        # self.assertEqual(dimstack.utils.nround(stack.RSS.sigma, 6), 0.059417)
+        # self.assertEqual(dimstack.utils.nround(stack.RSS.stdev, 6), 0.059417)
 
     def test_RSS_assembly(self):
         eval = stack.RSS
@@ -74,23 +74,23 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(assy.R, 1), 0.0)
 
     # def test_MRSS(self):
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.mu), 0.4)
+    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.mean), 0.4)
     #     self.assertEqual(dimstack.utils.nround(stack.MRSS.nominal), 0.4)
     #     # self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.17825)
     #     self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.2405)
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.sigma, 6), 0.059417)
+    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.stdev, 6), 0.059417)
 
     def test_SixSigma(self):
         self.assertEqual(dimstack.utils.nround(stack.items[0].C_p), 2)
         self.assertEqual(dimstack.utils.nround(stack.items[0].k), 0.25)
         self.assertEqual(dimstack.utils.nround(stack.items[0].C_pk), 1.5)
-        self.assertEqual(dimstack.utils.nround(stack.items[0].mu_eff), 208.0)
-        self.assertEqual(dimstack.utils.nround(stack.items[0].sigma_eff), 0.008)
+        self.assertEqual(dimstack.utils.nround(stack.items[0].mean_eff), 208.0)
+        self.assertEqual(dimstack.utils.nround(stack.items[0].stdev_eff), 0.008)
 
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).mu), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).mean), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).tolerance.T / 2), 0.26433)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).sigma, 6), 0.05874)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).stdev, 6), 0.05874)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_min), 0.13567)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_max), 0.66433)
 

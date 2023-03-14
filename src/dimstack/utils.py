@@ -1,4 +1,3 @@
-import math
 from decimal import Decimal, ROUND_HALF_UP
 
 DECIMALS = 5
@@ -17,12 +16,8 @@ def nround(number, ndigits=DECIMALS):
     -0.034
     """
     # return round(number, ndigits)
-    # https://stackoverflow.com/questions/43851273/how-to-round-float-0-5-up-to-1-0-while-still-rounding-0-45-to-0-0-as-the-usual
-    # exp = number * 10**ndigits
-    # if abs(exp) - abs(math.floor(exp)) < 0.5:
-    #     return type(number)(math.floor(exp) / 10**ndigits)
-    # return type(number)(math.ceil(exp) / 10**ndigits)
 
+    # https://stackoverflow.com/questions/43851273/how-to-round-float-0-5-up-to-1-0-while-still-rounding-0-45-to-0-0-as-the-usual
     exp = Decimal("1.{}".format(ndigits * "0")) if ndigits else Decimal("1")
     return type(number)(Decimal(number).quantize(exp, ROUND_HALF_UP))
 

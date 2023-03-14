@@ -44,7 +44,7 @@ class BasicDimension:
         desc: str = "Dimension",
     ):
         self.id = BasicDimension.newID()
-        self.dirMul = sign(nom)
+        self.dir = sign(nom)
         self.nominal = abs(nom)
         self.tolerance = tol
         self.a = a * sign(nom)  # sensitivity
@@ -65,7 +65,7 @@ class BasicDimension:
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": str(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-                "μ": nround(self.mu),
+                "μ": nround(self.mean),
             }
         ]
 
@@ -73,7 +73,7 @@ class BasicDimension:
 
     @property
     def direction(self):
-        if self.dirMul >= 0:
+        if self.dir >= 0:
             return POSITIVE
         else:
             return NEGATIVE
@@ -88,12 +88,12 @@ class BasicDimension:
     @property
     def Z_min(self):
         """The minimum value of the measurement. AKA, absolute upper"""
-        return self.dirMul * (self.nominal - self.tolerance.lower)
+        return self.dir * (self.nominal - self.tolerance.lower)
 
     @property
     def Z_max(self):
         """The maximum value of the measurement. AKA, absolute lower"""
-        return self.dirMul * (self.nominal + self.tolerance.upper)
+        return self.dir * (self.nominal + self.tolerance.upper)
 
     @property
     def lower_rel(self):
@@ -104,8 +104,32 @@ class BasicDimension:
         return self.nominal + self.tolerance.upper
 
     @property
-    def mu(self):
+    def mean(self):
         return (self.lower_rel + self.upper_rel) / 2
+
+    def convert_to_bilateral(self):
+        mean = self.mean
+        tol = self.tolerance.T / 2
+
+        self.nominal = mean
+        self.tolerance = SymmetricBilateral(tol)
+        return self
+
+    @classmethod
+    def from_statistical_dimension(
+        cls,
+        stat: "StatisticalDimension",
+    ):
+        if type(stat) is BasicDimension:
+            return stat
+        # print(f"WARNING: Converting {stat} to BasicDimension")
+        return cls(
+            nom=stat.nominal,
+            tol=stat.tolerance,
+            a=stat.a,
+            name=stat.name,
+            desc=stat.description,
+        )
 
 
 class StatisticalDimension(BasicDimension):
@@ -126,7 +150,7 @@ class StatisticalDimension(BasicDimension):
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)} @ ±{self.process_sigma}σ & k={self.k}"
 
     @classmethod
-    def fromBasic(
+    def from_basic_dimension(
         cls,
         basic: Union[BasicDimension, "StatisticalDimension"],
         process_sigma: float = 3,
@@ -135,6 +159,7 @@ class StatisticalDimension(BasicDimension):
     ):
         if type(basic) is StatisticalDimension:
             return basic
+        # print(f"WARNING: Converting {basic} to StatisticalDimension")
         return cls(
             nom=basic.nominal,
             tol=basic.tolerance,
@@ -155,16 +180,16 @@ class StatisticalDimension(BasicDimension):
                 "dir": self.direction,
                 "Nom.": nround(self.nominal),
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
-                "Sen.": str(self.a),
+                "Sen.": nround(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
                 "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
-                "μ": nround(self.mu),
-                "σ": nround(self.sigma),
-                "C_p": nround(self.C_p),
                 "k": nround(self.k),
+                "C_p": nround(self.C_p),
                 "C_pk": nround(self.C_pk),
-                "μ_eff": nround(self.mu_eff),
-                "σ_eff": nround(self.sigma_eff),
+                "μ": nround(self.mean),
+                "σ": nround(self.stdev),
+                "μ_eff": nround(self.mean_eff),
+                "σ_eff": nround(self.stdev_eff),
                 "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
                 "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
             }
@@ -173,32 +198,32 @@ class StatisticalDimension(BasicDimension):
         display_df(data, self.name)
 
     @property
-    def sigma(self):
+    def stdev(self):
         return abs(self.tolerance.T / 2) / self.process_sigma
 
     # @property
     # def variance(self):
-    #     return self.sigma ** 2
+    #     return self.stdev ** 2
 
     @property
     def C_p(self):
-        sigma = abs(self.tolerance.T / 2) / self.process_sigma
-        return C_p(self.upper_rel, self.lower_rel, sigma)
+        stdev = abs(self.tolerance.T / 2) / self.process_sigma
+        return C_p(self.upper_rel, self.lower_rel, stdev)
 
     @property
     def C_pk(self):
         return C_pk(self.C_p, self.k)
 
     @property
-    def mu_eff(self):
+    def mean_eff(self):
         """effective mean"""
         return (self.lower_rel + self.upper_rel) / 2
 
     @property
-    def sigma_eff(self):
+    def stdev_eff(self):
         """
         effective standard deviation
-        "6 sigma" is the standard deviation of the distribution
+        "6 stdev" is the standard deviation of the distribution
         """
         return abs(self.tolerance.T) / (6 * self.C_pk)
 
@@ -206,7 +231,7 @@ class StatisticalDimension(BasicDimension):
     def yield_loss_probability(self):
         UL = self.upper_rel
         LL = self.lower_rel
-        return 1 - norm_cdf(UL, self.mu, self.sigma) + norm_cdf(LL, self.mu, self.sigma)
+        return 1 - norm_cdf(UL, self.mean, self.stdev) + norm_cdf(LL, self.mean, self.stdev)
 
     @property
     def yield_probability(self):
@@ -244,12 +269,11 @@ class Stack:
 
     @property
     def WC(self) -> BasicDimension:
-        mu = sum([item.mu * item.a for item in self.items])
-        upper = sum(filter(None, [item.tolerance_absolute.upper for item in self.items]))
-        lower = sum(filter(None, [item.tolerance_absolute.lower for item in self.items]))
-        tolerance = Bilateral((upper + lower) / 2)
+        mean = sum([item.mean * item.a for item in self.items])
+        t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
+        tolerance = Bilateral(t_wc)
         return BasicDimension(
-            nom=mu,
+            nom=mean,
             tol=tolerance,
             name="WC",
             desc=f"{self.title}",
@@ -259,7 +283,7 @@ class Stack:
     def RSS(self) -> StatisticalDimension:
         """
         This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
-        It is really only useful for a Bilateral stack of same process-sigma items. The RSS result has the same uncertainty as the measurements.
+        It is really only useful for a Bilateral stack of same process-stdev items. The RSS result has the same uncertainty as the measurements.
         Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
         manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
         probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
@@ -274,8 +298,8 @@ class Stack:
         # Dimensioning and Tolerancing Handbook, McGraw Hill
         # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
         """
-        items: List[StatisticalDimension] = [StatisticalDimension.fromBasic(item) for item in self.items]
-        d_g = sum([item.mu_eff * item.a for item in items])
+        items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
+        d_g = sum([item.mean_eff * item.a for item in items])
         t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
         tolerance = Bilateral(t_rss)
         return StatisticalDimension(
@@ -287,8 +311,8 @@ class Stack:
 
     @property
     def MRSS(self) -> StatisticalDimension:
-        items: List[StatisticalDimension] = [StatisticalDimension.fromBasic(item) for item in self.items]
-        d_g = sum([item.mu_eff * item.a for item in items])
+        items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
+        d_g = sum([item.mean_eff * item.a for item in items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
         t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
         n = len(self.items)
@@ -303,12 +327,12 @@ class Stack:
         )
 
     def SixSigma(self, at: float = 3) -> StatisticalDimension:
-        items: List[StatisticalDimension] = [StatisticalDimension.fromBasic(item) for item in self.items]
-        mu = sum([item.mu_eff * item.dirMul for item in items])
-        sigma = RSS_func(*[item.sigma_eff * item.dirMul for item in items])
-        tolerance = Bilateral(sigma * at)
+        items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
+        mean = sum([item.mean_eff * item.dir for item in items])
+        stdev = RSS_func(*[item.stdev_eff * item.dir for item in items])
+        tolerance = Bilateral(stdev * at)
         return StatisticalDimension(
-            nom=mu,
+            nom=mean,
             tol=tolerance,
             process_sigma=at,
             name="'6 Sigma'",
@@ -324,17 +348,17 @@ class Stack:
                 "dir": item.direction,
                 "Nom.": nround(item.nominal),
                 "Tol.": (repr(item.tolerance)).ljust(14, " "),
-                "Sen.": str(item.a),
+                "Sen.": f"{nround(item.a)}",
                 "Relative Bounds": f"[{nround(item.lower_rel)}, {nround(item.upper_rel)}]",
                 # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
                 "Process Sigma": f"± {str(nround(item.process_sigma))}σ" if hasattr(item, "process_sigma") else "",
-                "μ": nround(item.mu),
-                "σ": nround(item.sigma) if hasattr(item, "sigma") else "",
-                "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
                 "k": nround(item.k) if hasattr(item, "k") else "",
+                "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
                 "C_pk": nround(item.C_pk) if hasattr(item, "C_pk") else "",
-                "μ_eff": nround(item.mu_eff) if hasattr(item, "mu_eff") else "",
-                "σ_eff": nround(item.sigma_eff) if hasattr(item, "sigma_eff") else "",
+                "μ": nround(item.mean),
+                "σ": nround(item.stdev) if hasattr(item, "stdev") else "",
+                "μ_eff": nround(item.mean_eff) if hasattr(item, "mean_eff") else "",
+                "σ_eff": nround(item.stdev_eff) if hasattr(item, "stdev_eff") else "",
                 "Yield Probability": f"{nround(item.yield_probability*100, 8)}" if hasattr(item, "yield_probability") else "",
                 "Reject PPM": f"{nround(item.yield_loss_probability*1000000, 2)}" if hasattr(item, "yield_loss_probability") else "",
             }
@@ -401,35 +425,35 @@ class Assembly:
         self.process_sigma = process_sigma
 
     @property
-    def mu(self):
+    def mean(self):
         """mean"""
         return (self.LL + self.UL) / 2
 
     # @property
-    # def sigma(self):
+    # def stdev(self):
     #     """standard deviation"""
     #     return (self.UL - self.LL) / self.process_sigma
 
     @property
     def k(self):
         """k"""
-        return abs((self.dim.mu - self.mu) / (3 * self.dim.sigma))
+        return abs((self.dim.mean - self.mean) / (3 * self.dim.stdev))
 
     @property
     def C_p(self):
-        return C_p(self.UL, self.LL, self.dim.sigma)
+        return C_p(self.UL, self.LL, self.dim.stdev)
 
     @property
     def C_pk(self):
         # return C_pk(self.C_p, self.k)
         return min(
-            (self.UL - self.dim.mu) / (3 * self.dim.sigma),
-            (self.dim.mu - self.LL) / (3 * self.dim.sigma),
+            (self.UL - self.dim.mean) / (3 * self.dim.stdev),
+            (self.dim.mean - self.LL) / (3 * self.dim.stdev),
         )
 
     @property
     def yield_loss_probability(self):
-        return 1 - norm_cdf(self.UL, self.dim.mu, self.dim.sigma) + norm_cdf(self.LL, self.dim.mu, self.dim.sigma)
+        return 1 - norm_cdf(self.UL, self.dim.mean, self.dim.stdev) + norm_cdf(self.LL, self.dim.mean, self.dim.stdev)
 
     @property
     def yield_probability(self):
@@ -452,11 +476,11 @@ class Assembly:
                 "Relative Bounds": f"[{nround(self.LL)}, {nround(self.UL)}]",
                 # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
                 "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
-                "μ": nround(self.mu),
-                # "σ": nround(self.sigma),
-                "C_p": nround(self.C_p),
                 "k": nround(self.k),
+                "C_p": nround(self.C_p),
                 "C_pk": nround(self.C_pk),
+                "μ": nround(self.mean),
+                # "σ": nround(self.stdev),
                 "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
                 "Reject PPM": f"{nround(self.R, 2)}",
             }

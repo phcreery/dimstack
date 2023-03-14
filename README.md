@@ -15,6 +15,7 @@ SymmetricBilateral = dimstack.tolerance.SymmetricBilateral
 UnequalBilateral = dimstack.tolerance.UnequalBilateral
 
 dimstack.display.display_mode("text")
+
 m1 = dimstack.eval.StatisticalDimension(
     nom=208,
     tol=SymmetricBilateral(0.036),
@@ -90,8 +91,8 @@ ID Name      Description dir Nom.           Tol. Sen. Relative Bounds   μ
  8   WC stacks on stacks   +  0.4 ± 0.383           1  [0.017, 0.783] 0.4
 
 RSS
-ID Name      Description dir Nom.           Tol. Sen.    Relative Bounds Process Sigma   μ       σ C_p k C_pk μ_eff   σ_eff Yield Probability Reject PPM    
-10  RSS stacks on stacks   +  0.4 ± 0.17825         1 [0.22175, 0.57825]          ± 3σ 0.4 0.05942 1.0 0  1.0   0.4 0.05942       99.73002039     2699.8    
+ID Name      Description dir Nom.           Tol. Sen.    Relative Bounds Process Sigma   μ       σ C_p k C_pk μ_eff   σ_eff Yield Probability Reject PPM
+10  RSS stacks on stacks   +  0.4 ± 0.17825         1 [0.22175, 0.57825]          ± 3σ 0.4 0.05942 1.0 0  1.0   0.4 0.05942       99.73002039     2699.8
 
 MRSS
 ID Name      Description dir Nom.           Tol. Sen.    Relative Bounds Process Sigma   μ       σ C_p k C_pk μ_eff   σ_eff Yield Probability Reject PPM
@@ -105,7 +106,6 @@ assy
 Name Description Relative Bounds Process Sigma     μ     C_p       k    C_pk Yield Probability Reject PPM
 assy                 [0.05, 0.8]        ± 4.5σ 0.425 2.12804 0.14187 1.98617       99.99999987        0.0
 ```
-
 
 ## Notebooks
 
@@ -138,7 +138,7 @@ OR
 .\.venv\Scripts\activate
 ```
 
-### Testing 
+### Testing
 
 ```
 python -m unittest discover .\tests\

@@ -6,7 +6,7 @@ import math
 # "6 Sigma" equations.
 
 
-def C_p(UL: float, LL: float, sigma: float) -> float:
+def C_p(UL: float, LL: float, stdev: float) -> float:
     """
     Process capability index.
 
@@ -23,14 +23,14 @@ def C_p(UL: float, LL: float, sigma: float) -> float:
     >>> C_p(6, -6, 1)
     2.0
     """
-    return (UL - LL) / (6 * sigma)
+    return (UL - LL) / (6 * stdev)
 
 
 def C_pk(C_p: float, k: float) -> float:
     """
     Process capability index. adjusted for centering.
-    Cpl = (mu - L)/3*sigma
-    Cpu = (U - mu)/3*sigma
+    Cpl = (mu - L)/3*stdev
+    Cpu = (U - mu)/3*stdev
     C_pk = min(Cpl, Cpu) = (1 - k) * C_p
 
     Args:
@@ -47,12 +47,8 @@ def C_pk(C_p: float, k: float) -> float:
     return (1 - k) * C_p
 
 
-# def sigma_i(T_i: float, sigma: float) -> float:
-#     return T_i / sigma
-
-
-# def standard_deviation(sigma_i: float, n: float) -> float:
-#     return sigma_i / n**0.5
+# def standard_deviation(stdev_i: float, n: float) -> float:
+#     return stdev_i / n**0.5
 
 
 def RSS_func(*args):
@@ -66,10 +62,20 @@ def RSS_func(*args):
 
 
 def C_f(t_rss, t_wc, n):
+    """Correction factor used to calculate the modified RSS.
+
+    Args:
+        t_rss (_type_): _description_
+        t_wc (_type_): _description_
+        n (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
-def norm_cdf(x, mu=0, sigma=1):
+def norm_cdf(x, mu=0, stdev=1):
     """
     Cumulative distribution function for the normal distribution.
 
@@ -80,8 +86,10 @@ def norm_cdf(x, mu=0, sigma=1):
     >>> norm_cdf(2)
     0.9772498680518209
     """
-    return 0.5 * (1 + math.erf((x - mu) / (sigma * (2**0.5))))
+    return 0.5 * (1 + math.erf((x - mu) / (stdev * (2**0.5))))
+
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

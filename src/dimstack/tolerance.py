@@ -26,8 +26,7 @@ class SymmetricBilateral:
 
 
 class UnequalBilateral:
-    """
-    Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
+    """Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
     This can also be used for Unilateral tolerancing.
     """
 
