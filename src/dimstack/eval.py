@@ -310,7 +310,7 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name="RSS",
+            name="RSS (assuming ± 3σ inputs)",
             desc=f"{self.title}",
         )
 
@@ -324,11 +324,14 @@ class Stack:
         C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1)) + 1
         t_mrss = C_f * t_rss
         tolerance = Bilateral(t_mrss)
+        stdev = t_wc / 6
+        sigma = t_mrss / stdev
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name="MRSS",
+            name="MRSS (assuming ± 3σ inputs)",
             desc=f"{self.title}",
+            process_sigma=sigma,
         )
 
     def SixSigma(self, at: float = 3) -> StatisticalDimension:
@@ -458,7 +461,15 @@ class Spec:
 
     @property
     def yield_loss_probability(self):
-        return 1 - norm_cdf(self.UL, self.dim.mean, self.dim.stdev) + norm_cdf(self.LL, self.dim.mean, self.dim.stdev)
+        if self.UL > self.dim.Z_max:
+            upper = 1
+        else:
+            upper = norm_cdf(self.UL, self.dim.mean, self.dim.stdev)
+        if self.LL < self.dim.Z_min:
+            lower = 0
+        else:
+            lower = norm_cdf(self.LL, self.dim.mean, self.dim.stdev)
+        return 1 - (upper - lower)
 
     @property
     def yield_probability(self):

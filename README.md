@@ -7,9 +7,7 @@ Python library for analysis of and design for statistical tolerancing.
 ## Example
 
 ```python
-import dimstack.display
-import dimstack.tolerance
-import dimstack.eval
+import dimstack
 
 SymmetricBilateral = dimstack.tolerance.SymmetricBilateral
 UnequalBilateral = dimstack.tolerance.UnequalBilateral
@@ -55,17 +53,12 @@ stack = dimstack.eval.Stack(title="stacks on stacks", items=items)
 stack.show()
 stack.Closed.show()
 stack.WC.show()
-
-eval = stack.RSS
-eval.show()
-
+stack.RSS.show()
 stack.MRSS.show()
+stack.SixSigma(at=4.5).show()
 
-eval = stack.SixSigma(at=4.5)
-eval.show()
-
-assy = dimstack.eval.Assembly("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
-assy.show()
+spec = dimstack.eval.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8, process_sigma=4.5)
+spec.show()
 
 ```
 
@@ -73,42 +66,38 @@ Returns:
 
 ```
 Stack: stacks on stacks
-ID Name                     Description dir  Nom.             Tol. Sen. Relative Bounds Process Sigma k C_p C_pk      μ σ μ_eff σ_eff Yield Probability Reject PPM
- 0    A             Screw thread length   - 0.375   + 0 / - 0.031     1  [0.344, 0.375]                          0.3595
- 1    B                   Washer Length   + 0.032   ± 0.002           1   [0.03, 0.034]                           0.032
- 2    C Inner bearing cap turned length   +  0.06   ± 0.003           1  [0.057, 0.063]                            0.06
- 3    D                  Bearing length   + 0.438   + 0 / - 0.015     1  [0.423, 0.438]                          0.4305
- 4    E            Spacer turned length   +  0.12   ± 0.005           1  [0.115, 0.125]                            0.12
- 5    F                    Rotor length   +   1.5 + 0.01 / - 0.004    1   [1.496, 1.51]                           1.503
- 4    G            Spacer turned length   +  0.12   ± 0.005           1  [0.115, 0.125]                            0.12
- 3    H                  Bearing length   + 0.438   + 0 / - 0.015     1  [0.423, 0.438]                          0.4305
- 6    I           Pulley casting length   +  0.45   ± 0.007           1  [0.443, 0.457]                            0.45
- 7    J             Shaft turned length   - 3.019   + 0.012 / - 0     1  [3.019, 3.031]                           3.025
- 8    K               Tapped hole depth   +   0.3   ± 0.03            1    [0.27, 0.33]                             0.3
+ID Name    Description dir  Nom.           Tol. Sen.    Relative Bounds Process Sigma    k C_p C_pk     μ       σ μ_eff   σ_eff Yield Probability Reject PPM
+ 0    a          Shaft   + 208.0 ± 0.036           1 [207.964, 208.036]          ± 6σ 0.25 2.0  1.5 208.0   0.006 208.0   0.008        99.9999998        0.0
+ 1    b  Retainer ring   -  1.75 + 0 / - 0.06      1       [1.69, 1.75]          ± 3σ    0 1.0  1.0  1.72    0.01  1.72    0.01       99.73002039     2699.8
+ 2    c        Bearing   -  23.0 + 0 / - 0.12      1        [22.88, 23]          ± 3σ    0 1.0  1.0 22.94    0.02 22.94    0.02       99.73002039     2699.8
+ 3    d Bearing Sleeve   +  20.0 ± 0.026           1   [19.974, 20.026]          ± 3σ    0 1.0  1.0  20.0 0.00867  20.0 0.00867       99.73002039     2699.8
+ 4    e           Case   - 200.0 ± 0.145           1 [199.855, 200.145]          ± 3σ    0 1.0  1.0 200.0 0.04833 200.0 0.04833       99.73002039     2699.8
+ 5    f Bearing Sleeve   +  20.0 ± 0.026           1   [19.974, 20.026]                              20.0
+ 6    g        Bearing   -  23.0 + 0 / - 0.12      1        [22.88, 23]          ± 3σ    0 1.0  1.0 22.94    0.02 22.94    0.02       99.73002039     2699.8
 
 Dimension: Closed - stacks on stacks
-ID   Name      Description dir  Nom.              Tol. Sen. Relative Bounds      μ
- 9 Closed stacks on stacks   + 0.064 + 0.093 / - 0.098    1 [-0.034, 0.157] 0.0615
+ID   Name      Description dir Nom.              Tol. Sen. Relative Bounds   μ
+ 7 Closed stacks on stacks   + 0.25 + 0.533 / - 0.233    1  [0.017, 0.783] 0.4
 
 Dimension: WC - stacks on stacks
-ID Name      Description dir   Nom.           Tol. Sen. Relative Bounds      μ
-10   WC stacks on stacks   + 0.0615 ± 0.0915          1  [-0.03, 0.153] 0.0615
+ID Name      Description dir Nom.           Tol. Sen. Relative Bounds   μ
+ 8   WC stacks on stacks   +  0.4 ± 0.383           1  [0.017, 0.783] 0.4
 
-Dimension: RSS - stacks on stacks
-ID Name      Description dir   Nom.           Tol. Sen.    Relative Bounds Process Sigma k C_p C_pk      μ       σ  μ_eff   σ_eff Yield Probability Reject PPM
-22  RSS stacks on stacks   + 0.0615 ± 0.03755         1 [0.02395, 0.09905]          ± 3σ 0 1.0  1.0 0.0615 0.01252 0.0615 0.01252       99.73002039     2699.8
+Dimension: RSS (assuming ± 3σ inputs) - stacks on stacks
+ID                       Name      Description dir Nom.           Tol. Sen.    Relative Bounds Process Sigma k C_p C_pk   μ       σ μ_eff   σ_eff Yield Probability Reject PPM
+10 RSS (assuming ± 3σ inputs) stacks on stacks   +  0.4 ± 0.17825         1 [0.22175, 0.57825]          ± 3σ 0 1.0  1.0 0.4 0.05942   0.4 0.05942       99.73002039     2699.8
 
-Dimension: MRSS - stacks on stacks
-ID Name      Description dir   Nom.           Tol. Sen.    Relative Bounds Process Sigma k C_p C_pk      μ      σ  μ_eff  σ_eff Yield Probability Reject PPM
-34 MRSS stacks on stacks   + 0.0615 ± 0.04919         1 [0.01231, 0.11069]          ± 3σ 0 1.0  1.0 0.0615 0.0164 0.0615 0.0164       99.73002039     2699.8
+Dimension: MRSS (assuming ± 3σ inputs) - stacks on stacks
+ID                        Name      Description dir Nom.           Tol. Sen.    Relative Bounds Process Sigma k     C_p    C_pk   μ       σ μ_eff   σ_eff Yield Probability Reject PPM
+12 MRSS (assuming ± 3σ inputs) stacks on stacks   +  0.4 ± 0.24046         1 [0.15954, 0.64046]    ± 3.76693σ 0 1.25564 1.25564 0.4 0.06383   0.4 0.06383       99.98347307     165.27
 
 Dimension: '6 Sigma' - stacks on stacks
-ID      Name      Description dir   Nom.           Tol. Sen.    Relative Bounds Process Sigma k C_p C_pk      μ       σ  μ_eff   σ_eff Yield Probability Reject PPM
-46 '6 Sigma' stacks on stacks   + 0.0615 ± 0.05617         1 [0.00533, 0.11767]        ± 4.5σ 0 1.5  1.5 0.0615 0.01248 0.0615 0.01248       99.99932047        6.8
+ID      Name      Description dir Nom.           Tol. Sen.    Relative Bounds Process Sigma k C_p C_pk   μ       σ μ_eff   σ_eff Yield Probability Reject PPM
+14 '6 Sigma' stacks on stacks   +  0.4 ± 0.26433         1 [0.13567, 0.66433]        ± 4.5σ 0 1.5  1.5 0.4 0.05874   0.4 0.05874       99.99932047        6.8
 
 Spec: stack spec
-      Name Description                                                      Dimension Spec. Limits Spec. Process Sigma       k      C_p    C_pk     μ Yield Probability Reject PPM
-stack spec             58: '6 Sigma' stacks on stacks +0.0615 ± 0.05617 @ ±4.5σ & k=0  [0.05, 0.8]              ± 4.5σ 9.70662 10.01371 0.30709 0.425       82.15429019   178457.1
+      Name Description                                                   Dimension Spec. Limits Spec. Process Sigma       k     C_p    C_pk     μ Yield Probability Reject PPM
+stack spec             16: '6 Sigma' stacks on stacks +0.4 ± 0.26433 @ ±4.5σ & k=0  [0.05, 0.8]              ± 4.5σ 0.14187 2.12804 1.98617 0.425               100          0
 ```
 
 ## Notebooks
@@ -116,17 +105,9 @@ stack spec             58: '6 Sigma' stacks on stacks +0.0615 ± 0.05617 @ ±4.5
 ```
 cd notebooks
 jupyter lite init
-
 jupyter lite build --contents .
 jupyter lite serve
 ```
-
-```
-import piplite
-await piplite.install('dimstack', keep_going=True)
-```
-
-OR
 
 ```
 %pip install -q dimstack
