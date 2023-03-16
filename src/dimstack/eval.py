@@ -40,10 +40,10 @@ class BasicDimension:
         desc: str = "Dimension",
     ):
         self.id = BasicDimension.newID()
-        self.dir = sign(nom)
+        self.dir = sign(nom) * sign(a)
         self.nominal = abs(nom)
         self.tolerance = tol
-        self.a = a * sign(nom)  # sensitivity, TODO: should this be abs()??
+        self.a = abs(a)
         self.name = name
         self.description = desc
 
@@ -168,7 +168,7 @@ class StatisticalDimension(BasicDimension):
         return cls(
             nom=basic.nominal * basic.dir,
             tol=basic.tolerance,
-            a=abs(basic.a),  # abs?????
+            a=basic.a,
             name=basic.name,
             desc=basic.description,
             process_sigma=process_sigma,
@@ -260,7 +260,7 @@ class Stack:
 
     @property
     def Closed(self) -> BasicDimension:
-        nominal = sum([item.nominal * item.a for item in self.items])
+        nominal = sum([item.nominal * item.a * item.dir for item in self.items])
         tolerance = Bilateral(
             sum(filter(None, [item.tolerance_absolute.upper for item in self.items])),
             sum(filter(None, [item.tolerance_absolute.lower for item in self.items])),
@@ -274,8 +274,8 @@ class Stack:
 
     @property
     def WC(self) -> BasicDimension:
-        mean = sum([item.mean * item.a for item in self.items])
-        t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
+        mean = sum([item.mean * item.a * item.dir for item in self.items])
+        t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
         tolerance = Bilateral(t_wc)
         return BasicDimension(
             nom=mean,
@@ -304,8 +304,8 @@ class Stack:
         # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
         """
         items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
-        d_g = sum([item.mean_eff * item.a for item in items])
-        t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
+        d_g = sum([item.mean_eff * item.a * item.dir for item in items])
+        t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) * item.dir for item in items])
         tolerance = Bilateral(t_rss)
         return StatisticalDimension(
             nom=d_g,
@@ -317,9 +317,9 @@ class Stack:
     @property
     def MRSS(self) -> StatisticalDimension:
         items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
-        d_g = sum([item.mean_eff * item.a for item in items])
-        t_wc = sum([abs(item.a * (item.tolerance.T / 2)) for item in self.items])
-        t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) for item in items])
+        d_g = sum([item.mean_eff * item.a * item.dir for item in items])
+        t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
+        t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) * item.dir for item in items])
         n = len(self.items)
         C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1)) + 1
         t_mrss = C_f * t_rss
