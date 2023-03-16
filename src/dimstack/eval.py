@@ -43,7 +43,7 @@ class BasicDimension:
         self.dir = sign(nom)
         self.nominal = abs(nom)
         self.tolerance = tol
-        self.a = a * sign(nom)  # sensitivity
+        self.a = a * sign(nom)  # sensitivity, TODO: should this be abs()??
         self.name = name
         self.description = desc
 
@@ -168,7 +168,7 @@ class StatisticalDimension(BasicDimension):
         return cls(
             nom=basic.nominal * basic.dir,
             tol=basic.tolerance,
-            a=basic.a,
+            a=abs(basic.a),  # abs?????
             name=basic.name,
             desc=basic.description,
             process_sigma=process_sigma,
@@ -420,7 +420,7 @@ class Stack:
     # return fig
 
 
-class Assembly:
+class Spec:
     def __init__(self, name, description, dim: StatisticalDimension, LL, UL, process_sigma=3):
         self.name = name
         self.description = description
@@ -492,7 +492,7 @@ class Assembly:
             }
         ]
 
-        display_df(data, f"Assembly: {self.name}")
+        display_df(data, f"Spec: {self.name}")
 
 
 if __name__ == "__main__":

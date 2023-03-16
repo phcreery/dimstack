@@ -1,10 +1,7 @@
 import unittest
 from copy import deepcopy
 
-import dimstack.display
-import dimstack.tolerance
-import dimstack.eval
-import dimstack.utils
+import dimstack
 
 # this test is a copy Dimensioning and Tolerancing Handbook by McGraw Hill, Chapter 9
 

@@ -1,8 +1,5 @@
 import unittest
-import dimstack.display
-import dimstack.tolerance
-import dimstack.eval
-import dimstack.utils
+import dimstack
 
 # this test is a copy of MITCalc User Interface diagram
 
@@ -69,7 +66,7 @@ class MITCalc(unittest.TestCase):
 
     def test_RSS_assembly(self):
         eval = stack.RSS
-        assy = dimstack.eval.Assembly("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
+        assy = dimstack.eval.Spec("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
 
         self.assertEqual(dimstack.utils.nround(assy.R, 1), 0.0)
 
@@ -94,9 +91,9 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_min), 0.13567)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_max), 0.66433)
 
-    def test_sixsigma_assembly(self):
+    def test_SixSigma_assembly(self):
         eval = stack.SixSigma(at=4.5)
-        assy = dimstack.eval.Assembly("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
+        assy = dimstack.eval.Spec("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
 
         self.assertEqual(dimstack.utils.nround(assy.C_p), 2.12804)
         self.assertEqual(dimstack.utils.nround(assy.C_pk), 1.98617)

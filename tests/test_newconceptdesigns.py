@@ -1,8 +1,5 @@
 import unittest
-import dimstack.display
-import dimstack.tolerance
-import dimstack.eval
-import dimstack.utils
+import dimstack
 
 # this test is a copy of "My First Stackup" in newconceptzdesign http://www.newconceptzdesign.com/tutorial/Tutorial-My_first_stackup.html
 
@@ -49,7 +46,7 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).Z_min, 4), 9.8358)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).Z_max, 4), 9.8602)
 
-    # def test_sixsigma_assembly(self):
+    # def test_SixSigma_assembly(self):
     #     eval = stack.SixSigma(at=4.5)
     #     assy = dimstack.eval.Assembly("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
 
