@@ -1,7 +1,5 @@
 import dimstack
 
-from copy import deepcopy
-
 SymmetricBilateral = dimstack.tolerance.SymmetricBilateral
 UnequalBilateral = dimstack.tolerance.UnequalBilateral
 
@@ -111,5 +109,5 @@ stack.RSS.show()
 stack.MRSS.show()
 stack.SixSigma(at=4.5).show()
 
-spec = dimstack.eval.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8, process_sigma=4.5)
+spec = dimstack.eval.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8)
 spec.show()

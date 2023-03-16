@@ -57,7 +57,7 @@ stack.RSS.show()
 stack.MRSS.show()
 stack.SixSigma(at=4.5).show()
 
-spec = dimstack.eval.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8, process_sigma=4.5)
+spec = dimstack.eval.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8)
 spec.show()
 
 ```
@@ -96,8 +96,8 @@ ID      Name      Description dir Nom.           Tol. Sen.    Relative Bounds Pr
 14 '6 Sigma' stacks on stacks   +  0.4 ± 0.26433         1 [0.13567, 0.66433]        ± 4.5σ 0 1.5  1.5 0.4 0.05874   0.4 0.05874       99.99932047        6.8
 
 Spec: stack spec
-      Name Description                                                   Dimension Spec. Limits Spec. Process Sigma       k     C_p    C_pk     μ Yield Probability Reject PPM
-stack spec             16: '6 Sigma' stacks on stacks +0.4 ± 0.26433 @ ±4.5σ & k=0  [0.05, 0.8]              ± 4.5σ 0.14187 2.12804 1.98617 0.425               100          0
+      Name Description                                                   Dimension Spec. Limits       k     C_p    C_pk     μ Yield Probability Reject PPM
+stack spec             16: '6 Sigma' stacks on stacks +0.4 ± 0.26433 @ ±4.5σ & k=0  [0.05, 0.8] 0.14187 2.12804 1.98617 0.425               100          0
 ```
 
 ## Notebooks

@@ -358,7 +358,6 @@ class Stack:
                 "Tol.": (repr(item.tolerance)).ljust(14, " "),
                 "Sen.": f"{nround(item.a)}",
                 "Relative Bounds": f"[{nround(item.lower_rel)}, {nround(item.upper_rel)}]",
-                # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
                 "Process Sigma": f"± {str(nround(item.process_sigma))}σ" if hasattr(item, "process_sigma") else "",
                 "k": nround(item.k) if hasattr(item, "k") else "",
                 "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
@@ -424,23 +423,17 @@ class Stack:
 
 
 class Spec:
-    def __init__(self, name, description, dim: StatisticalDimension, LL, UL, process_sigma=3):
+    def __init__(self, name, description, dim: StatisticalDimension, LL, UL):
         self.name = name
         self.description = description
         self.dim = dim
         self.LL = LL
         self.UL = UL
-        self.process_sigma = process_sigma
 
     @property
     def mean(self):
         """mean"""
         return (self.LL + self.UL) / 2
-
-    # @property
-    # def stdev(self):
-    #     """standard deviation"""
-    #     return (self.UL - self.LL) / self.process_sigma
 
     @property
     def k(self):
@@ -481,23 +474,16 @@ class Spec:
         return self.yield_loss_probability * 1000000
 
     def show(self):
-        # members = [attr for attr in dir(obj()) if not callable(getattr(obj(),attr)) and not attr.startswith("__")]
         data = [
             {
                 "Name": self.name,
                 "Description": self.description,
                 "Dimension": f"{self.dim}",
-                # "dir": self.direction,
-                # "Nom.": nround(self.nominal),
-                # "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
-                # "Absolute Bounds": f"[{nround(item.lower_rel)}, {nround(item.max_rel)}]",
-                "Spec. Process Sigma": f"± {str(nround(self.process_sigma))}σ",
                 "k": nround(self.k),
                 "C_p": nround(self.C_p),
                 "C_pk": nround(self.C_pk),
                 "μ": nround(self.mean),
-                # "σ": nround(self.stdev),
                 "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
                 "Reject PPM": f"{nround(self.R, 2)}",
             }

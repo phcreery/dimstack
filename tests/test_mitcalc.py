@@ -66,9 +66,9 @@ class MITCalc(unittest.TestCase):
 
     def test_RSS_assembly(self):
         eval = stack.RSS
-        assy = dimstack.eval.Spec("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
+        spec = dimstack.eval.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
 
-        self.assertEqual(dimstack.utils.nround(assy.R, 1), 0.0)
+        self.assertEqual(dimstack.utils.nround(spec.R, 1), 0.0)
 
     # def test_MRSS(self):
     #     self.assertEqual(dimstack.utils.nround(stack.MRSS.mean), 0.4)
@@ -93,11 +93,11 @@ class MITCalc(unittest.TestCase):
 
     def test_SixSigma_assembly(self):
         eval = stack.SixSigma(at=4.5)
-        assy = dimstack.eval.Spec("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
+        spec = dimstack.eval.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
 
-        self.assertEqual(dimstack.utils.nround(assy.C_p), 2.12804)
-        self.assertEqual(dimstack.utils.nround(assy.C_pk), 1.98617)
-        self.assertEqual(dimstack.utils.nround(assy.R, 1), 0.0)
+        self.assertEqual(dimstack.utils.nround(spec.C_p), 2.12804)
+        self.assertEqual(dimstack.utils.nround(spec.C_pk), 1.98617)
+        self.assertEqual(dimstack.utils.nround(spec.R, 1), 0.0)
 
 
 if __name__ == "__main__":
