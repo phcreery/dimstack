@@ -1,6 +1,5 @@
 import pandas as pd
-
-# from IPython.display import display
+from copy import deepcopy
 
 # import matplotlib.pyplot as plt
 
@@ -19,7 +18,7 @@ def display_mode(mode: str):
     DISPLAY_MODE = mode
 
 
-def display_df(data: dict, title: str = None):
+def display_df(data: dict, title: str = None) -> pd.DataFrame:
     """Display a dataframe.
 
     Args:
@@ -33,7 +32,11 @@ def display_df(data: dict, title: str = None):
             print(f"{title}")
         print(df.to_string(index=False))
         print()
-    # elif DISPLAY_MODE == "plot":
-    #     return display(df.style.hide(axis="index").set_caption(title))
+    elif DISPLAY_MODE == "plot":
+        from IPython.display import display
+        display(df.style.hide(axis="index").set_caption(title))
+        # return df.style.hide(axis="index").set_caption(title)
     elif DISPLAY_MODE == "df":
         return df
+    else:
+        return data

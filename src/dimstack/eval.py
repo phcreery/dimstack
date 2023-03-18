@@ -65,7 +65,7 @@ class BasicDimension:
             }
         ]
 
-        display_df(data, f"Dimension: {self.name} - {self.description}")
+        return display_df(data, f"Dimension: {self.name} - {self.description}")
 
     @property
     def direction(self):
@@ -200,7 +200,7 @@ class StatisticalDimension(BasicDimension):
             }
         ]
 
-        display_df(data, f"Dimension: {self.name} - {self.description}")
+        return display_df(data, f"Dimension: {self.name} - {self.description}")
 
     @property
     def stdev(self):
@@ -372,7 +372,7 @@ class Stack:
             for item in self.items
         ]
 
-        display_df(data, f"Stack: {self.title}")
+        return display_df(data, f"Stack: {self.title}")
 
     # def show_length_chart(self):
     #     fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
@@ -489,7 +489,7 @@ class Spec:
             }
         ]
 
-        display_df(data, f"Spec: {self.name}")
+        return display_df(data, f"Spec: {self.name}")
 
 
 if __name__ == "__main__":
