@@ -268,7 +268,7 @@ class Stack:
         return BasicDimension(
             nominal,
             tolerance,
-            name="Closed",
+            name="Closed Analysis",
             desc=f"{self.title}",
         )
 
@@ -280,7 +280,7 @@ class Stack:
         return BasicDimension(
             nom=mean,
             tol=tolerance,
-            name="WC",
+            name="WC Analysis",
             desc=f"{self.title}",
         )
 
@@ -310,7 +310,7 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name="RSS (assuming ± 3σ inputs)",
+            name="RSS Analysis (assuming ± 3σ inputs)",
             desc=f"{self.title}",
         )
 
@@ -329,7 +329,7 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name="MRSS (assuming ± 3σ inputs)",
+            name="MRSS Analysis (assuming ± 3σ inputs)",
             desc=f"{self.title}",
             process_sigma=sigma,
         )
@@ -343,7 +343,7 @@ class Stack:
             nom=mean,
             tol=tolerance,
             process_sigma=at,
-            name="'6 Sigma'",
+            name="'6 Sigma' Analysis",
             desc=f"{self.title}",
         )
 
