@@ -34,6 +34,8 @@ def display_df(data: dict, title: str = None) -> pd.DataFrame:
         print()
     elif DISPLAY_MODE == "plot":
         from IPython.display import display
+        import jinja2  # noqa
+
         display(df.style.hide(axis="index").set_caption(title))
         # return df.style.hide(axis="index").set_caption(title)
     elif DISPLAY_MODE == "df":
