@@ -2,7 +2,7 @@
 
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 
-Python library for analysis of and design for statistical tolerancing.
+Python library to help with analysis of and design for statistical tolerancing.
 
 ## Example
 
