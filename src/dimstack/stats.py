@@ -26,7 +26,28 @@ def C_p(UL: float, LL: float, stdev: float) -> float:
     return (UL - LL) / (6 * stdev)
 
 
-def C_pk(C_p: float, k: float) -> float:
+# def C_pk(C_p: float, k: float) -> float:
+#     """
+#     Process capability index. adjusted for centering.
+#     Cpl = (mu - L)/3*stdev
+#     Cpu = (U - mu)/3*stdev
+#     C_pk = min(Cpl, Cpu) = (1 - k) * C_p
+
+#     Args:
+#         C_p (float): Process capability index.
+#         k (float): ratio of the amount the center of the distribution is shifted
+#                     from the nominal value to the standard deviation.
+
+#     Returns:
+#         float: Process capability index.
+
+#     >>> C_pk(1, 0)
+#     1
+#     """
+#     return (1 - k) * C_p
+
+
+def C_pk(UL: float, LL: float, stdev: float, mean: float) -> float:
     """
     Process capability index. adjusted for centering.
     Cpl = (mu - L)/3*stdev
@@ -34,17 +55,22 @@ def C_pk(C_p: float, k: float) -> float:
     C_pk = min(Cpl, Cpu) = (1 - k) * C_p
 
     Args:
-        C_p (float): Process capability index.
-        k (float): ratio of the amount the center of the distribution is shifted
-                    from the nominal value to the standard deviation.
+        UL (float): Upper limit.
+        LL (float): Lower limit.
+        stdev (float): Standard deviation.
+        mean (float): Mean.
 
     Returns:
         float: Process capability index.
 
-    >>> C_pk(1, 0)
-    1
+    >>> from .utils import nround
+    >>> nround(C_pk(208.036, 207.964, 0.006, 208.009))
+    1.5
     """
-    return (1 - k) * C_p
+    return min(
+        (UL - mean) / (3 * stdev),
+        (mean - LL) / (3 * stdev),
+    )
 
 
 # def standard_deviation(stdev_i: float, n: float) -> float:

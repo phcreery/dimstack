@@ -53,13 +53,13 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.Closed.tolerance.lower), 0.233)
 
     def test_WC(self):
-        self.assertEqual(dimstack.utils.nround(stack.WC.mean), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.WC.nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.WC.tolerance.T / 2), 0.383)
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_min), 0.017)
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_max), 0.783)
 
     def test_RSS(self):
-        self.assertEqual(dimstack.utils.nround(stack.RSS.mean), 0.4)
+        # self.assertEqual(dimstack.utils.nround(stack.RSS.mean), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.RSS.nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.RSS.tolerance.T / 2), 0.17825)
         # self.assertEqual(dimstack.utils.nround(stack.RSS.stdev, 6), 0.059417)

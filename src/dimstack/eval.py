@@ -61,7 +61,7 @@ class BasicDimension:
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": str(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-                "μ": nround(self.mean),
+                # "μ": nround(self.mean),
             }
         ]
 
@@ -82,6 +82,10 @@ class BasicDimension:
             return Bilateral(self.tolerance.lower, self.tolerance.upper)
 
     @property
+    def median(self):
+        return (self.lower_rel + self.upper_rel) / 2
+
+    @property
     def Z_min(self):
         """The minimum value of the measurement. AKA, absolute upper"""
         return self.dir * (self.nominal - self.tolerance.lower)
@@ -99,9 +103,9 @@ class BasicDimension:
     def upper_rel(self):
         return self.nominal + self.tolerance.upper
 
-    @property
-    def mean(self):
-        return (self.lower_rel + self.upper_rel) / 2
+    # @property
+    # def mean(self):
+    #     return (self.lower_rel + self.upper_rel) / 2
 
     def convert_to_bilateral(self):
         mean = self.mean
@@ -203,6 +207,11 @@ class StatisticalDimension(BasicDimension):
         return display_df(data, f"Dimension: {self.name} - {self.description}")
 
     @property
+    def mean(self):
+        mean_shift = self.k * self.process_sigma * self.stdev
+        return self.median + mean_shift
+
+    @property
     def stdev(self):
         return abs(self.tolerance.T / 2) / self.process_sigma
 
@@ -212,12 +221,11 @@ class StatisticalDimension(BasicDimension):
 
     @property
     def C_p(self):
-        stdev = abs(self.tolerance.T / 2) / self.process_sigma
-        return C_p(self.upper_rel, self.lower_rel, stdev)
+        return C_p(self.upper_rel, self.lower_rel, self.stdev)
 
     @property
     def C_pk(self):
-        return C_pk(self.C_p, self.k)
+        return C_pk(self.upper_rel, self.lower_rel, self.stdev, self.mean)
 
     @property
     def mean_eff(self):
@@ -236,7 +244,7 @@ class StatisticalDimension(BasicDimension):
     def yield_loss_probability(self):
         UL = self.upper_rel
         LL = self.lower_rel
-        return 1 - norm_cdf(UL, self.mean, self.stdev) + norm_cdf(LL, self.mean, self.stdev)
+        return 1 - norm_cdf(UL, self.mean_eff, self.stdev_eff) + norm_cdf(LL, self.mean_eff, self.stdev_eff)
 
     @property
     def yield_probability(self):
@@ -274,7 +282,7 @@ class Stack:
 
     @property
     def WC(self) -> BasicDimension:
-        mean = sum([item.mean * item.a * item.dir for item in self.items])
+        mean = sum([item.median * item.a * item.dir for item in self.items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
         tolerance = Bilateral(t_wc)
         return BasicDimension(
@@ -362,7 +370,7 @@ class Stack:
                 "k": nround(item.k) if hasattr(item, "k") else "",
                 "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
                 "C_pk": nround(item.C_pk) if hasattr(item, "C_pk") else "",
-                "μ": nround(item.mean),
+                "μ": nround(item.mean) if hasattr(item, "mean") else "",
                 "σ": nround(item.stdev) if hasattr(item, "stdev") else "",
                 "μ_eff": nround(item.mean_eff) if hasattr(item, "mean_eff") else "",
                 "σ_eff": nround(item.stdev_eff) if hasattr(item, "stdev_eff") else "",

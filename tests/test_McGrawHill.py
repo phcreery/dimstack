@@ -70,7 +70,7 @@ class McGrawHill_1(unittest.TestCase):
     stack = dimstack.eval.Stack(title="stacks on stacks", items=items)
 
     def test_WC(self):
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.mean), 0.0615)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.nominal), 0.0615)
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.tolerance.T / 2), 0.0915)  # 0.0955
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_min, 5), -0.03)  # -0.034
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_max, 3), 0.153)  # 0.157
@@ -108,7 +108,7 @@ class McGrawHill_2(unittest.TestCase):
     stack = dimstack.eval.Stack(title="stacks on stacks", items=items)
 
     def test_WC(self):
-        self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.mean), 0.07201)  # 0.0719
+        self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.nominal), 0.07201)  # 0.0719
         self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.tolerance.T / 2), 0.09763)  # 0.0967
         self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.Z_min, 5), -0.02561)  # -0.0248
 
