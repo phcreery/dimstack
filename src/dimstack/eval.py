@@ -156,7 +156,7 @@ class StatisticalDimension(BasicDimension):
         self.k = k
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)} @ ±{self.process_sigma}σ & k={self.k}"
+        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)} @ ± {self.process_sigma}σ & k={self.k}"
 
     @classmethod
     def from_basic_dimension(
@@ -191,6 +191,7 @@ class StatisticalDimension(BasicDimension):
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": nround(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+                "Dist.": f"{self.distribution}",
                 "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
                 "k": nround(self.k),
                 "C_p": nround(self.C_p),
@@ -276,8 +277,8 @@ class Stack:
         return BasicDimension(
             nominal,
             tolerance,
-            name="Closed Analysis",
-            desc=f"{self.title}",
+            name=f"{self.title}",
+            desc="Closed Analysis",
         )
 
     @property
@@ -288,8 +289,8 @@ class Stack:
         return BasicDimension(
             nom=mean,
             tol=tolerance,
-            name="WC Analysis",
-            desc=f"{self.title}",
+            name=f"{self.title}",
+            desc="WC Analysis",
         )
 
     @property
@@ -318,8 +319,8 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name="RSS Analysis (assuming ± 3σ inputs)",
-            desc=f"{self.title}",
+            name=f"{self.title}",
+            desc="RSS Analysis (assuming inputs with Normal Distribution & ± 3σ)",
         )
 
     @property
@@ -337,8 +338,8 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name="MRSS Analysis (assuming ± 3σ inputs)",
-            desc=f"{self.title}",
+            name=f"{self.title}",
+            desc="MRSS Analysis (assuming inputs with Normal Distribution & ± 3σ)",
             process_sigma=sigma,
         )
 
@@ -351,8 +352,8 @@ class Stack:
             nom=mean,
             tol=tolerance,
             process_sigma=at,
-            name="'6 Sigma' Analysis",
-            desc=f"{self.title}",
+            name=f"{self.title}",
+            desc="'6 Sigma' Analysis (assuming inputs with Normal Distribution)",
         )
 
     def show(self):
