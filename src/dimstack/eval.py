@@ -1,6 +1,6 @@
 import itertools
 
-from typing import List, Union
+from typing import List, Union, Dict, Any
 
 from .display import display_df
 from .stats import C_p, C_pk, RSS_func, norm_cdf
@@ -50,8 +50,9 @@ class BasicDimension:
     def __repr__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)}"
 
-    def show(self):
-        data = [
+    @property
+    def dict(self) -> Dict[str, Any]:
+        return [
             {
                 "ID": self.id,
                 "Name": self.name,
@@ -65,7 +66,8 @@ class BasicDimension:
             }
         ]
 
-        return display_df(data, f"Dimension: {self.name} - {self.description}")
+    def show(self):
+        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
 
     @property
     def direction(self):
@@ -180,8 +182,9 @@ class StatisticalDimension(BasicDimension):
             distribution=distribution,
         )
 
-    def show(self):
-        data = [
+    @property
+    def dict(self) -> Dict[str, Any]:
+        return [
             {
                 "ID": self.id,
                 "Name": self.name,
@@ -205,7 +208,8 @@ class StatisticalDimension(BasicDimension):
             }
         ]
 
-        return display_df(data, f"Dimension: {self.name} - {self.description}")
+    def show(self):
+        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
 
     @property
     def mean(self):
@@ -283,6 +287,10 @@ class Stack:
 
     @property
     def WC(self) -> BasicDimension:
+        """
+        This is a simple WC calculation. This results in a Bilateral dimension with a tolerance that is the sum of the component tolerances.
+        It states that in any combination of tolerances, you can be sure the result will be within the this resulting tolerance.
+        """
         mean = sum([item.median * item.a * item.dir for item in self.items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
         tolerance = Bilateral(t_wc)
@@ -356,8 +364,9 @@ class Stack:
             desc="'6 Sigma' Analysis (assuming inputs with Normal Distribution)",
         )
 
-    def show(self):
-        data = [
+    @property
+    def dict(self) -> Dict[str, Any]:
+        return [
             {
                 "ID": item.id,
                 "Name": item.name,
@@ -381,7 +390,8 @@ class Stack:
             for item in self.items
         ]
 
-        return display_df(data, f"Stack: {self.title}")
+    def show(self):
+        return display_df(self.dict, f"Stack: {self.title}")
 
     # def show_length_chart(self):
     #     fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
@@ -452,7 +462,7 @@ class Spec:
     @property
     def k(self):
         """k"""
-        return abs((self.dim.mean - self.median) / ((self.UL - self.LL)/2))
+        return abs((self.dim.mean - self.median) / ((self.UL - self.LL) / 2))
 
     @property
     def C_p(self):
@@ -487,8 +497,9 @@ class Spec:
         """Return the yield loss probability in PPM"""
         return self.yield_loss_probability * 1000000
 
-    def show(self):
-        data = [
+    @property
+    def dict(self) -> Dict[str, Any]:
+        return [
             {
                 "Name": self.name,
                 "Description": self.description,
@@ -503,7 +514,8 @@ class Spec:
             }
         ]
 
-        return display_df(data, f"Spec: {self.name}")
+    def show(self):
+        return display_df(self.dict, f"Spec: {self.name}")
 
 
 if __name__ == "__main__":
