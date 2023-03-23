@@ -439,14 +439,19 @@ class Spec:
         self.UL = UL
 
     @property
-    def mean(self):
-        """mean"""
+    def median(self):
+        """median"""
         return (self.LL + self.UL) / 2
+
+    # @property
+    # def mean(self):
+    #     mean_shift = self.k * self.process_sigma * self.stdev
+    #     return self.median + mean_shift
 
     @property
     def k(self):
         """k"""
-        return abs((self.dim.mean - self.mean) / (3 * self.dim.stdev))
+        return abs((self.dim.mean - self.median) / ((self.UL - self.LL)/2))
 
     @property
     def C_p(self):
@@ -488,10 +493,10 @@ class Spec:
                 "Description": self.description,
                 "Dimension": f"{self.dim}",
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
+                "Median": nround(self.median),
                 "k": nround(self.k),
                 "C_p": nround(self.C_p),
                 "C_pk": nround(self.C_pk),
-                "μ": nround(self.mean),
                 "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
                 "Reject PPM": f"{nround(self.R, 2)}",
             }
