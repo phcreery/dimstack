@@ -41,3 +41,5 @@ build-backend = "pdm.pep517.api"
 [tool.pdm]
 
 [tool.pdm.scripts]
+post_build = "cp cp dist\* .\notebooks\pypi\"
+test = "python -m unittest"
