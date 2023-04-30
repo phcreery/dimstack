@@ -92,5 +92,5 @@ dmypy.json
 cython_debug/
 
 reference*
-.pdm.toml
+.pdm-python
 .pyprojectx

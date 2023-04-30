@@ -1,44 +1,41 @@
 import pandas as pd
-from copy import deepcopy
-
-# import matplotlib.pyplot as plt
 
 
-DISPLAY_MODE = "text"  # "text" or "plot" or "df"
+DISPLAY_MODE = "text"  # "text", "str"/'string, "plot", or "df"
 FIGSIZE = (6, 3)
 
 
-def display_mode(mode: str):
+def mode(dispmode: str):
     """Set the display mode for the stack.
 
     Args:
-        mode (str): "text" or "plot"
+        mode (str): "text", "str"/'string, "plot", or "df"
     """
     global DISPLAY_MODE
-    DISPLAY_MODE = mode
+    DISPLAY_MODE = dispmode
 
 
-def display_df(data: dict, title: str = None) -> pd.DataFrame:
+def display_df(data: dict, title: str = None, dispmode=None) -> pd.DataFrame:
     """Display a dataframe.
 
     Args:
         df (pd.DataFrame): _description_
     """
+    if dispmode is None:
+        dispmode = DISPLAY_MODE
 
     df = pd.DataFrame(data).astype(str)
 
-    if DISPLAY_MODE == "text":
+    if dispmode == "text":
         if title:
             print(f"{title}")
         print(df.to_string(index=False))
         print()
-    elif DISPLAY_MODE == "plot":
-        from IPython.display import display
-        import jinja2  # noqa
-
-        display(df.style.hide(axis="index").set_caption(title))
-        # return df.style.hide(axis="index").set_caption(title)
-    elif DISPLAY_MODE == "df":
+    if dispmode == "string" or dispmode == "str":
+        return df.to_string(index=False)
+    elif dispmode == "plot":
+        return df.style.hide(axis="index").set_caption(title)
+    elif dispmode == "df":
         return df
     else:
         return data

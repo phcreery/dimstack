@@ -1,4 +1,5 @@
 import itertools
+import logging
 
 from typing import List, Union, Dict, Any
 
@@ -50,6 +51,12 @@ class BasicDimension:
     def __repr__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)}"
 
+    def _repr_html_(self) -> str:
+        return display_df(self.dict, f"Dimension: {self.name} - {self.description}", dispmode="plot")._repr_html_()
+
+    def show(self):
+        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
+
     @property
     def dict(self) -> Dict[str, Any]:
         return [
@@ -65,9 +72,6 @@ class BasicDimension:
                 # "μ": nround(self.mean),
             }
         ]
-
-    def show(self):
-        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
 
     @property
     def direction(self):
@@ -124,7 +128,8 @@ class BasicDimension:
     ):
         if type(stat) is BasicDimension:
             return stat
-        # print(f"WARNING: Converting {stat} to BasicDimension")
+
+        logging.warning(f"Converting StatisticalDimension ({stat}) to BasicDimension")
         return cls(
             nom=stat.nominal * stat.dir,
             tol=stat.tolerance,
@@ -152,6 +157,7 @@ class StatisticalDimension(BasicDimension):
         *args,
         **kwargs,
     ):
+        # super().__init__(*args, **kwargs)
         super(StatisticalDimension, self).__init__(*args, **kwargs)
         self.distribution = distribution
         self.process_sigma = process_sigma
@@ -159,6 +165,12 @@ class StatisticalDimension(BasicDimension):
 
     def __repr__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)} @ ± {self.process_sigma}σ & k={self.k}"
+
+    def _repr_html_(self) -> str:
+        return display_df(self.dict, f"Dimension: {self.name} - {self.description}", dispmode="plot")._repr_html_()
+
+    def show(self):
+        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
 
     @classmethod
     def from_basic_dimension(
@@ -170,7 +182,8 @@ class StatisticalDimension(BasicDimension):
     ):
         if type(basic) is StatisticalDimension:
             return basic
-        # print(f"WARNING: Converting {basic} to StatisticalDimension")
+
+        logging.warning(f"Converting BasicDimension ({basic}) to StatisticalDimension")
         return cls(
             nom=basic.nominal * basic.dir,
             tol=basic.tolerance,
@@ -207,9 +220,6 @@ class StatisticalDimension(BasicDimension):
                 "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
             }
         ]
-
-    def show(self):
-        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
 
     @property
     def mean(self):
@@ -266,7 +276,13 @@ class Stack:
         self.items = items
 
     def __repr__(self) -> str:
-        return f"{self.title}"
+        return f"{self.title}: {self.items}"
+
+    def _repr_html_(self) -> str:
+        return display_df(self.dict, f"Stack: {self.title}", dispmode="plot")._repr_html_()
+
+    def show(self):
+        return display_df(self.dict, f"Stack: {self.title}")
 
     def append(self, measurement: Union[BasicDimension, StatisticalDimension]):
         self.items.append(measurement)
@@ -376,6 +392,7 @@ class Stack:
                 "Tol.": (repr(item.tolerance)).ljust(14, " "),
                 "Sen.": f"{nround(item.a)}",
                 "Relative Bounds": f"[{nround(item.lower_rel)}, {nround(item.upper_rel)}]",
+                "Dist.": f"{item.distribution}" if hasattr(item, "distribution") else "",
                 "Process Sigma": f"± {str(nround(item.process_sigma))}σ" if hasattr(item, "process_sigma") else "",
                 "k": nround(item.k) if hasattr(item, "k") else "",
                 "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
@@ -389,9 +406,6 @@ class Stack:
             }
             for item in self.items
         ]
-
-    def show(self):
-        return display_df(self.dict, f"Stack: {self.title}")
 
     # def show_length_chart(self):
     #     fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
@@ -448,6 +462,15 @@ class Spec:
         self.dim = dim
         self.LL = LL
         self.UL = UL
+
+    def __repr__(self) -> str:
+        return f"Spec: {self.name}"
+
+    def _repr_html_(self) -> str:
+        return display_df(self.dict, f"Spec: {self.name}", dispmode="plot")._repr_html_()
+
+    def show(self):
+        return display_df(self.dict, f"Spec: {self.name}")
 
     @property
     def median(self):
@@ -513,9 +536,6 @@ class Spec:
                 "Reject PPM": f"{nround(self.R, 2)}",
             }
         ]
-
-    def show(self):
-        return display_df(self.dict, f"Spec: {self.name}")
 
 
 if __name__ == "__main__":
