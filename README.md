@@ -106,7 +106,6 @@ stack spec             16: stacks on stacks '6 Sigma' Analysis (assuming inputs 
 
 ```
 cd notebooks
-jupyter lite init
 jupyter lite build --contents .
 jupyter lite serve
 ```
@@ -119,7 +118,10 @@ jupyter lite serve
 
 `pdm add [package]`
 
-`pdm build`
+```
+pdm build
+cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
+```
 
 ```
 .\.venv\Scripts\activate
