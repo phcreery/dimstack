@@ -11,6 +11,7 @@ dependencies = [
     "jinja2>=3.1.2",
     "latexify-py==0.2.0",
     "plotly>=5.14.1",
+    "scipy>=1.10.1",
 ]
 requires-python = ">=3.8, <3.11"
 readme = "README.md"
@@ -41,5 +42,5 @@ build-backend = "pdm.pep517.api"
 [tool.pdm]
 
 [tool.pdm.scripts]
-post_build = "cp cp dist\* .\notebooks\pypi\"
+after_build = "cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'"
 test = "python -m unittest"

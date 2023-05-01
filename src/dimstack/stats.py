@@ -78,18 +78,23 @@ def C_f(t_rss, t_wc, n):
     return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
-def norm_cdf(x, mu=0, stdev=1):
+def normal_cdf(x, mean=0, stdev=1):
     """
     Cumulative distribution function for the normal distribution.
 
-    >>> norm_cdf(0)
+    >>> normal_cdf(0)
     0.5
-    >>> norm_cdf(1)
+    >>> normal_cdf(1)
     0.8413447460685428
-    >>> norm_cdf(2)
+    >>> normal_cdf(2)
     0.9772498680518209
     """
-    return 0.5 * (1 + math.erf((x - mu) / (stdev * (2**0.5))))
+    return 0.5 * (1 + math.erf((x - mean) / (stdev * (2**0.5))))
+
+
+def normal_dist(x, mean=0, stdev=1):
+    prob_density = (math.pi * stdev) * math.exp(-0.5 * ((x - mean) / stdev) ** 2)
+    return prob_density
 
 
 if __name__ == "__main__":

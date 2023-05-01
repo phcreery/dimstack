@@ -4,17 +4,13 @@ import logging
 from typing import List, Union, Dict, Any
 
 from .display import display_df
-from .stats import C_p, C_pk, RSS_func, norm_cdf
+from .stats import C_p, C_pk, RSS_func, normal_cdf
 from .tolerance import SymmetricBilateral, UnequalBilateral, Bilateral
 from .utils import nround, sign
+from . import dist
 
 POSITIVE = "+"
 NEGATIVE = "-"
-# DIST_NORMAL = "Normal"  # Normal distribution.
-# DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
-# DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used.
-# DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
-# DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
 
 
 class BasicDimension:
@@ -47,6 +43,7 @@ class BasicDimension:
         self.a = abs(a)
         self.name = name
         self.description = desc
+        self.distribution = dist.DIST_UNIFORM
 
     def __repr__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)}"
@@ -69,7 +66,7 @@ class BasicDimension:
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": str(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-                # "μ": nround(self.mean),
+                "Distribution": self.distribution,
             }
         ]
 
@@ -109,15 +106,11 @@ class BasicDimension:
     def upper_rel(self):
         return self.nominal + self.tolerance.upper
 
-    # @property
-    # def mean(self):
-    #     return (self.lower_rel + self.upper_rel) / 2
-
     def convert_to_bilateral(self):
-        mean = self.mean
+        median = self.median
         tol = self.tolerance.T / 2
 
-        self.nominal = mean
+        self.nominal = median
         self.tolerance = SymmetricBilateral(tol)
         return self
 
@@ -138,6 +131,9 @@ class BasicDimension:
             desc=stat.description,
         )
 
+    def get_dist(self):
+        return dist.Uniform(self.lower_rel, self.upper_rel)
+
 
 class StatisticalDimension(BasicDimension):
     """StatisticalDimension
@@ -153,7 +149,7 @@ class StatisticalDimension(BasicDimension):
         self,
         process_sigma: float = 3,
         k: float = 0,
-        distribution: str = "Normal",
+        distribution: str = dist.DIST_NORMAL,
         *args,
         **kwargs,
     ):
@@ -207,7 +203,7 @@ class StatisticalDimension(BasicDimension):
                 "Tol.": (repr(self.tolerance)).ljust(14, " "),
                 "Sen.": nround(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-                "Dist.": f"{self.distribution}",
+                "Distribution": f"{self.distribution}",
                 "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
                 "k": nround(self.k),
                 "C_p": nround(self.C_p),
@@ -259,11 +255,19 @@ class StatisticalDimension(BasicDimension):
     def yield_loss_probability(self):
         UL = self.upper_rel
         LL = self.lower_rel
-        return 1 - norm_cdf(UL, self.mean_eff, self.stdev_eff) + norm_cdf(LL, self.mean_eff, self.stdev_eff)
+        # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
+        return 1 - self.get_dist().cdf(UL) + self.get_dist().cdf(LL)
 
     @property
     def yield_probability(self):
         return 1 - self.yield_loss_probability
+
+    def get_dist(self):
+        if self.distribution == dist.DIST_NORMAL:
+            return dist.Normal(self.mean_eff, self.stdev_eff)
+            # return dist.Normal(self.mean, self.stdev)
+        elif self.distribution == dist.DIST_UNIFORM:
+            return dist.Uniform(self.lower_rel, self.upper_rel)
 
 
 class Stack:
@@ -504,11 +508,11 @@ class Spec:
         if self.UL > self.dim.Z_max:
             upper = 1
         else:
-            upper = norm_cdf(self.UL, self.dim.mean, self.dim.stdev)
+            upper = normal_cdf(self.UL, self.dim.mean, self.dim.stdev)
         if self.LL < self.dim.Z_min:
             lower = 0
         else:
-            lower = norm_cdf(self.LL, self.dim.mean, self.dim.stdev)
+            lower = normal_cdf(self.LL, self.dim.mean, self.dim.stdev)
         return 1 - (upper - lower)
 
     @property

@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 DISPLAY_MODE = "text"  # "text", "str"/"string", "plot", or "df"
 FIGSIZE = (6, 3)
 
