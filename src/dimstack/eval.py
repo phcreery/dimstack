@@ -134,6 +134,9 @@ class BasicDimension:
     def get_dist(self):
         return dist.Uniform(self.lower_rel, self.upper_rel)
 
+    def get_alt_dists(self):
+        return []
+
 
 class StatisticalDimension(BasicDimension):
     """StatisticalDimension
@@ -268,6 +271,18 @@ class StatisticalDimension(BasicDimension):
             # return dist.Normal(self.mean, self.stdev)
         elif self.distribution == dist.DIST_UNIFORM:
             return dist.Uniform(self.lower_rel, self.upper_rel)
+
+    def get_alt_dists(self):
+        if self.distribution == dist.DIST_NORMAL:
+            if self.k == 0:
+                return []
+            mean_shift = self.k * self.process_sigma * self.stdev
+            return [
+                dist.Normal(self.mean_eff + mean_shift, self.stdev),
+                dist.Normal(self.mean_eff - mean_shift, self.stdev),
+            ]
+        else:
+            return []
 
 
 class Stack:
