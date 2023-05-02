@@ -46,7 +46,10 @@ class BasicDimension:
         self.distribution = dist.DIST_UNIFORM
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)}"
+        return f"BasicDimension({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description})"
+
+    def __str__(self) -> str:
+        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {str(self.tolerance)}"
 
     def _repr_html_(self) -> str:
         return display_df(self.dict, f"Dimension: {self.name} - {self.description}", dispmode="plot")._repr_html_()
@@ -63,7 +66,7 @@ class BasicDimension:
                 "Description": (self.description),
                 "dir": self.direction,
                 "Nom.": nround(self.nominal),
-                "Tol.": (repr(self.tolerance)).ljust(14, " "),
+                "Tol.": (str(self.tolerance)).ljust(14, " "),
                 "Sen.": str(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
                 "Distribution": self.distribution,
@@ -163,7 +166,10 @@ class StatisticalDimension(BasicDimension):
         self.k = k
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {repr(self.tolerance)} @ ± {self.process_sigma}σ & k={self.k}"
+        return f"StatisticalDimension({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
+
+    def __str__(self) -> str:
+        return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {str(self.tolerance)} @ ± {self.process_sigma}σ & k={self.k}"
 
     def _repr_html_(self) -> str:
         return display_df(self.dict, f"Dimension: {self.name} - {self.description}", dispmode="plot")._repr_html_()
@@ -203,7 +209,7 @@ class StatisticalDimension(BasicDimension):
                 "Description": (self.description),
                 "dir": self.direction,
                 "Nom.": nround(self.nominal),
-                "Tol.": (repr(self.tolerance)).ljust(14, " "),
+                "Tol.": (str(self.tolerance)).ljust(14, " "),
                 "Sen.": nround(self.a),
                 "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
                 "Distribution": f"{self.distribution}",
@@ -295,6 +301,9 @@ class Stack:
         self.items = items
 
     def __repr__(self) -> str:
+        return f"Stack({self.title}, [{', '.join([repr(item) for item in self.items])}])"
+
+    def __str__(self) -> str:
         return f"{self.title}: {self.items}"
 
     def _repr_html_(self) -> str:
@@ -408,7 +417,7 @@ class Stack:
                 "Description": (item.description),
                 "dir": item.direction,
                 "Nom.": nround(item.nominal),
-                "Tol.": (repr(item.tolerance)).ljust(14, " "),
+                "Tol.": (str(item.tolerance)).ljust(14, " "),
                 "Sen.": f"{nround(item.a)}",
                 "Relative Bounds": f"[{nround(item.lower_rel)}, {nround(item.upper_rel)}]",
                 "Dist.": f"{item.distribution}" if hasattr(item, "distribution") else "",
@@ -426,53 +435,6 @@ class Stack:
             for item in self.items
         ]
 
-    # def show_length_chart(self):
-    #     fig, axs = plt.subplots(1, 1, figsize=FIGSIZE, dpi=200)
-    #     axs.grid()
-    #     axs.set_axisbelow(True)
-    #     axs.axvline(0, label="DATUM", alpha=0.6)
-
-    #     # determine rough plot length to size the arrow heads
-    #     max = 0
-    #     min = 0
-    #     last_part_x = 0
-    #     for item in self.items:
-    #         last_part_x = last_part_x + item.nominal * item.a
-    #         if last_part_x > max:
-    #             max = last_part_x
-    #         if last_part_x < min:
-    #             min = last_part_x
-    #     head_width = (max + min) * 0.001
-    #     # head_width = 0.1
-
-    #     # draw arrows
-    #     num_of_parts = len(self.items)
-    #     last_part_x = 0
-    #     for i in range(num_of_parts):
-    #         item = self.items[i]
-    #         axs.arrow(
-    #             x=last_part_x,
-    #             dx=item.nominal * item.a,
-    #             y=i,
-    #             dy=0,
-    #             width=head_width / 5,
-    #             length_includes_head=True,
-    #             head_width=head_width,
-    #             head_length=head_width * 50,
-    #             color=(0, 0, 0),
-    #         )
-
-    #         last_part_x = last_part_x + item.nominal * item.a
-    #     axs.set_yticks(range(len(self.items)))
-    #     axs.set_yticklabels([item.name for item in self.items])
-    #     axs.invert_yaxis()
-    #     axs.set_title("Nominal Stackup Flow Chart")
-    #     axs.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
-
-    #     fig.tight_layout()
-
-    # return fig
-
 
 class Spec:
     def __init__(self, name, description, dim: StatisticalDimension, LL, UL):
@@ -483,6 +445,9 @@ class Spec:
         self.UL = UL
 
     def __repr__(self) -> str:
+        return f"Spec({self.name}, {self.description}, {repr(self.dim)}, {self.LL}, {self.UL})"
+
+    def __str__(self) -> str:
         return f"Spec: {self.name}"
 
     def _repr_html_(self) -> str:

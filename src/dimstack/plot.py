@@ -40,7 +40,7 @@ class StackPlot:
                 line=dict(color=color, width=2),
                 marker=dict(size=[0, 10]),
                 name=item.name,
-                text=["", repr(item)],
+                text=["", str(item)],
                 textposition="bottom center",
                 legendgroup=f"{item.name}",
             )
@@ -116,7 +116,7 @@ class StackPlot:
                     line=dict(color=color, width=2),
                     marker=dict(size=[0, 10]),
                     name=item.name,
-                    text=["", repr(item)],
+                    text=["", str(item)],
                     textposition="bottom center",
                     legendgroup=f"{item.name}",
                 )

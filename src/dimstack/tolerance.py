@@ -10,6 +10,9 @@ class SymmetricBilateral:
         self._tol = abs(tol)
 
     def __repr__(self) -> str:
+        return f"SymmetricBilateral({self._tol})"
+
+    def __str__(self) -> str:
         return f"± {nround(self.T/2)}"
 
     @property
@@ -35,6 +38,9 @@ class UnequalBilateral:
         self.lower = abs(lower)
 
     def __repr__(self) -> str:
+        return f"UnequalBilateral({self.upper}, {self.lower})"
+
+    def __str__(self) -> str:
         return f"+ {nround(self.upper)} / - {nround(self.lower)}"
 
     @property
