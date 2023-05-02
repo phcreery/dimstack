@@ -420,7 +420,7 @@ class Stack:
                 "Tol.": (str(item.tolerance)).ljust(14, " "),
                 "Sen.": f"{nround(item.a)}",
                 "Relative Bounds": f"[{nround(item.lower_rel)}, {nround(item.upper_rel)}]",
-                "Dist.": f"{item.distribution}" if hasattr(item, "distribution") else "",
+                "Distribution": f"{item.distribution}" if hasattr(item, "distribution") else "",
                 "Process Sigma": f"± {str(nround(item.process_sigma))}σ" if hasattr(item, "process_sigma") else "",
                 "k": nround(item.k) if hasattr(item, "k") else "",
                 "C_p": nround(item.C_p) if hasattr(item, "C_p") else "",
