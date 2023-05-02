@@ -102,6 +102,9 @@ stack spec             16: stacks on stacks '6 Sigma' Analysis (assuming inputs 
 
 ```
 
+![](./doc/newplot.png)
+![](./doc/newplot2.png)
+
 ## Notebooks
 
 ```
