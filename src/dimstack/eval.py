@@ -325,8 +325,8 @@ class Stack:
         return BasicDimension(
             nominal,
             tolerance,
-            name=f"{self.title}",
-            desc="Closed Analysis",
+            name=f"{self.title} - Closed Analysis",
+            desc="",
         )
 
     @property
@@ -341,8 +341,8 @@ class Stack:
         return BasicDimension(
             nom=mean,
             tol=tolerance,
-            name=f"{self.title}",
-            desc="WC Analysis",
+            name=f"{self.title} - WC Analysis",
+            desc="",
         )
 
     @property
@@ -371,8 +371,8 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name=f"{self.title}",
-            desc="RSS Analysis (assuming inputs with Normal Distribution & ± 3σ)",
+            name=f"{self.title} - RSS Analysis",
+            desc="(assuming inputs with Normal Distribution & ± 3σ)",
         )
 
     @property
@@ -390,8 +390,8 @@ class Stack:
         return StatisticalDimension(
             nom=d_g,
             tol=tolerance,
-            name=f"{self.title}",
-            desc="MRSS Analysis (assuming inputs with Normal Distribution & ± 3σ)",
+            name=f"{self.title} - MRSS Analysis",
+            desc="(assuming inputs with Normal Distribution & ± 3σ)",
             process_sigma=sigma,
         )
 
@@ -404,8 +404,8 @@ class Stack:
             nom=mean,
             tol=tolerance,
             process_sigma=at,
-            name=f"{self.title}",
-            desc="'6 Sigma' Analysis (assuming inputs with Normal Distribution)",
+            name=f"{self.title} - '6 Sigma' Analysis",
+            desc="(assuming inputs with Normal Distribution)",
         )
 
     @property
