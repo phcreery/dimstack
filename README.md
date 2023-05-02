@@ -57,6 +57,7 @@ stack.SixSigma(at=4.5).show()
 spec = ds.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8)
 spec.show()
 
+ds.plot.StackPlot().add(stack).add(stack.RSS).show()
 ```
 
 Returns:
