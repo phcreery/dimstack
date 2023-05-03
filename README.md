@@ -2,7 +2,7 @@
 
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 
-Python library to help with analysis of and design for statistical tolerancing.
+Python library for mechanical engineers to help with statistical tolerancing analysis and design.
 
 ## Example
 
@@ -106,27 +106,43 @@ stack spec             16: stacks on stacks '6 Sigma' Analysis (assuming inputs 
 ![](./doc/newplot.png)
 ![](./doc/newplot2.png)
 
-## Notebooks
+## Usage
 
+dimstack can be used in a standard python script, or as a REPL, allowing use in JupyterLab.
+
+Demo usage in a JupyterLite Lab
+- https://phcreery.github.io/dimstack/lab/index.html
+
+Demo usage in a JuptyerLite REPL:
+- https://phcreery.github.io/dimstack/repl/index.html?kernel=python&toolbar=1&code=%pip%20install%20-q%20ds%0Aimport%20dimstack%20as%20ds
+
+Embed in your site:
+```html
+<iframe
+  src="https://phcreery.github.io/dimstack/repl/index.html?kernel=python&toolbar=1&code=%pip%20install%20-q%20ds%0Aimport%20dimstack%20as%20ds"
+  width="100%"
+  height="100%"
+></iframe>
 ```
-cd notebooks
-jupyter lite build --contents .
-jupyter lite serve
-```
+
+## Dev
+
+### Notebooks
+In JupyterLite instances, you first have to pip install the wheel embedded.
 
 ```
 %pip install -q dimstack
 ```
-
-## Dev
 
 ### Build
 
 ```
 pdm build
 cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
+cd notebooks
+jupyter lite build --contents .
+jupyter lite serve
 ```
-
 ### Testing
 
 ```
