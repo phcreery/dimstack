@@ -210,7 +210,7 @@ class StatisticalDimension(BasicDimension):
             data (np.ndarray): The data to create the dimension from
         """
         distribution = dist.Normal.fit(data)
-        print(distribution, distribution.mean, distribution.stdev)
+
         return cls(
             nom=distribution.mean,
             tol=SymmetricBilateral(distribution.stdev * sigma),
