@@ -156,6 +156,7 @@ class StatisticalDimension(BasicDimension):
         process_sigma: float = 3,
         k: float = 0,
         distribution: str = dist.DIST_NORMAL,
+        data=None,
         *args,
         **kwargs,
     ):
@@ -164,6 +165,7 @@ class StatisticalDimension(BasicDimension):
         self.distribution = distribution
         self.process_sigma = process_sigma
         self.k = k
+        self.data = data
 
     def __repr__(self) -> str:
         return f"StatisticalDimension({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
@@ -198,6 +200,27 @@ class StatisticalDimension(BasicDimension):
             process_sigma=process_sigma,
             k=k,
             distribution=distribution,
+        )
+
+    @classmethod
+    def from_data(cls, data, sigma=3, name="data", desc="data"):
+        """Create a StatisticalDimension from data
+
+        Args:
+            data (np.ndarray): The data to create the dimension from
+        """
+        distribution = dist.Normal.fit(data)
+        print(distribution, distribution.mean, distribution.stdev)
+        return cls(
+            nom=distribution.mean,
+            tol=SymmetricBilateral(distribution.stdev * sigma),
+            a=1,
+            name=name,
+            desc=f"{desc} (from data)",
+            process_sigma=sigma,
+            k=0,
+            distribution=dist.DIST_NORMAL,
+            data=data,
         )
 
     @property

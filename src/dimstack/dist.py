@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import norm, uniform
-
+from typing import Union, List
+import pandas as pd
 
 DIST_UNIFORM = "Uniform"  # Uniform distribution.
 DIST_NORMAL = "Normal"  # Normal distribution.
@@ -46,6 +47,11 @@ class Normal:
 
     def cdf(self, x: float):
         return norm.cdf(x, loc=self.mean, scale=self.stdev)
+
+    @classmethod
+    def fit(cls, data: Union[np.ndarray, List[float], List[int], List[np.float64], pd.Series]):
+        mean, stdev = norm.fit(data)
+        return cls(mean, stdev)
 
 
 class NormalScreened:

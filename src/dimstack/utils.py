@@ -32,6 +32,7 @@ def sign(x):
     >>> sign(-10)
     -1
     """
+    x = float(x)
     return (x > 0) - (x < 0)
 
 
