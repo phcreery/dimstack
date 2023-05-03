@@ -120,15 +120,11 @@ jupyter lite serve
 
 ## Dev
 
-`pdm add [package]`
+### Build
 
 ```
 pdm build
 cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
-```
-
-```
-.\.venv\Scripts\activate
 ```
 
 ### Testing
