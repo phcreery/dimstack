@@ -1,0 +1,17 @@
+site_name: "dimstack"
+
+repo_url: https://github.com/phcreery/dimstack
+
+theme:
+  name: "material"
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: true
+            members_order: source
+            filters: []
+            show_bases: true

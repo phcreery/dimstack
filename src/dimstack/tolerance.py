@@ -49,6 +49,15 @@ class UnequalBilateral:
 
 
 def Bilateral(upper: float, lower: float = None):
+    """Automatically determine the type of bilateral tolerance to use.
+
+    Args:
+        upper (float): _description_
+        lower (float, optional): _description_. Defaults to None.
+
+    Returns:
+        Tolerance (SymmetricBilateral | UnequalBilateral): _description_
+    """
     if lower is None:
         return SymmetricBilateral(upper)
     else:

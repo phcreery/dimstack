@@ -207,7 +207,7 @@ class StatisticalDimension(BasicDimension):
         """Create a StatisticalDimension from data
 
         Args:
-            data (np.ndarray): The data to create the dimension from
+            data (np.ndarray or similar): The data to create the dimension from
         """
         distribution = dist.Normal.fit(data)
 
@@ -285,6 +285,9 @@ class StatisticalDimension(BasicDimension):
 
     @property
     def yield_loss_probability(self):
+        """
+        Returns the probability of a part being out of spec.
+        """
         UL = self.upper_rel
         LL = self.lower_rel
         # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
@@ -384,8 +387,9 @@ class Stack:
         equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
         plus the RSS variation at the gap.
 
-        # Dimensioning and Tolerancing Handbook, McGraw Hill
-        # http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
+        See:
+         - Dimensioning and Tolerancing Handbook, McGraw Hill
+         - http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
         """
         items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
         d_g = sum([item.mean_eff * item.a * item.dir for item in items])
@@ -400,6 +404,11 @@ class Stack:
 
     @property
     def MRSS(self) -> StatisticalDimension:
+        """Basically RSS with a coefficient modifier to make the tolerance tighter.
+
+        Returns:
+            StatisticalDimension: _description_
+        """
         items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
         d_g = sum([item.mean_eff * item.a * item.dir for item in items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
