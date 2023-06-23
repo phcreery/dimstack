@@ -469,7 +469,7 @@ class Stack:
 
 
 class Spec:
-    def __init__(self, name, description, dim: StatisticalDimension, LL, UL):
+    def __init__(self, name, description, dim: Union[StatisticalDimension, BasicDimension], LL, UL):
         self.name = name
         self.description = description
         self.dim = dim
@@ -498,34 +498,29 @@ class Spec:
     #     mean_shift = self.k * self.process_sigma * self.stdev
     #     return self.median + mean_shift
 
-    @property
-    def k(self):
-        """k"""
-        return abs((self.dim.mean - self.median) / ((self.UL - self.LL) / 2))
+    # @property
+    # def k(self):
+    #     """k"""
+    #     return abs((self.dim.mean - self.median) / ((self.UL - self.LL) / 2))
 
-    @property
-    def C_p(self):
-        return C_p(self.UL, self.LL, self.dim.stdev)
+    # @property
+    # def C_p(self):
+    #     return C_p(self.UL, self.LL, self.dim.stdev)
 
-    @property
-    def C_pk(self):
-        # return C_pk(self.C_p, self.k)
-        return min(
-            (self.UL - self.dim.mean) / (3 * self.dim.stdev),
-            (self.dim.mean - self.LL) / (3 * self.dim.stdev),
-        )
+    # @property
+    # def C_pk(self):
+    #     # return C_pk(self.C_p, self.k)
+    #     return min(
+    #         (self.UL - self.dim.mean) / (3 * self.dim.stdev),
+    #         (self.dim.mean - self.LL) / (3 * self.dim.stdev),
+    #     )
 
     @property
     def yield_loss_probability(self):
-        if self.UL > self.dim.Z_max:
-            upper = 1
-        else:
-            upper = normal_cdf(self.UL, self.dim.mean, self.dim.stdev)
-        if self.LL < self.dim.Z_min:
-            lower = 0
-        else:
-            lower = normal_cdf(self.LL, self.dim.mean, self.dim.stdev)
-        return 1 - (upper - lower)
+        """
+        Returns the probability of a part being out of spec.
+        """
+        return 1 - self.dim.get_dist().cdf(self.UL) + self.dim.get_dist().cdf(self.LL)
 
     @property
     def yield_probability(self):
@@ -545,9 +540,9 @@ class Spec:
                 "Dimension": f"{self.dim}",
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
                 "Median": nround(self.median),
-                "k": nround(self.k),
-                "C_p": nround(self.C_p),
-                "C_pk": nround(self.C_pk),
+                # "k": nround(self.k),
+                # "C_p": nround(self.C_p),
+                # "C_pk": nround(self.C_pk),
                 "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
                 "Reject PPM": f"{nround(self.R, 2)}",
             }
