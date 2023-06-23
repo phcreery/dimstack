@@ -147,12 +147,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cloudpickle"
-version = "2.2.1"
-requires_python = ">=3.6"
-summary = "Extended pickling support for Python objects"
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
@@ -190,16 +184,6 @@ name = "dill"
 version = "0.3.6"
 requires_python = ">=3.7"
 summary = "serialize all of python"
-
-[[package]]
-name = "doit"
-version = "0.36.0"
-requires_python = ">=3.8"
-summary = "doit - Automation Tool"
-dependencies = [
-    "cloudpickle",
-    "importlib-metadata>=4.4",
-]
 
 [[package]]
 name = "executing"
@@ -567,27 +551,6 @@ name = "jupyterlab-widgets"
 version = "3.0.5"
 requires_python = ">=3.7"
 summary = "Jupyter interactive widgets for JupyterLab"
-
-[[package]]
-name = "jupyterlite-core"
-version = "0.1.0b19"
-requires_python = ">=3.7"
-summary = "tools for building JupyterLite sites"
-dependencies = [
-    "doit<1,>=0.34",
-    "importlib-metadata>=3.6; python_version < \"3.10\"",
-    "jupyter-core>=4.7",
-]
-
-[[package]]
-name = "jupyterlite-pyodide-kernel"
-version = "0.0.5"
-requires_python = ">=3.8"
-summary = "Python kernel for JupyterLite powered by Pyodide"
-dependencies = [
-    "jupyterlite-core<0.2.0,>=0.1.0b19",
-    "pkginfo",
-]
 
 [[package]]
 name = "latexify-py"
@@ -1262,9 +1225,8 @@ requires_python = ">=3.7"
 summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
-lock_version = "4.2"
-groups = ["default", "dev"]
-content_hash = "sha256:00623342a0259703a3bc6ac09e7c3d039e70908ae6ac35a6d04da604fd43975d"
+lock_version = "4.1"
+content_hash = "sha256:28bcbf54f5da193025f79b2e4d2147ecf67315504ab2ff71b1403a466d839e30"
 
 [metadata.files]
 "aiofiles 22.1.0" = [
@@ -1516,10 +1478,6 @@ content_hash = "sha256:00623342a0259703a3bc6ac09e7c3d039e70908ae6ac35a6d04da604f
     {url = "https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
     {url = "https://files.pythonhosted.org/packages/c2/f1/df59e28c642d583f7dacffb1e0965d0e00b218e0186d7858ac5233dce840/click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
 ]
-"cloudpickle 2.2.1" = [
-    {url = "https://files.pythonhosted.org/packages/15/80/44286939ca215e88fa827b2aeb6fa3fd2b4a7af322485c7170d6f9fd96e0/cloudpickle-2.2.1-py3-none-any.whl", hash = "sha256:61f594d1f4c295fa5cd9014ceb3a1fc4a70b0de1164b94fbc2d854ccba056f9f"},
-    {url = "https://files.pythonhosted.org/packages/5f/51/913ecca3970a2227cf4d5e8937df52cc28f465ac442216110b8e3323262d/cloudpickle-2.2.1.tar.gz", hash = "sha256:d89684b8de9e34a2a43b3460fbca07d09d6e25ce858df4d5a44240403b6178f5"},
-]
 "colorama 0.4.6" = [
     {url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -1558,10 +1516,6 @@ content_hash = "sha256:00623342a0259703a3bc6ac09e7c3d039e70908ae6ac35a6d04da604f
 "dill 0.3.6" = [
     {url = "https://files.pythonhosted.org/packages/7c/e7/364a09134e1062d4d5ff69b853a56cf61c223e0afcc6906b6832bcd51ea8/dill-0.3.6.tar.gz", hash = "sha256:e5db55f3687856d8fbdab002ed78544e1c4559a130302693d839dfe8f93f2373"},
     {url = "https://files.pythonhosted.org/packages/be/e3/a84bf2e561beed15813080d693b4b27573262433fced9c1d1fea59e60553/dill-0.3.6-py3-none-any.whl", hash = "sha256:a07ffd2351b8c678dfc4a856a3005f8067aea51d6ba6c700796a4d9e280f39f0"},
-]
-"doit 0.36.0" = [
-    {url = "https://files.pythonhosted.org/packages/44/83/a2960d2c975836daa629a73995134fd86520c101412578c57da3d2aa71ee/doit-0.36.0-py3-none-any.whl", hash = "sha256:ebc285f6666871b5300091c26eafdff3de968a6bd60ea35dd1e3fc6f2e32479a"},
-    {url = "https://files.pythonhosted.org/packages/5a/36/66b7dea1bb5688ba0d2d7bc113e9c0d57df697bd3f39ce2a139d9612aeee/doit-0.36.0.tar.gz", hash = "sha256:71d07ccc9514cb22fe59d98999577665eaab57e16f644d04336ae0b4bae234bc"},
 ]
 "executing 1.2.0" = [
     {url = "https://files.pythonhosted.org/packages/28/3c/bc3819dd8b1a1588c9215a87271b6178cc5498acaa83885211f5d4d9e693/executing-1.2.0-py2.py3-none-any.whl", hash = "sha256:0314a69e37426e3608aada02473b4161d4caf5a4b244d1d0c48072b8fee7bacc"},
@@ -1691,14 +1645,6 @@ content_hash = "sha256:00623342a0259703a3bc6ac09e7c3d039e70908ae6ac35a6d04da604f
 "jupyterlab-widgets 3.0.5" = [
     {url = "https://files.pythonhosted.org/packages/a8/59/1c1a0ae2dc4586c08c372aaee6f5f765327564a753752a8df2574ea1aa31/jupyterlab_widgets-3.0.5.tar.gz", hash = "sha256:eeaecdeaf6c03afc960ddae201ced88d5979b4ca9c3891bcb8f6631af705f5ef"},
     {url = "https://files.pythonhosted.org/packages/df/82/4576cbc07ebace8c7734fe08b2c2f9123b7ebecd29e932a3b839b6bee2cb/jupyterlab_widgets-3.0.5-py3-none-any.whl", hash = "sha256:a04a42e50231b355b7087e16a818f541e53589f7647144ea0344c4bf16f300e5"},
-]
-"jupyterlite-core 0.1.0b19" = [
-    {url = "https://files.pythonhosted.org/packages/04/00/983ee59afa6976412c684f5accfbe2e0e742e29aec6cde8852a96418b772/jupyterlite_core-0.1.0b19-py3-none-any.whl", hash = "sha256:06f6e8809ef7bee3a22297ea376853482eb8b6f8888bb539382e30cb0c10b7f1"},
-    {url = "https://files.pythonhosted.org/packages/c0/af/d5f16084323f8a3cf8da7848d8fa5fbb6b122e61d8114deca8a16ebe487c/jupyterlite-core-0.1.0b19.tar.gz", hash = "sha256:2bfd0f88ea823eeef48e280b52dc5547aee2466dc699edcdb78a4c1814243cb8"},
-]
-"jupyterlite-pyodide-kernel 0.0.5" = [
-    {url = "https://files.pythonhosted.org/packages/13/7f/9eecb1a820b3bafff83dd52d052983c54492f6ff0cd3d5bdd7afdc76cabf/jupyterlite_pyodide_kernel-0.0.5.tar.gz", hash = "sha256:d8e4b96ef44fc7414e80db278d40e41d186731858e79788a55454436e2d9b964"},
-    {url = "https://files.pythonhosted.org/packages/81/ff/9cd69da9e968d529597258c32dee39ac580a8973877c8ca5dd7bd7d349e7/jupyterlite_pyodide_kernel-0.0.5-py3-none-any.whl", hash = "sha256:296979b1d8dc5ec7d70cf9742abae7266ec1581638984f34bb1517109615ab42"},
 ]
 "latexify-py 0.2.0" = [
     {url = "https://files.pythonhosted.org/packages/50/1c/44104c308113f5b2fd0488c73496b2081fad7c49d902610bf2fcb9573222/latexify_py-0.2.0.tar.gz", hash = "sha256:cb39bee8f1f38adea3e43fd81565912135ba39b720c97fe0c57fd25dbc81b26f"},

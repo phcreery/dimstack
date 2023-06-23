@@ -15,7 +15,7 @@
   "python.languageServer": "Pylance",
   "editor.formatOnSave": true,
   "python.linting.mypyEnabled": false,
-  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.typeCheckingMode": "basic",
   "notebook.output.textLineLimit": 120,
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
