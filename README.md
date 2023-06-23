@@ -138,16 +138,6 @@ In JupyterLite instances, you first have to pip install the wheel embedded.
 %pip install -q dimstack
 ```
 
-### Build
-
-```
-pdm build
-cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
-cd notebooks
-jupyter lite build --contents .
-jupyter lite serve
-```
-
 ### Testing
 
 ```
