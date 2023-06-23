@@ -13,13 +13,14 @@ class StackPlot:
     def __init__(self):
         colors = px.colors.qualitative.Plotly
         self.col_pal_iterator = itertools.cycle(colors)
+        self.title = "Dimension chart"
 
         # fig = go.Figure()
         fig = make_subplots(specs=[[{"secondary_y": True}]], x_title="Distance (mm)")
         self.fig = fig
         self.fig.update_yaxes(title_text="Dimension", secondary_y=False)
         self.fig.update_yaxes(title_text="Probability Density", secondary_y=True)
-        self.fig.update_layout(go.Layout(title="Dimension chart"))
+        self.fig.update_layout(go.Layout(title=self.title))
 
     def show(self):
         return self.fig.show()
@@ -116,6 +117,8 @@ class StackPlot:
             new_pos = prev_pos + item.nominal * item.dir
             self.add_dimension(item, start_pos=prev_pos)
             prev_pos = new_pos
+    
+        self.fig.update_layout(go.Layout(title=stack.title))
 
         return self
 
