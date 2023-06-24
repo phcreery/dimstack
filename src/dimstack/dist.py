@@ -12,6 +12,13 @@ DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. 
 
 
 class Uniform:
+    """Uniform distribution.
+
+    Args:
+        lower (float): Lower limit.
+        upper (float): Upper limit.
+    """
+
     def __init__(self, lower: float, upper: float):
         self.lower = lower
         self.upper = upper
@@ -31,6 +38,13 @@ class Uniform:
 
 
 class Normal:
+    """Normal distribution.
+
+    Args:
+        mean (float): Mean.
+        stdev (float): Standard deviation.
+    """
+
     def __init__(self, mean: float, stdev: float):
         self.mean = mean
         self.stdev = stdev
@@ -55,6 +69,15 @@ class Normal:
 
 
 class NormalScreened:
+    """Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
+
+    Args:
+        mean (float): Mean.
+        stdev (float): Standard deviation.
+        lower (float): Lower limit.
+        upper (float): Upper limit.
+    """
+
     def __init__(self, mean: float, stdev: float, lower: float, upper: float):
         self.mean = mean
         self.stdev = stdev

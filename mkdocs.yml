@@ -3,7 +3,9 @@ site_name: "dimstack"
 repo_url: https://github.com/phcreery/dimstack
 
 theme:
-  name: "material"
+  # name: "material"
+  name: readthedocs
+  highlightjs: true
 
 plugins:
   - search
@@ -15,3 +17,5 @@ plugins:
             members_order: source
             filters: []
             show_bases: true
+            show_source: false
+            heading_level: 3

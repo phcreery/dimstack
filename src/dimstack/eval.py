@@ -4,7 +4,7 @@ import logging
 from typing import List, Union, Dict, Any
 
 from .display import display_df
-from .stats import C_p, C_pk, RSS_func, normal_cdf
+from .stats import C_p, C_pk, RSS_func
 from .tolerance import SymmetricBilateral, UnequalBilateral, Bilateral
 from .utils import nround, sign
 from . import dist
@@ -59,19 +59,17 @@ class BasicDimension:
 
     @property
     def dict(self) -> Dict[str, Any]:
-        return [
-            {
-                "ID": self.id,
-                "Name": self.name,
-                "Description": (self.description),
-                "dir": self.direction,
-                "Nom.": nround(self.nominal),
-                "Tol.": (str(self.tolerance)).ljust(14, " "),
-                "Sen.": str(self.a),
-                "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-                "Distribution": self.distribution,
-            }
-        ]
+        return {
+            "ID": self.id,
+            "Name": self.name,
+            "Description": (self.description),
+            "dir": self.direction,
+            "Nom.": nround(self.nominal),
+            "Tol.": (str(self.tolerance)).ljust(14, " "),
+            "Sen.": str(self.a),
+            "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+            "Distribution": self.distribution,
+        }
 
     @property
     def direction(self):
@@ -225,29 +223,27 @@ class StatisticalDimension(BasicDimension):
 
     @property
     def dict(self) -> Dict[str, Any]:
-        return [
-            {
-                "ID": self.id,
-                "Name": self.name,
-                "Description": (self.description),
-                "dir": self.direction,
-                "Nom.": nround(self.nominal),
-                "Tol.": (str(self.tolerance)).ljust(14, " "),
-                "Sen.": nround(self.a),
-                "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-                "Distribution": f"{self.distribution}",
-                "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
-                "k": nround(self.k),
-                "C_p": nround(self.C_p),
-                "C_pk": nround(self.C_pk),
-                "μ": nround(self.mean),
-                "σ": nround(self.stdev),
-                "μ_eff": nround(self.mean_eff),
-                "σ_eff": nround(self.stdev_eff),
-                "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
-                "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
-            }
-        ]
+        return {
+            "ID": self.id,
+            "Name": self.name,
+            "Description": (self.description),
+            "dir": self.direction,
+            "Nom.": nround(self.nominal),
+            "Tol.": (str(self.tolerance)).ljust(14, " "),
+            "Sen.": nround(self.a),
+            "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+            "Distribution": f"{self.distribution}",
+            "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
+            "k": nround(self.k),
+            "C_p": nround(self.C_p),
+            "C_pk": nround(self.C_pk),
+            "μ": nround(self.mean),
+            "σ": nround(self.stdev),
+            "μ_eff": nround(self.mean_eff),
+            "σ_eff": nround(self.stdev_eff),
+            "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
+            "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
+        }
 
     @property
     def mean(self):
@@ -441,7 +437,7 @@ class Stack:
         )
 
     @property
-    def dict(self) -> Dict[str, Any]:
+    def dict(self):
         return [
             {
                 "ID": item.id,
@@ -533,20 +529,18 @@ class Spec:
 
     @property
     def dict(self) -> Dict[str, Any]:
-        return [
-            {
-                "Name": self.name,
-                "Description": self.description,
-                "Dimension": f"{self.dim}",
-                "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
-                "Median": nround(self.median),
-                # "k": nround(self.k),
-                # "C_p": nround(self.C_p),
-                # "C_pk": nround(self.C_pk),
-                "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
-                "Reject PPM": f"{nround(self.R, 2)}",
-            }
-        ]
+        return {
+            "Name": self.name,
+            "Description": self.description,
+            "Dimension": f"{self.dim}",
+            "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
+            "Median": nround(self.median),
+            # "k": nround(self.k),
+            # "C_p": nround(self.C_p),
+            # "C_pk": nround(self.C_pk),
+            "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
+            "Reject PPM": f"{nround(self.R, 2)}",
+        }
 
 
 if __name__ == "__main__":

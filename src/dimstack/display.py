@@ -1,6 +1,6 @@
 import pandas as pd
 
-DISPLAY_MODE = "text"  # "text", "str"/"string", "plot", or "df"
+DISPLAY_MODE = "text"
 FIGSIZE = (6, 3)
 
 
@@ -8,13 +8,13 @@ def mode(dispmode: str):
     """Set the display mode for the stack.
 
     Args:
-        mode (str): "text", "str"/'string, "plot", or "df"
+        mode (str): "text", "str"/"string", "plot", or "df"
     """
     global DISPLAY_MODE
     DISPLAY_MODE = dispmode
 
 
-def display_df(data: dict, title: str = None, dispmode=None) -> pd.DataFrame:
+def display_df(data: dict, title: str = "", dispmode=None):
     """Display a dataframe.
 
     Args:
