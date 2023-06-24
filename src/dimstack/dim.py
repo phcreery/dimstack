@@ -13,7 +13,7 @@ POSITIVE = "+"
 NEGATIVE = "-"
 
 
-class BasicDimension:
+class Basic:
     """
     A measurement is a single measurement of a part.
 
@@ -36,7 +36,7 @@ class BasicDimension:
         name: str = "Dimension",
         desc: str = "Dimension",
     ):
-        self.id = BasicDimension.newID()
+        self.id = Basic.newID()
         self.dir = sign(nom) * sign(a)
         self.nominal = abs(nom)
         self.tolerance = tol
@@ -46,7 +46,7 @@ class BasicDimension:
         self.distribution = dist.DIST_UNIFORM
 
     def __repr__(self) -> str:
-        return f"BasicDimension({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description})"
+        return f"Basic({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description})"
 
     def __str__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {str(self.tolerance)}"
@@ -58,18 +58,20 @@ class BasicDimension:
         return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
 
     @property
-    def dict(self) -> Dict[str, Any]:
-        return {
-            "ID": self.id,
-            "Name": self.name,
-            "Description": (self.description),
-            "dir": self.direction,
-            "Nom.": nround(self.nominal),
-            "Tol.": (str(self.tolerance)).ljust(14, " "),
-            "Sen.": str(self.a),
-            "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-            "Distribution": self.distribution,
-        }
+    def dict(self) -> List[Dict[str, Any]]:
+        return [
+            {
+                "ID": self.id,
+                "Name": self.name,
+                "Description": (self.description),
+                "dir": self.direction,
+                "Nom.": nround(self.nominal),
+                "Tol.": (str(self.tolerance)).ljust(14, " "),
+                "Sen.": str(self.a),
+                "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+                "Distribution": self.distribution,
+            }
+        ]
 
     @property
     def direction(self):
@@ -118,12 +120,12 @@ class BasicDimension:
     @classmethod
     def from_statistical_dimension(
         cls,
-        stat: "StatisticalDimension",
+        stat: "Statistical",
     ):
-        if type(stat) is BasicDimension:
+        if type(stat) is Basic:
             return stat
 
-        logging.warning(f"Converting StatisticalDimension ({stat}) to BasicDimension")
+        logging.warning(f"Converting Statistical ({stat}) to Basic")
         return cls(
             nom=stat.nominal * stat.dir,
             tol=stat.tolerance,
@@ -139,8 +141,8 @@ class BasicDimension:
         return []
 
 
-class StatisticalDimension(BasicDimension):
-    """StatisticalDimension
+class Statistical(Basic):
+    """Statistical
 
     Args:
         process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
@@ -159,14 +161,14 @@ class StatisticalDimension(BasicDimension):
         **kwargs,
     ):
         # super().__init__(*args, **kwargs)
-        super(StatisticalDimension, self).__init__(*args, **kwargs)
+        super(Statistical, self).__init__(*args, **kwargs)
         self.distribution = distribution
         self.process_sigma = process_sigma
         self.k = k
         self.data = data
 
     def __repr__(self) -> str:
-        return f"StatisticalDimension({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
+        return f"Statistical({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
 
     def __str__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.direction}{nround(self.nominal)} {str(self.tolerance)} @ ± {self.process_sigma}σ & k={self.k}"
@@ -180,15 +182,15 @@ class StatisticalDimension(BasicDimension):
     @classmethod
     def from_basic_dimension(
         cls,
-        basic: Union[BasicDimension, "StatisticalDimension"],
+        basic: Union[Basic, "Statistical"],
         process_sigma: float = 3,
         k: float = 0,
         distribution: str = "Normal",
     ):
-        if type(basic) is StatisticalDimension:
+        if type(basic) is Statistical:
             return basic
 
-        logging.warning(f"Converting BasicDimension ({basic}) to StatisticalDimension")
+        logging.warning(f"Converting Basic ({basic}) to Statistical dimension")
         return cls(
             nom=basic.nominal * basic.dir,
             tol=basic.tolerance,
@@ -202,7 +204,7 @@ class StatisticalDimension(BasicDimension):
 
     @classmethod
     def from_data(cls, data, sigma=3, name="data", desc="data"):
-        """Create a StatisticalDimension from data
+        """Create a Statistical dimension from data
 
         Args:
             data (np.ndarray or similar): The data to create the dimension from
@@ -222,28 +224,30 @@ class StatisticalDimension(BasicDimension):
         )
 
     @property
-    def dict(self) -> Dict[str, Any]:
-        return {
-            "ID": self.id,
-            "Name": self.name,
-            "Description": (self.description),
-            "dir": self.direction,
-            "Nom.": nround(self.nominal),
-            "Tol.": (str(self.tolerance)).ljust(14, " "),
-            "Sen.": nround(self.a),
-            "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
-            "Distribution": f"{self.distribution}",
-            "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
-            "k": nround(self.k),
-            "C_p": nround(self.C_p),
-            "C_pk": nround(self.C_pk),
-            "μ": nround(self.mean),
-            "σ": nround(self.stdev),
-            "μ_eff": nround(self.mean_eff),
-            "σ_eff": nround(self.stdev_eff),
-            "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
-            "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
-        }
+    def dict(self) -> List[Dict[str, Any]]:
+        return [
+            {
+                "ID": self.id,
+                "Name": self.name,
+                "Description": (self.description),
+                "dir": self.direction,
+                "Nom.": nround(self.nominal),
+                "Tol.": (str(self.tolerance)).ljust(14, " "),
+                "Sen.": nround(self.a),
+                "Relative Bounds": f"[{nround(self.lower_rel)}, {nround(self.upper_rel)}]",
+                "Distribution": f"{self.distribution}",
+                "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
+                "k": nround(self.k),
+                "C_p": nround(self.C_p),
+                "C_pk": nround(self.C_pk),
+                "μ": nround(self.mean),
+                "σ": nround(self.stdev),
+                "μ_eff": nround(self.mean_eff),
+                "σ_eff": nround(self.stdev_eff),
+                "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
+                "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}",
+            }
+        ]
 
     @property
     def mean(self):
@@ -317,7 +321,7 @@ class Stack:
     def __init__(
         self,
         title: str = "Stack",
-        items: List[Union[BasicDimension, StatisticalDimension]] = [],
+        items: List[Union[Basic, Statistical]] = [],
     ):
         self.title = title
         self.items = items
@@ -334,17 +338,17 @@ class Stack:
     def show(self):
         return display_df(self.dict, f"Stack: {self.title}")
 
-    def append(self, measurement: Union[BasicDimension, StatisticalDimension]):
+    def append(self, measurement: Union[Basic, Statistical]):
         self.items.append(measurement)
 
     @property
-    def Closed(self) -> BasicDimension:
+    def Closed(self) -> Basic:
         nominal = sum([item.nominal * item.a * item.dir for item in self.items])
         tolerance = Bilateral(
             sum(filter(None, [item.tolerance_absolute.upper for item in self.items])),
             sum(filter(None, [item.tolerance_absolute.lower for item in self.items])),
         )
-        return BasicDimension(
+        return Basic(
             nominal,
             tolerance,
             name=f"{self.title} - Closed Analysis",
@@ -352,7 +356,7 @@ class Stack:
         )
 
     @property
-    def WC(self) -> BasicDimension:
+    def WC(self) -> Basic:
         """
         This is a simple WC calculation. This results in a Bilateral dimension with a tolerance that is the sum of the component tolerances.
         It states that in any combination of tolerances, you can be sure the result will be within the this resulting tolerance.
@@ -360,7 +364,7 @@ class Stack:
         mean = sum([item.median * item.a * item.dir for item in self.items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
         tolerance = Bilateral(t_wc)
-        return BasicDimension(
+        return Basic(
             nom=mean,
             tol=tolerance,
             name=f"{self.title} - WC Analysis",
@@ -368,7 +372,7 @@ class Stack:
         )
 
     @property
-    def RSS(self) -> StatisticalDimension:
+    def RSS(self) -> Statistical:
         """
         This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
         It is really only useful for a Bilateral stack of same process-stdev items. The RSS result has the same uncertainty as the measurements.
@@ -387,11 +391,11 @@ class Stack:
          - Dimensioning and Tolerancing Handbook, McGraw Hill
          - http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
         """
-        items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
+        items: List[Statistical] = [Statistical.from_basic_dimension(item) for item in self.items]
         d_g = sum([item.mean_eff * item.a * item.dir for item in items])
         t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) * item.dir for item in items])
         tolerance = Bilateral(t_rss)
-        return StatisticalDimension(
+        return Statistical(
             nom=d_g,
             tol=tolerance,
             name=f"{self.title} - RSS Analysis",
@@ -399,13 +403,13 @@ class Stack:
         )
 
     @property
-    def MRSS(self) -> StatisticalDimension:
+    def MRSS(self) -> Statistical:
         """Basically RSS with a coefficient modifier to make the tolerance tighter.
 
         Returns:
-            StatisticalDimension: _description_
+            Statistical: _description_
         """
-        items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
+        items: List[Statistical] = [Statistical.from_basic_dimension(item) for item in self.items]
         d_g = sum([item.mean_eff * item.a * item.dir for item in items])
         t_wc = sum([abs(item.a * (item.tolerance.T / 2) * item.dir) for item in self.items])
         t_rss = RSS_func(*[item.a * (item.tolerance.T / 2) * item.dir for item in items])
@@ -415,7 +419,7 @@ class Stack:
         tolerance = Bilateral(t_mrss)
         stdev = t_wc / 6
         sigma = t_mrss / stdev
-        return StatisticalDimension(
+        return Statistical(
             nom=d_g,
             tol=tolerance,
             name=f"{self.title} - MRSS Analysis",
@@ -423,12 +427,12 @@ class Stack:
             process_sigma=sigma,
         )
 
-    def SixSigma(self, at: float = 3) -> StatisticalDimension:
-        items: List[StatisticalDimension] = [StatisticalDimension.from_basic_dimension(item) for item in self.items]
+    def SixSigma(self, at: float = 3) -> Statistical:
+        items: List[Statistical] = [Statistical.from_basic_dimension(item) for item in self.items]
         mean = sum([item.mean_eff * item.dir for item in items])
         stdev = RSS_func(*[item.stdev_eff for item in items])
         tolerance = Bilateral(stdev * at)
-        return StatisticalDimension(
+        return Statistical(
             nom=mean,
             tol=tolerance,
             process_sigma=at,
@@ -437,7 +441,7 @@ class Stack:
         )
 
     @property
-    def dict(self):
+    def dict(self) -> List[Dict[str, Any]]:
         return [
             {
                 "ID": item.id,
@@ -465,7 +469,7 @@ class Stack:
 
 
 class Spec:
-    def __init__(self, name, description, dim: Union[StatisticalDimension, BasicDimension], LL, UL):
+    def __init__(self, name, description, dim: Union[Statistical, Basic], LL, UL):
         self.name = name
         self.description = description
         self.dim = dim
@@ -528,8 +532,8 @@ class Spec:
         return self.yield_loss_probability * 1000000
 
     @property
-    def dict(self) -> Dict[str, Any]:
-        return {
+    def dict(self) -> List[Dict[str, Any]]:
+        return [{
             "Name": self.name,
             "Description": self.description,
             "Dimension": f"{self.dim}",
@@ -540,7 +544,7 @@ class Spec:
             # "C_pk": nround(self.C_pk),
             "Yield Probability": f"{nround(self.yield_probability*100, 8)}",
             "Reject PPM": f"{nround(self.R, 2)}",
-        }
+        }]
 
 
 if __name__ == "__main__":

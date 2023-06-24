@@ -3,26 +3,24 @@ import dimstack
 
 # this test is a copy of "My First Stackup" in newconceptzdesign http://www.newconceptzdesign.com/tutorial/Tutorial-My_first_stackup.html
 
-m1 = dimstack.eval.StatisticalDimension(
+m1 = dimstack.dim.Statistical(
     nom=-0.3190,
     tol=dimstack.tolerance.SymmetricBilateral(0.0050),
     process_sigma=6,
     name="PN16",
     desc="Mounting face to rt. end",
 )
-m2 = dimstack.eval.StatisticalDimension(
+m2 = dimstack.dim.Statistical(
     nom=10.4860,
     tol=dimstack.tolerance.SymmetricBilateral(0.0100),
     process_sigma=6,
     name="PN07",
     desc="Overall width",
 )
-m3 = dimstack.eval.StatisticalDimension(
-    nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), process_sigma=6, name="PN16", desc="Mounting face to rt. end"
-)
+m3 = dimstack.dim.Statistical(nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), process_sigma=6, name="PN16", desc="Mounting face to rt. end")
 items = [m1, m2, m3]
 
-stack = dimstack.eval.Stack(title="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", items=items)
+stack = dimstack.dim.Stack(title="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", items=items)
 
 
 class MITCalc(unittest.TestCase):
@@ -47,8 +45,8 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).Z_max, 4), 9.8602)
 
     # def test_SixSigma_assembly(self):
-    #     eval = stack.SixSigma(at=4.5)
-    #     assy = dimstack.eval.Assembly("assy", "", dim=eval, LL=0.05, UL=0.8, process_sigma=4.5)
+    #     dim = stack.SixSigma(at=4.5)
+    #     assy = dimstack.dim.Assembly("assy", "", dim=dim, LL=0.05, UL=0.8, process_sigma=4.5)
 
     #     self.assertEqual(dimstack.utils.nround(assy.C_p), 2.12804)
     #     self.assertEqual(dimstack.utils.nround(assy.C_pk), 1.98617)

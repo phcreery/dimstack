@@ -2,7 +2,7 @@
 
 [TOC]
 
-::: dimstack.eval
+::: dimstack.dim
 
 ::: dimstack.tolerance
 

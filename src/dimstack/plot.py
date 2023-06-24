@@ -6,12 +6,12 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 
-from .eval import Stack, BasicDimension, StatisticalDimension
+from .dim import Stack, Basic, Statistical
 
 
 class StackPlot:
-    """ Plot a stack of dimensions. This is a wrapper around Plotly.
-    """
+    """Plot a stack of dimensions. This is a wrapper around Plotly."""
+
     def __init__(self):
         colors = px.colors.qualitative.Plotly
         self.col_pal_iterator = itertools.cycle(colors)
@@ -25,15 +25,14 @@ class StackPlot:
         self.fig.update_layout(go.Layout(title=self.title))
 
     def show(self):
-        """ Show the plot. This works in both Jupyter notebooks and in a Python script.
-        """
+        """Show the plot. This works in both Jupyter notebooks and in a Python script."""
         return self.fig.show()
 
-    def add_dimension(self, item: Union[BasicDimension, StatisticalDimension], start_pos=0):
+    def add_dimension(self, item: Union[Basic, Statistical], start_pos=0):
         """Add a dimension to the plot.
 
         Args:
-            item (Union[BasicDimension, StatisticalDimension]): _description_
+            item (Union[Basic, Statistical]): _description_
             start_pos (int, optional): _description_. Defaults to 0.
         """
         prev_pos = start_pos
@@ -129,7 +128,7 @@ class StackPlot:
 
         Returns:
             _type_: _description_
-        """        """"""
+        """ """"""
         prev_pos = 0
         for item in stack.items:
             new_pos = prev_pos + item.nominal * item.dir
@@ -140,21 +139,21 @@ class StackPlot:
 
         return self
 
-    def add(self, item: Union[Stack, BasicDimension, StatisticalDimension]):
-        """ Add a dimension or stack to the plot.
+    def add(self, item: Union[Stack, Basic, Statistical]):
+        """Add a dimension or stack to the plot.
 
         Args:
-            item (Stack, BasicDimension, StatisticalDimension): _description_
+            item (Stack, Basic, Statistical): _description_
 
         Raises:
-            TypeError: If the item is not a Stack, BasicDimension, or StatisticalDimension.
+            TypeError: If the item is not a Stack, Basic, or Statistical.
 
         Returns:
             StackPlot: self
-        """        
+        """
         if isinstance(item, Stack):
             self.add_stack(item)
-        elif isinstance(item, (BasicDimension, StatisticalDimension)):
+        elif isinstance(item, (Basic, Statistical)):
             self.add_dimension(item)
         else:
             raise TypeError(f"Cannot add {type(item)} to StackPlot")

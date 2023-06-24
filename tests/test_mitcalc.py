@@ -3,7 +3,7 @@ import dimstack
 
 # this test is a copy of MITCalc User Interface diagram
 
-m1 = dimstack.eval.StatisticalDimension(
+m1 = dimstack.dim.Statistical(
     nom=208,
     tol=dimstack.tolerance.SymmetricBilateral(0.036),
     process_sigma=6,
@@ -11,33 +11,33 @@ m1 = dimstack.eval.StatisticalDimension(
     name="a",
     desc="Shaft",
 )
-m2 = dimstack.eval.StatisticalDimension(
+m2 = dimstack.dim.Statistical(
     nom=-1.75,
     tol=dimstack.tolerance.UnequalBilateral(0, 0.06),
     process_sigma=3,
     name="b",
     desc="Retainer ring",
 )
-m3 = dimstack.eval.StatisticalDimension(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, 0.12), process_sigma=3, name="c", desc="Bearing")
-m4 = dimstack.eval.StatisticalDimension(
+m3 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, 0.12), process_sigma=3, name="c", desc="Bearing")
+m4 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
     process_sigma=3,
     name="d",
     desc="Bearing Sleeve",
 )
-m5 = dimstack.eval.StatisticalDimension(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case")
-m6 = dimstack.eval.StatisticalDimension(
+m5 = dimstack.dim.Statistical(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case")
+m6 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
     process_sigma=3,
     name="f",
     desc="Bearing Sleeve",
 )
-m7 = dimstack.eval.StatisticalDimension(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, 0.12), process_sigma=3, name="g", desc="Bearing")
+m7 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, 0.12), process_sigma=3, name="g", desc="Bearing")
 items = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = dimstack.eval.Stack(title="stacks on stacks", items=items)
+stack = dimstack.dim.Stack(title="stacks on stacks", items=items)
 
 
 class MITCalc(unittest.TestCase):
@@ -66,7 +66,7 @@ class MITCalc(unittest.TestCase):
 
     def test_RSS_assembly(self):
         eval = stack.RSS
-        spec = dimstack.eval.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
+        spec = dimstack.dim.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
 
         self.assertEqual(dimstack.utils.nround(spec.R, 1), 0.0)
 
@@ -93,7 +93,7 @@ class MITCalc(unittest.TestCase):
 
     def test_SixSigma_assembly(self):
         eval = stack.SixSigma(at=4.5)
-        spec = dimstack.eval.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
+        spec = dimstack.dim.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
 
         # self.assertEqual(dimstack.utils.nround(spec.C_p), 2.12804) # temporarily removed 20230623
         # self.assertEqual(dimstack.utils.nround(spec.C_pk), 1.98617) # temporarily removed 20230623
