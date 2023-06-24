@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Basics - dimstack</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Basics";
+        var mkdocs_page_input_path = "API_Reference\\basics.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> dimstack
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../examples/">Examples</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Basics</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#dimstack.dim">dim</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Basic">Basic</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.Z_min">Z_min</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.Z_max">Z_max</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Statistical">Statistical</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.mean_eff">mean_eff</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.from_data">from_data()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Stack">Stack</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.WC">WC</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.RSS">RSS</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.MRSS">MRSS</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Spec">Spec</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.median">median</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.yield_loss_probability">yield_loss_probability</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.R">R</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dimstack.tolerance">tolerance</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.Bilateral">Bilateral()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dimstack.dist">dist</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.Uniform">Uniform</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.Normal">Normal</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.NormalScreened">NormalScreened</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#constants">Constants</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.DIST_UNIFORM">DIST_UNIFORM</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.DIST_NORMAL">DIST_NORMAL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.DIST_SCREENED">DIST_SCREENED</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../displaying/">Displaying</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">dimstack</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>API Reference &raquo;</li>
+      <li>Basics</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/phcreery/dimstack/edit/master/docs/API_Reference/basics.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="basics">Basics</h1>
+<div class="toc">
+<ul>
+<li><a href="#basics">Basics</a><ul>
+<li><a href="#dimstack.dim">dim</a><ul>
+<li><a href="#dimstack.dim.Basic">Basic</a><ul>
+<li><a href="#dimstack.dim.Basic.Z_min">Z_min</a></li>
+<li><a href="#dimstack.dim.Basic.Z_max">Z_max</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.dim.Statistical">Statistical</a><ul>
+<li><a href="#dimstack.dim.Statistical.mean_eff">mean_eff</a></li>
+<li><a href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a></li>
+<li><a href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Statistical.from_data">from_data()</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.dim.Stack">Stack</a><ul>
+<li><a href="#dimstack.dim.Stack.WC">WC</a></li>
+<li><a href="#dimstack.dim.Stack.RSS">RSS</a></li>
+<li><a href="#dimstack.dim.Stack.MRSS">MRSS</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.dim.Spec">Spec</a><ul>
+<li><a href="#dimstack.dim.Spec.median">median</a></li>
+<li><a href="#dimstack.dim.Spec.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Spec.R">R</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#dimstack.tolerance">tolerance</a><ul>
+<li><a href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a></li>
+<li><a href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></li>
+<li><a href="#dimstack.tolerance.Bilateral">Bilateral()</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.dist">dist</a><ul>
+<li><a href="#dimstack.dist.Uniform">Uniform</a></li>
+<li><a href="#dimstack.dist.Normal">Normal</a></li>
+<li><a href="#dimstack.dist.NormalScreened">NormalScreened</a></li>
+</ul>
+</li>
+<li><a href="#constants">Constants</a><ul>
+<li><a href="#dimstack.dist.DIST_UNIFORM">DIST_UNIFORM</a></li>
+<li><a href="#dimstack.dist.DIST_NORMAL">DIST_NORMAL</a></li>
+<li><a href="#dimstack.dist.DIST_SCREENED">DIST_SCREENED</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="dimstack.dim" class="doc doc-heading">
+          <code>dimstack.dim</code>
+
+
+</h3>
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dim.Basic" class="doc doc-heading">
+        <code>Basic</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A measurement is a single measurement of a part.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>nom</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The nominal value of the measurement. Defaults to 0.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>tol</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>, <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>]</code>
+          </td>
+          <td><p>The tolerance of the measurement. Defaults to SymmetricBilateral(0).</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>a</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
+                and the nominal value will be made positive.</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The name of the measurement. Defaults to "Dimension".</p></td>
+          <td>
+                <code>&#39;Dimension&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>desc</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The description of the measurement. Defaults to "Dimension".</p></td>
+          <td>
+                <code>&#39;Dimension&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.Z_min" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Z_min</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The minimum value of the measurement. AKA, absolute upper</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.Z_max" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Z_max</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The maximum value of the measurement. AKA, absolute lower</p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dim.Statistical" class="doc doc-heading">
+        <code>Statistical</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code></p>
+
+  
+      <p>Statistical</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>process_sigma</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The standard deviation of the process represented as ±σ. Defaults to ±3σ.</p></td>
+          <td>
+                <code>3</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>k</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
+                standard deviation. Defaults to 0σ.</p></td>
+          <td>
+                <code>0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>distribution</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The distribution of the measurement. Defaults to "Normal".</p></td>
+          <td>
+                <code>dist.DIST_NORMAL</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Statistical.mean_eff" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">mean_eff</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>effective mean</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Statistical.stdev_eff" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">stdev_eff</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>effective standard deviation
+"6 stdev" is the standard deviation of the distribution</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Statistical.yield_loss_probability" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns the probability of a part being out of spec.</p>
+  </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h5 id="dimstack.dim.Statistical.from_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a Statistical dimension from data</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code>np.ndarray or similar</code>
+          </td>
+          <td><p>The data to create the dimension from</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dim.Stack" class="doc doc-heading">
+        <code>Stack</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Stack.WC" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">WC</span><span class="p">:</span> <span class="n">Basic</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This is a simple WC calculation. This results in a Bilateral dimension with a tolerance that is the sum of the component tolerances.
+It states that in any combination of tolerances, you can be sure the result will be within the this resulting tolerance.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Stack.RSS" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">RSS</span><span class="p">:</span> <span class="n">Statistical</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
+It is really only useful for a Bilateral stack of same process-stdev items. The RSS result has the same uncertainty as the measurements.
+Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
+manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
+probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
+normal and the probability that it is ±t_rss between is 99.73%.
+Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
+for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
+manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
+The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
+equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
+plus the RSS variation at the gap.</p>
+
+<details class="see" open>
+  <summary>See</summary>
+  <ul>
+<li>Dimensioning and Tolerancing Handbook, McGraw Hill</li>
+<li>http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&amp;file=RSS_explanation.GIF</li>
+</ul>
+</details>  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Stack.MRSS" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">MRSS</span><span class="p">:</span> <span class="n">Statistical</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Basically RSS with a coefficient modifier to make the tolerance tighter.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>Statistical</code></td>          <td>
+                <code><a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="#dimstack.dim.Statistical">Statistical</a></code>
+          </td>
+          <td><p><em>description</em></p></td>
+        </tr>
+    </tbody>
+  </table>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dim.Spec" class="doc doc-heading">
+        <code>Spec</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Spec.median" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">median</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>median</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Spec.yield_loss_probability" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns the probability of a part being out of spec.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Spec.R" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">R</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the yield loss probability in PPM</p>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="dimstack.tolerance" class="doc doc-heading">
+          <code>dimstack.tolerance</code>
+
+
+</h3>
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.tolerance.SymmetricBilateral" class="doc doc-heading">
+        <code>SymmetricBilateral</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Bilateral tolerancing is a method of specifying a tolerance that is symmetrical about the nominal value.
+This is the most common type of tolerancing.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.tolerance.UnequalBilateral" class="doc doc-heading">
+        <code>UnequalBilateral</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
+This can also be used for Unilateral tolerancing.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="dimstack.tolerance.Bilateral" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Bilateral</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Automatically determine the type of bilateral tolerance to use from the upper and lower inputs.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>upper</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p><em>description</em></p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>lower</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p><em>description</em>. Defaults to None.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a> | <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></code>
+          </td>
+          <td><p><em>description</em></p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="dimstack.dist" class="doc doc-heading">
+          <code>dimstack.dist</code>
+
+
+</h3>
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dist.Uniform" class="doc doc-heading">
+        <code>Uniform</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Uniform distribution.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>lower</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Lower limit.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>upper</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Upper limit.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dist.Normal" class="doc doc-heading">
+        <code>Normal</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Normal distribution.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mean</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Mean.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>stdev</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Standard deviation.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dist.NormalScreened" class="doc doc-heading">
+        <code>NormalScreened</code>
+
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mean</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Mean.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>stdev</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Standard deviation.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>lower</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Lower limit.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>upper</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Upper limit.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div><h2 id="constants">Constants</h2>
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="dimstack.dist.DIST_UNIFORM" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">dimstack</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">DIST_UNIFORM</span> <span class="o">=</span> <span class="s1">&#39;Uniform&#39;</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents first">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="dimstack.dist.DIST_NORMAL" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">dimstack</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">DIST_NORMAL</span> <span class="o">=</span> <span class="s1">&#39;Normal&#39;</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents first">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="dimstack.dist.DIST_SCREENED" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">dimstack</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">DIST_SCREENED</span> <span class="o">=</span> <span class="s1">&#39;Screened&#39;</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents first">
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../examples/" class="btn btn-neutral float-left" title="Examples"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../displaying/" class="btn btn-neutral float-right" title="Displaying">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/phcreery/dimstack" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../../examples/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../displaying/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
