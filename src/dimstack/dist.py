@@ -104,5 +104,5 @@ class NormalScreened:
         if x < self.lower:
             return 0
         elif x > self.upper:
-            return 0
+            return 1
         return norm.cdf(x, loc=self.mean, scale=self.stdev)

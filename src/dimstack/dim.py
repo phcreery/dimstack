@@ -185,7 +185,7 @@ class Statistical(Basic):
         basic: Union[Basic, "Statistical"],
         process_sigma: float = 3,
         k: float = 0,
-        distribution: str = "Normal",
+        distribution: str = dist.DIST_NORMAL,
     ):
         if type(basic) is Statistical:
             return basic
@@ -203,7 +203,7 @@ class Statistical(Basic):
         )
 
     @classmethod
-    def from_data(cls, data, sigma=3, name="data", desc="data"):
+    def from_data(cls, data, sigma=3, name="dataset", desc="imported data"):
         """Create a Statistical dimension from data
 
         Args:
@@ -288,14 +288,14 @@ class Statistical(Basic):
         """
         Returns the probability of a part being out of spec.
         """
-        UL = self.upper_rel
-        LL = self.lower_rel
-        # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
-        return 1 - self.get_dist().cdf(UL) + self.get_dist().cdf(LL)
+        return 1 - self.yield_probability
 
     @property
     def yield_probability(self):
-        return 1 - self.yield_loss_probability
+        UL = self.upper_rel
+        LL = self.lower_rel
+        # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
+        return self.get_dist().cdf(UL) - self.get_dist().cdf(LL)
 
     def get_dist(self):
         if self.distribution == dist.DIST_NORMAL:
@@ -520,11 +520,11 @@ class Spec:
         """
         Returns the probability of a part being out of spec.
         """
-        return 1 - self.dim.get_dist().cdf(self.UL) + self.dim.get_dist().cdf(self.LL)
+        return 1 - self.yield_probability
 
     @property
     def yield_probability(self):
-        return 1 - self.yield_loss_probability
+        return self.dim.get_dist().cdf(self.UL) - self.dim.get_dist().cdf(self.LL)
 
     @property
     def R(self):
@@ -537,8 +537,9 @@ class Spec:
             "Name": self.name,
             "Description": self.description,
             "Dimension": f"{self.dim}",
+            "Dimension Bounds": f"[{nround(self.dim.lower_rel)}, {nround(self.dim.upper_rel)}]",
             "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
-            "Median": nround(self.median),
+            # "Median": nround(self.median),
             # "k": nround(self.k),
             # "C_p": nround(self.C_p),
             # "C_pk": nround(self.C_pk),
