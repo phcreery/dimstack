@@ -3,9 +3,7 @@ from scipy.stats import norm, uniform
 from typing import Union, List
 import pandas as pd
 
-DIST_UNIFORM = "Uniform"  # Uniform distribution.
-DIST_NORMAL = "Normal"  # Normal distribution.
-DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
+# TODO:
 # DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used.
 # DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
 # DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.

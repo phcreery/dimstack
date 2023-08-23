@@ -65,9 +65,9 @@ class McGrawHill_1(unittest.TestCase):
         name="K",
         desc="Tapped hole depth",
     )
-    items = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
+    dims = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
 
-    stack = dimstack.dim.Stack(title="stacks on stacks", items=items)
+    stack = dimstack.dim.Stack(name="stacks on stacks", dims=dims)
 
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.nominal), 0.0615)
@@ -76,13 +76,13 @@ class McGrawHill_1(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_max, 3), 0.153)  # 0.157
 
     def test_RSS(self):
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.mean), 0.0615)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.nominal), 0.0615)
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.tolerance.T / 2, 3), 0.038)  # 0.0381
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_min), 0.02395)  # 0.0234
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_max), 0.09905)  # 0.0996
 
     def test_MRSS(self):
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.mean), 0.0615)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.nominal), 0.0615)
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.tolerance.T / 2), 0.04919)  # 0.0505
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_min, 3), 0.012)  # 0.0110
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_max, 3), 0.111)  # 0.1120
@@ -103,9 +103,9 @@ class McGrawHill_2(unittest.TestCase):
     m9 = dimstack.dim.Basic(nom=3.625, tol=dimstack.tolerance.SymmetricBilateral(0.015), a=-0.7530, name="J")
     m10 = dimstack.dim.Basic(nom=5.125, tol=dimstack.tolerance.SymmetricBilateral(0.020), a=-0.4006, name="K")
     m11 = dimstack.dim.Basic(nom=1.000, tol=dimstack.tolerance.SymmetricBilateral(0.010), a=-1.0914, name="M")
-    items = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
+    dims = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
 
-    stack = dimstack.dim.Stack(title="stacks on stacks", items=items)
+    stack = dimstack.dim.Stack(name="stacks on stacks", dims=dims)
 
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.nominal), 0.07201)  # 0.0719

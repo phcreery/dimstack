@@ -12,17 +12,16 @@ from .dim import Stack, Basic, Statistical
 class StackPlot:
     """Plot a stack of dimensions. This is a wrapper around Plotly."""
 
-    def __init__(self):
+    def __init__(self, title="Stack Plot", x_title="Distance"):
         colors = px.colors.qualitative.Plotly
         self.col_pal_iterator = itertools.cycle(colors)
-        self.title = "Dimension chart"
 
         # fig = go.Figure()
-        fig = make_subplots(specs=[[{"secondary_y": True}]], x_title="Distance (mm)")
+        fig = make_subplots(specs=[[{"secondary_y": True}]], x_title=x_title)
         self.fig = fig
         self.fig.update_yaxes(title_text="Dimension", secondary_y=False)
         self.fig.update_yaxes(title_text="Probability Density", secondary_y=True)
-        self.fig.update_layout(go.Layout(title=self.title))
+        self.fig.update_layout(go.Layout(title=title))
 
     def show(self):
         """Show the plot. This works in both Jupyter notebooks and in a Python script."""

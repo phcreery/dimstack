@@ -7,10 +7,10 @@ m1 = dimstack.dim.Statistical(
     nom=208,
     tol=dimstack.tolerance.SymmetricBilateral(0.036),
     process_sigma=6,
-    k=0.25,
     name="a",
     desc="Shaft",
 )
+m1.assume_normal_dist_skewed(0.25)
 m2 = dimstack.dim.Statistical(
     nom=-1.75,
     tol=dimstack.tolerance.UnequalBilateral(0, 0.06),
@@ -18,7 +18,9 @@ m2 = dimstack.dim.Statistical(
     name="b",
     desc="Retainer ring",
 )
+m2.assume_normal_dist()
 m3 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, 0.12), process_sigma=3, name="c", desc="Bearing")
+m3.assume_normal_dist()
 m4 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
@@ -26,7 +28,9 @@ m4 = dimstack.dim.Statistical(
     name="d",
     desc="Bearing Sleeve",
 )
+m4.assume_normal_dist()
 m5 = dimstack.dim.Statistical(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case")
+m5.assume_normal_dist()
 m6 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
@@ -34,18 +38,20 @@ m6 = dimstack.dim.Statistical(
     name="f",
     desc="Bearing Sleeve",
 )
+m6.assume_normal_dist()
 m7 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, 0.12), process_sigma=3, name="g", desc="Bearing")
-items = [m1, m2, m3, m4, m5, m6, m7]
+m7.assume_normal_dist()
+dims = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = dimstack.dim.Stack(title="stacks on stacks", items=items)
+stack = dimstack.dim.Stack(name="stacks on stacks", dims=dims)
 
 
 class MITCalc(unittest.TestCase):
     def test_input(self):
-        self.assertEqual(len(stack.items), 7)
-        self.assertEqual(stack.items[0].nominal, 208)
-        self.assertEqual(stack.items[0].tolerance.upper, 0.036)
-        self.assertEqual(stack.items[0].tolerance.lower, 0.036)
+        self.assertEqual(len(stack.dims), 7)
+        self.assertEqual(stack.dims[0].nominal, 208)
+        self.assertEqual(stack.dims[0].tolerance.upper, 0.036)
+        self.assertEqual(stack.dims[0].tolerance.lower, 0.036)
 
     def test_Closed(self):
         self.assertEqual(dimstack.utils.nround(stack.Closed.nominal), 0.25)
@@ -78,16 +84,16 @@ class MITCalc(unittest.TestCase):
     #     self.assertEqual(dimstack.utils.nround(stack.MRSS.stdev, 6), 0.059417)
 
     def test_SixSigma(self):
-        self.assertEqual(dimstack.utils.nround(stack.items[0].C_p), 2)
-        self.assertEqual(dimstack.utils.nround(stack.items[0].k), 0.25)
-        self.assertEqual(dimstack.utils.nround(stack.items[0].C_pk), 1.5)
-        self.assertEqual(dimstack.utils.nround(stack.items[0].mean_eff), 208.0)
-        self.assertEqual(dimstack.utils.nround(stack.items[0].stdev_eff), 0.008)
+        self.assertEqual(dimstack.utils.nround(stack.dims[0].C_p), 2)
+        self.assertEqual(dimstack.utils.nround(stack.dims[0].k), 0.25)
+        self.assertEqual(dimstack.utils.nround(stack.dims[0].C_pk), 1.5)
+        self.assertEqual(dimstack.utils.nround(stack.dims[0].mean_eff), 208.0)
+        self.assertEqual(dimstack.utils.nround(stack.dims[0].stdev_eff), 0.008)
 
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).mean), 0.4)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).tolerance.T / 2), 0.26433)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).stdev, 6), 0.05874)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).distribution.stdev, 6), 0.05874)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_min), 0.13567)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_max), 0.66433)
 

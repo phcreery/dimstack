@@ -10,6 +10,7 @@ m1 = dimstack.dim.Statistical(
     name="PN16",
     desc="Mounting face to rt. end",
 )
+m1.assume_normal_dist()
 m2 = dimstack.dim.Statistical(
     nom=10.4860,
     tol=dimstack.tolerance.SymmetricBilateral(0.0100),
@@ -17,10 +18,12 @@ m2 = dimstack.dim.Statistical(
     name="PN07",
     desc="Overall width",
 )
+m2.assume_normal_dist()
 m3 = dimstack.dim.Statistical(nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), process_sigma=6, name="PN16", desc="Mounting face to rt. end")
-items = [m1, m2, m3]
+m3.assume_normal_dist()
+dims = [m1, m2, m3]
 
-stack = dimstack.dim.Stack(title="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", items=items)
+stack = dimstack.dim.Stack(name="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", dims=dims)
 
 
 class MITCalc(unittest.TestCase):
@@ -37,10 +40,10 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.WC.Z_max), 9.8680)
 
     def test_SixSigma(self):
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).mean), 9.8480)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).nominal), 9.8480)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).nominal), 9.8480)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).tolerance.T / 2, 4), 0.0122)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).stdev * 2, 5), 0.00408)  # times 2 !?!?
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).distribution.stdev * 2, 5), 0.00408)  # times 2 !?!?
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).Z_min, 4), 9.8358)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).Z_max, 4), 9.8602)
 

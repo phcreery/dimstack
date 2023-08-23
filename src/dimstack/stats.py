@@ -1,4 +1,5 @@
 import math
+from typing import List
 
 # "6 Sigma" equations.
 
@@ -23,7 +24,7 @@ def C_p(UL: float, LL: float, stdev: float) -> float:
     return (UL - LL) / (6 * stdev)
 
 
-def C_pk(UL: float, LL: float, stdev: float, mean: float) -> float:
+def C_pk(UL: float, LL: float, mean: float, stdev: float) -> float:
     """
     Process capability index. adjusted for centering.
     Cpl = (mu - L)/3*stdev
@@ -40,7 +41,7 @@ def C_pk(UL: float, LL: float, stdev: float, mean: float) -> float:
         float: Process capability index.
 
     >>> from .utils import nround
-    >>> nround(C_pk(208.036, 207.964, 0.006, 208.009))
+    >>> nround(C_pk(208.036, 207.964, 208.009, 0.006))
     1.5
     """
     return min(
@@ -54,14 +55,28 @@ def C_pk(UL: float, LL: float, stdev: float, mean: float) -> float:
 #     return stdev_i / n**0.5
 
 
-def RSS_func(*args):
+def RSS_args(*args):
     """
     Root sum square.
 
-    >>> RSS_func(1, 2, 3)
+    >>> RSS_args(1, 2, 3)
     3.7416573867739413
     """
     return (sum([arg**2 for arg in args])) ** 0.5
+
+
+def RSS(args: List[float]):
+    """
+    Root sum square.
+
+    >>> RSS([1, 2, 3])
+    3.7416573867739413
+    """
+    val = 0
+    for arg in args:
+        val += arg * arg
+    val = math.sqrt(val)
+    return val
 
 
 def C_f(t_rss, t_wc, n):
