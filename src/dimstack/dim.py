@@ -317,15 +317,16 @@ class Statistical(Basic):
         """
         if self.distribution is None:
             return 0
-
-        UL = self.rel_upper
-        LL = self.rel_lower
-        # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
-        return 1 - self.distribution.cdf(UL) + self.distribution.cdf(LL)
+        return 1 - self.yield_probability
 
     @property
     def yield_probability(self):
-        return 1 - self.yield_loss_probability
+        if self.distribution is None:
+            return 0
+        UL = self.rel_upper
+        LL = self.rel_lower
+        # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
+        return self.distribution.cdf(UL) - self.distribution.cdf(LL)
 
 
 class Stack:
@@ -537,11 +538,13 @@ class Spec:
         """
         if not isinstance(self.dim, Statistical) or self.dim.distribution is None:
             return 0
-        return 1 - self.dim.distribution.cdf(self.UL) + self.dim.distribution.cdf(self.LL)
+        return 1 - self.yield_probability
 
     @property
     def yield_probability(self):
-        return 1 - self.yield_loss_probability
+        if not isinstance(self.dim, Statistical) or self.dim.distribution is None:
+            return 0
+        return self.dim.distribution.cdf(self.UL) - self.dim.distribution.cdf(self.LL)
 
     @property
     def R(self):
