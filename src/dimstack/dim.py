@@ -261,15 +261,6 @@ class Statistical(Basic):
         ]
 
     # @property
-    # def mean(self):
-    #     mean_shift = self.k * self.process_sigma * self.stdev
-    #     return self.median + mean_shift
-
-    # @property
-    # def stdev(self):
-    #     return abs(self.tolerance.T / 2) / self.process_sigma
-
-    # @property
     # def variance(self):
     #     return self.stdev ** 2
 
@@ -508,28 +499,6 @@ class Spec:
     def median(self):
         """median"""
         return (self.LL + self.UL) / 2
-
-    # @property
-    # def mean(self):
-    #     mean_shift = self.k * self.process_sigma * self.stdev
-    #     return self.median + mean_shift
-
-    # @property
-    # def k(self):
-    #     """k"""
-    #     return abs((self.dim.mean - self.median) / ((self.UL - self.LL) / 2))
-
-    # @property
-    # def C_p(self):
-    #     return C_p(self.UL, self.LL, self.dim.stdev)
-
-    # @property
-    # def C_pk(self):
-    #     # return C_pk(self.C_p, self.k)
-    #     return min(
-    #         (self.UL - self.dim.mean) / (3 * self.dim.stdev),
-    #         (self.dim.mean - self.LL) / (3 * self.dim.stdev),
-    #     )
 
     @property
     def yield_loss_probability(self):
