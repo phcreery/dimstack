@@ -128,20 +128,42 @@ Embed in your site:
 ></iframe>
 ```
 
-## Dev
-
-### Notebooks
-
-In JupyterLite instances, you first have to pip install the wheel embedded.
-
-```
-%pip install -q dimstack
-```
+## Development
 
 ### Testing
 
 ```
+pdm run test
+```
+
+OR
+
+```
 python -m unittest discover .\tests\
+```
+
+### Documenting
+
+```
+pdm run docs
+pdm run deploydocs
+```
+
+### Deploying
+
+Fist build and publish
+
+```
+pdm build
+pdm publish --no-build
+```
+
+### and Notebook setup
+
+See https://github.com/phcreery/dimstack-demo
+
+```
+%pip install -q dimstack
 ```
 
 # Acknowledgements
