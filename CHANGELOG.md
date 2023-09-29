@@ -6,6 +6,7 @@ TODO: .py
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] simplify from_basic_dim like the vlangs
 - [ ] fix slight error in stack calculations in McGraw Hill Tests
+- [ ] Support to positive bilateral tolerances. Ex. 2 + 0.2 / + 0.1
 
 ## 0.3.0 Planned
 
