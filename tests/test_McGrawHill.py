@@ -9,7 +9,7 @@ import dimstack
 class McGrawHill_1(unittest.TestCase):
     m1 = dimstack.dim.Basic(
         nom=-0.375,
-        tol=dimstack.tolerance.UnequalBilateral(0, 0.031),
+        tol=dimstack.tolerance.UnequalBilateral(0, -0.031),
         name="A",
         desc="Screw thread length",
     )
@@ -27,7 +27,7 @@ class McGrawHill_1(unittest.TestCase):
     )
     m4 = dimstack.dim.Basic(
         nom=0.438,
-        tol=dimstack.tolerance.UnequalBilateral(0, 0.015),
+        tol=dimstack.tolerance.UnequalBilateral(0, -0.015),
         name="D",
         desc="Bearing length",
     )
@@ -39,7 +39,7 @@ class McGrawHill_1(unittest.TestCase):
     )
     m6 = dimstack.dim.Basic(
         nom=1.5,
-        tol=dimstack.tolerance.UnequalBilateral(0.01, 0.004),
+        tol=dimstack.tolerance.UnequalBilateral(0.01, -0.004),
         name="F",
         desc="Rotor length",
     )
@@ -71,21 +71,21 @@ class McGrawHill_1(unittest.TestCase):
 
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.nominal), 0.0615)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.tolerance.T / 2), 0.0915)  # 0.0955
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_min, 5), -0.03)  # -0.034
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_max, 3), 0.153)  # 0.157
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.tolerance.T / 2), 0.0955)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_min, 5), -0.034)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_max, 3), 0.157)
 
     def test_RSS(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.nominal), 0.0615)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.tolerance.T / 2, 3), 0.038)  # 0.0381
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_min), 0.02395)  # 0.0234
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_max), 0.09905)  # 0.0996
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.tolerance.T / 2), 0.03808)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_min), 0.02342)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_max), 0.09958)
 
     def test_MRSS(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.nominal), 0.0615)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.tolerance.T / 2), 0.04919)  # 0.0505
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_min, 3), 0.012)  # 0.0110
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_max, 3), 0.111)  # 0.1120
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.tolerance.T / 2), 0.05047)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_min, 3), 0.011)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_max, 3), 0.112)
 
 
 # this test is a copy Dimensioning and Tolerancing Handbook by McGraw Hill, Chaper 12-12

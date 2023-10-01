@@ -5,11 +5,8 @@ from typing import List, Union, Dict, Any
 from .display import display_df
 from .stats import C_p, C_pk, RSS
 from .tolerance import SymmetricBilateral, UnequalBilateral, Bilateral
-from .utils import nround, sign
+from .utils import nround, sign, sign_symbol, POSITIVE, NEGATIVE
 from . import dist
-
-POSITIVE = "+"
-NEGATIVE = "-"
 
 
 class Basic:
@@ -72,17 +69,7 @@ class Basic:
 
     @property
     def nom_direction_sign(self):
-        if self.dir >= 0:
-            return POSITIVE
-        else:
-            return NEGATIVE
-
-    @property
-    def tolerance_absolute(self):
-        if self.nom_direction_sign == POSITIVE:
-            return self.tolerance
-        elif self.nom_direction_sign == NEGATIVE:
-            return Bilateral(self.tolerance.lower, self.tolerance.upper)
+        sign_symbol(self.dir)
 
     @property
     def median(self):
@@ -91,12 +78,28 @@ class Basic:
     @property
     def abs_lower(self):
         """The minimum value of the measurement. AKA, absolute upper"""
-        return self.dir * (self.nominal - self.tolerance.lower)
+        return self.dir * (self.nominal + self.tolerance.lower)
 
     @property
     def abs_upper(self):
         """The maximum value of the measurement. AKA, absolute lower"""
         return self.dir * (self.nominal + self.tolerance.upper)
+
+    @property
+    def abs_lower_tol(self):
+        """The absolute minimum value of the tolerance."""
+        if sign_symbol(self.dir) == POSITIVE:
+            return self.tolerance.lower
+        else:
+            return -self.tolerance.upper
+
+    @property
+    def abs_upper_tol(self):
+        """The absolute maximum value of the tolerance."""
+        if sign_symbol(self.dir) == POSITIVE:
+            return self.tolerance.upper
+        else:
+            return -self.tolerance.lower
 
     @property
     def Z_min(self):
@@ -110,7 +113,7 @@ class Basic:
 
     @property
     def rel_lower(self):
-        return self.nominal - self.tolerance.lower
+        return self.nominal + self.tolerance.lower
 
     @property
     def rel_upper(self):
@@ -350,8 +353,8 @@ class Stack:
     def Closed(self) -> Basic:
         nominal = sum([dim.dir * dim.nominal * dim.a for dim in self.dims])
         tolerance = Bilateral(
-            sum(filter(None, [dim.tolerance_absolute.upper for dim in self.dims])),
-            sum(filter(None, [dim.tolerance_absolute.lower for dim in self.dims])),
+            sum(filter(None, [dim.abs_upper_tol for dim in self.dims])),
+            sum(filter(None, [dim.abs_lower_tol for dim in self.dims])),
         )
         return Basic(
             nominal,

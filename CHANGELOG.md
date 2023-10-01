@@ -1,11 +1,7 @@
 ## PLANNED
 
-TODO: .py
-
-- [ ] rename tolerance to tol
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] simplify from_basic_dim like the vlangs
-- [ ] fix slight error in stack calculations in McGraw Hill Tests
 
 ## 0.3.0 Planned
 
@@ -25,9 +21,11 @@ TODO: .py
 - [x] WC: is tol.dir needed on t_wc computation? No
 - [x] remove mean, stdev from Statistical Dimension
 - [x] make k calculated from nominal and distribution mean
+- [x] fix slight error in stack calculations in McGraw Hill Tests
+- [x] rename tolerance to tol
 
-## 0.2.0 Released
+## 0.2.0 Released 6/23/2023
 
-## 0.1.0
+## 0.1.0 Released 5/23/2023
 
 Initial Release

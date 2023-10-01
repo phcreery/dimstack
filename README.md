@@ -4,6 +4,8 @@
 
 Python library for mechanical engineers to help with statistical tolerancing analysis and design.
 
+https://pypi.org/project/dimstack/
+
 ## Example
 
 ```python

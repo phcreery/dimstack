@@ -75,6 +75,7 @@ class NormalScreened:
         lower (float): Lower limit.
         upper (float): Upper limit.
     """
+    # https://en.wikipedia.org/wiki/Truncated_normal_distribution
 
     def __init__(self, mean: float, stdev: float, lower: float, upper: float):
         self.mean = mean

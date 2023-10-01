@@ -1,6 +1,8 @@
 from decimal import Decimal, ROUND_HALF_UP
 
 DECIMALS = 5
+POSITIVE = "+"
+NEGATIVE = "-"
 
 
 def nround(number, ndigits=DECIMALS):
@@ -34,6 +36,28 @@ def sign(x):
     """
     x = float(x)
     return (x > 0) - (x < 0)
+
+
+def sign_symbol(x):
+    """Return the sign of x, i.e. + or -.
+
+    >>> sign_symbol(0)
+    '+'
+    >>> sign_symbol(10)
+    '+'
+    >>> sign_symbol(-10)
+    '-'
+
+    Args:
+        x (float)
+
+    Returns:
+        string: "+", "-"
+    """
+    if x >= 0:
+        return POSITIVE
+    else:
+        return NEGATIVE
 
 
 if __name__ == "__main__":
