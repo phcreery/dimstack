@@ -2,6 +2,7 @@ import numpy as np
 from scipy.stats import norm, uniform
 from typing import Union, List
 import pandas as pd
+from .utils import nround
 
 # TODO:
 # DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used.
@@ -22,7 +23,10 @@ class Uniform:
         self.upper = upper
 
     def __repr__(self) -> str:
-        return f"UniformDistribution({self.lower}, {self.upper})"
+        return f"UniformDistribution({nround(self.lower)}, {nround(self.upper)})"
+
+    def __str__(self) -> str:
+        return f"Uniform Dist. [{nround(self.lower)}, {nround(self.upper)}]"
 
     def sample(self, n: int):
         # return np.random.uniform(self.lower, self.upper, n)
@@ -49,7 +53,10 @@ class Normal:
         self.data = None
 
     def __repr__(self) -> str:
-        return f"NormalDistribution({self.mean}, {self.stdev})"
+        return f"NormalDistribution({nround(self.mean)}, {nround(self.stdev)})"
+
+    def __str__(self) -> str:
+        return f"Normal Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
 
     def sample(self, n: int):
         # return np.random.normal(self.mean, self.stdev, n)
@@ -88,7 +95,7 @@ class NormalScreened:
         self.upper = upper
 
     def __repr__(self) -> str:
-        return f"NormalDistribution({self.mean}, {self.stdev})"
+        return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
 
     def sample(self, n: int):
         numbers = norm.rvs(loc=self.mean, scale=self.stdev, size=n)

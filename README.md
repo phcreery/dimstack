@@ -69,20 +69,14 @@ Returns:
 
 ```
 Stack: stacks on stacks
-ID Name    Description dir  Nom.           Tol. Sens. (a)    Relative Bounds                                      Distribution Process Sigma Skew (k) C_p C_pk μ σ μ_eff σ_eff Yield Probability Reject PPM
- 0    a          Shaft   + 208.0 ± 0.036                1 [207.964, 208.036] NormalDistribution(208.009, 0.005999999999999999)          ± 6σ     0.25 2.0  1.5     208.0 0.008       99.99966023        3.4
- 1    b  Retainer ring   -  1.75 + 0.06 / + 0           1       [1.75, 1.81]
-    None          ± 3σ        0               1.78     0                 0          0
- 2    c        Bearing   -  23.0 + 0.12 / + 0           1        [23, 23.12]
-    None          ± 3σ        0              23.06     0                 0          0
- 3    d Bearing Sleeve   +  20.0 ± 0.026                1   [19.974, 20.026]
-    None          ± 3σ        0               20.0     0                 0          0
- 4    e           Case   - 200.0 ± 0.145                1 [199.855, 200.145]
-    None          ± 3σ        0              200.0     0                 0          0
+ID Name    Description dir  Nom.           Tol. Sens. (a)    Relative Bounds                      Distribution Process Sigma Skew (k) C_p C_pk μ σ μ_eff σ_eff Yield Probability Reject PPM
+ 0    a          Shaft   + 208.0 ± 0.036                1 [207.964, 208.036] Normal Dist. (μ=208.009, σ=0.006)          ± 6σ     0.25 2.0  1.5     208.0 0.008       99.99966023        3.4
+ 1    b  Retainer ring   -  1.75 + 0.06 / + 0           1       [1.75, 1.81]                              None          ± 3σ        0               1.78     0                 0          0
+ 2    c        Bearing   -  23.0 + 0.12 / + 0           1        [23, 23.12]                              None          ± 3σ        0              23.06     0                 0          0
+ 3    d Bearing Sleeve   +  20.0 ± 0.026                1   [19.974, 20.026]                              None          ± 3σ        0               20.0     0                 0          0
+ 4    e           Case   - 200.0 ± 0.145                1 [199.855, 200.145]                              None          ± 3σ        0              200.0     0                 0          0
  5    f Bearing Sleeve   +  20.0 ± 0.026                1   [19.974, 20.026]
-
- 6    g        Bearing   -  23.0 + 0.12 / + 0           1        [23, 23.12]
-    None          ± 3σ        0              23.06     0                 0          0
+ 6    g        Bearing   -  23.0 + 0.12 / + 0           1        [23, 23.12]                              None          ± 3σ        0              23.06     0                 0          0
 
 Dimension: stacks on stacks - Closed Analysis -
 ID                               Name Description dir Nom.              Tol. Sens. (a) Relative Bounds
@@ -100,20 +94,16 @@ ID                            Name                                       Descrip
 WARNING:root:Converting Basic (5: f Bearing Sleeve +20 ± 0.026) to Statistical dimension
 Dimension: stacks on stacks - MRSS Analysis - (assuming inputs with Normal Distribution & ± 3σ)
 ID                             Name                                       Description dir Nom.           Tol. Sens. (a)     Relative Bounds Distribution Process Sigma Skew (k) C_p C_pk μ_eff σ_eff Yield Probability Reject PPM
-12 stacks on stacks - MRSS Analysis (assuming inputs with Normal Distribution & ± 3σ)   +  0.1 ± 0.24046
-1 [-0.14046, 0.34046]         None    ± 3.76693σ        0            0.1     0                 0          0
+12 stacks on stacks - MRSS Analysis (assuming inputs with Normal Distribution & ± 3σ)   +  0.1 ± 0.24046              1 [-0.14046, 0.34046]         None    ± 3.76693σ        0            0.1     0                 0          0
 
 WARNING:root:Converting Basic (5: f Bearing Sleeve +20 ± 0.026) to Statistical dimension
 Dimension: stacks on stacks - '6 Sigma' Analysis - (assuming inputs with Normal Distribution)
-ID                                  Name                                Description dir Nom.           Tol. Sens. (a)
-Relative Bounds                                                  Distribution Process Sigma Skew (k) C_p C_pk μ_eff σ_eff Yield Probability Reject PPM
-14 stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Distribution)   +  0.1 ± 0.036                1
- [0.064, 0.136] NormalDistribution(0.09999999999999432, 0.007999999999995486)        ± 4.5σ      0.0 1.5  1.5   0.1 0.008       99.99932047        6.8
+ID                                  Name                                Description dir Nom.           Tol. Sens. (a) Relative Bounds                  Distribution Process Sigma Skew (k) C_p C_pk μ_eff σ_eff Yield Probability Reject PPM
+14 stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Distribution)   +  0.1 ± 0.036                1  [0.064, 0.136] Normal Dist. (μ=0.1, σ=0.008)        ± 4.5σ      0.0 1.5  1.5   0.1 0.008       99.99932047        6.8
 
 WARNING:root:Converting Basic (5: f Bearing Sleeve +20 ± 0.026) to Statistical dimension
 Spec: stack spec
-      Name Description
-          Dimension Median Spec. Limits Yield Probability Reject PPM
+      Name Description                                                                                                          Dimension Median Spec. Limits Yield Probability Reject PPM
 stack spec             16: stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Distribution) +0.1 ± 0.036 @ ± 4.5σ & k=0.0  0.425  [0.05, 0.8]       99.99999998        0.0
 
 WARNING:root:Converting Basic (5: f Bearing Sleeve +20 ± 0.026) to Statistical dimension
