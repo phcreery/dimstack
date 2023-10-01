@@ -46,6 +46,7 @@ class Normal:
     def __init__(self, mean: float, stdev: float):
         self.mean = mean
         self.stdev = stdev
+        self.data = None
 
     def __repr__(self) -> str:
         return f"NormalDistribution({self.mean}, {self.stdev})"
@@ -63,7 +64,9 @@ class Normal:
     @classmethod
     def fit(cls, data: Union[np.ndarray, List[float], List[int], List[np.float64], pd.Series]):
         mean, stdev = norm.fit(data)
-        return cls(mean, stdev)
+        inst = cls(mean, stdev)
+        inst.data = data
+        return inst
 
 
 class NormalScreened:
@@ -75,6 +78,7 @@ class NormalScreened:
         lower (float): Lower limit.
         upper (float): Upper limit.
     """
+
     # https://en.wikipedia.org/wiki/Truncated_normal_distribution
 
     def __init__(self, mean: float, stdev: float, lower: float, upper: float):

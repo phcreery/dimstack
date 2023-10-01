@@ -69,7 +69,7 @@ class Basic:
 
     @property
     def nom_direction_sign(self):
-        sign_symbol(self.dir)
+        return sign_symbol(self.dir)
 
     @property
     def median(self):

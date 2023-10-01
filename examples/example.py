@@ -2,11 +2,14 @@ import dimstack as ds
 
 ds.display.mode("text")
 
+k = 0.25
+process_sigma = 6
+stdev = 0.036 / process_sigma
 m1 = ds.dim.Statistical(
     nom=208,
     tol=ds.tol.SymmetricBilateral(0.036),
-    process_sigma=6,
-    k=0.25,
+    distribution=ds.dist.Normal(208 + k * process_sigma * stdev, stdev),
+    process_sigma=process_sigma,
     name="a",
     desc="Shaft",
 )
@@ -36,7 +39,7 @@ m6 = ds.dim.Basic(
 m7 = ds.dim.Statistical(nom=-23, tol=ds.tol.UnequalBilateral(0, 0.12), process_sigma=3, name="g", desc="Bearing")
 items = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = ds.Stack(title="stacks on stacks", items=items)
+stack = ds.Stack(name="stacks on stacks", dims=items)
 
 stack.show()
 stack.Closed.show()
