@@ -4,7 +4,7 @@
 - [ ] simplify from_basic_dim like the vlangs
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 
-## 0.3.3 Released 9/30/23
+## 0.3.1 Released 9/30/23
 
 - [ ] Fix plotting regression
 
