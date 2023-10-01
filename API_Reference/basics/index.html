@@ -57,6 +57,14 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Basic">Basic</a>
         <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_lower">abs_lower</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper">abs_upper</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.Z_min">Z_min</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.Z_max">Z_max</a>
@@ -70,8 +78,6 @@
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.from_data">from_data()</a>
     </li>
         </ul>
     </li>
@@ -117,16 +123,6 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#constants">Constants</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.DIST_UNIFORM">DIST_UNIFORM</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.DIST_NORMAL">DIST_NORMAL</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dist.DIST_SCREENED">DIST_SCREENED</a>
-    </li>
-        </ul>
-    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../displaying/">Displaying</a>
@@ -163,6 +159,10 @@
 <li><a href="#basics">Basics</a><ul>
 <li><a href="#dimstack.dim">dim</a><ul>
 <li><a href="#dimstack.dim.Basic">Basic</a><ul>
+<li><a href="#dimstack.dim.Basic.abs_lower">abs_lower</a></li>
+<li><a href="#dimstack.dim.Basic.abs_upper">abs_upper</a></li>
+<li><a href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a></li>
+<li><a href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a></li>
 <li><a href="#dimstack.dim.Basic.Z_min">Z_min</a></li>
 <li><a href="#dimstack.dim.Basic.Z_max">Z_max</a></li>
 </ul>
@@ -171,7 +171,6 @@
 <li><a href="#dimstack.dim.Statistical.mean_eff">mean_eff</a></li>
 <li><a href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a></li>
 <li><a href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a></li>
-<li><a href="#dimstack.dim.Statistical.from_data">from_data()</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Stack">Stack</a><ul>
@@ -198,12 +197,6 @@
 <li><a href="#dimstack.dist.Uniform">Uniform</a></li>
 <li><a href="#dimstack.dist.Normal">Normal</a></li>
 <li><a href="#dimstack.dist.NormalScreened">NormalScreened</a></li>
-</ul>
-</li>
-<li><a href="#constants">Constants</a><ul>
-<li><a href="#dimstack.dist.DIST_UNIFORM">DIST_UNIFORM</a></li>
-<li><a href="#dimstack.dist.DIST_NORMAL">DIST_NORMAL</a></li>
-<li><a href="#dimstack.dist.DIST_SCREENED">DIST_SCREENED</a></li>
 </ul>
 </li>
 </ul>
@@ -332,6 +325,90 @@
 
 
 
+<h5 id="dimstack.dim.Basic.abs_lower" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">abs_lower</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The minimum value of the measurement. AKA, absolute upper</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.abs_upper" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">abs_upper</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The maximum value of the measurement. AKA, absolute lower</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.abs_lower_tol" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">abs_lower_tol</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The absolute minimum value of the tolerance.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.abs_upper_tol" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">abs_upper_tol</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The absolute maximum value of the tolerance.</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h5 id="dimstack.dim.Basic.Z_min" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">Z_min</span></code>
   
@@ -427,7 +504,7 @@
           <td><p>The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
                 standard deviation. Defaults to 0σ.</p></td>
           <td>
-                <code>0</code>
+              <em>required</em>
           </td>
         </tr>
         <tr>
@@ -437,7 +514,7 @@
           </td>
           <td><p>The distribution of the measurement. Defaults to "Normal".</p></td>
           <td>
-                <code>dist.DIST_NORMAL</code>
+                <code>None</code>
           </td>
         </tr>
     </tbody>
@@ -521,52 +598,6 @@
 
 
 
-<div class="doc doc-object doc-function">
-
-
-
-<h5 id="dimstack.dim.Statistical.from_data" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-</h5>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Create a Statistical dimension from data</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>data</code></td>
-          <td>
-                <code>np.ndarray or similar</code>
-          </td>
-          <td><p>The data to create the dimension from</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-  </div>
-
-</div>
-
 
 
   </div>
@@ -640,7 +671,7 @@ It states that in any combination of tolerances, you can be sure the result will
   <div class="doc doc-contents ">
   
       <p>This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
-It is really only useful for a Bilateral stack of same process-stdev items. The RSS result has the same uncertainty as the measurements.
+It is really only useful for a Bilateral stack of same process-stdev dims. The RSS result has the same uncertainty as the measurements.
 Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
 manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
 probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
@@ -1263,64 +1294,6 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
-
-</div><h2 id="constants">Constants</h2>
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="dimstack.dist.DIST_UNIFORM" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">dimstack</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">DIST_UNIFORM</span> <span class="o">=</span> <span class="s1">&#39;Uniform&#39;</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents first">
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="dimstack.dist.DIST_NORMAL" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">dimstack</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">DIST_NORMAL</span> <span class="o">=</span> <span class="s1">&#39;Normal&#39;</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents first">
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="dimstack.dist.DIST_SCREENED" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">dimstack</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">DIST_SCREENED</span> <span class="o">=</span> <span class="s1">&#39;Screened&#39;</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents first">
   </div>
 
 </div>
