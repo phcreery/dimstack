@@ -23,6 +23,7 @@
 - [x] make k calculated from nominal and distribution mean
 - [x] fix slight error in stack calculations in McGraw Hill Tests
 - [x] rename tolerance to tol
+- [x] Support to positive bilateral tolerances. Ex. 2 + 0.2 / + 0.1
 
 ## 0.2.0 Released 6/23/2023
 
