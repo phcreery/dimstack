@@ -3,7 +3,7 @@
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] simplify from_basic_dim like the vlangs
 
-## 0.3.0 Planned
+## 0.3.0 Released 9/30/23
 
 - [x] remove self.items in MRSS(), they should just be items
 - [x] reorder mean and stdev in C_pk()

@@ -153,7 +153,7 @@ pdm run deploydocs
 
 ### Deploying
 
-Fist build and publish
+First bump version in pyproject.toml. Then build and publish
 
 ```
 pdm build
