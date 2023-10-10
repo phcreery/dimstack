@@ -4,7 +4,8 @@
 - [ ] simplify from_basic_dim like the vlangs
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] depricate Z_min/Z_max (abs_upper/abs_lower)
-- [ ] add rel_upper/rel_lower
+- [ ] add rel_upper/rel_lower properties
+- [ ] abs_upper/abs_lower to display table
 - [ ] fix abs_upper and abs_lower for negative nominal dimensions
 
 
