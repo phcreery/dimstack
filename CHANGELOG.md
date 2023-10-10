@@ -11,7 +11,7 @@
 
 ## 0.3.1 Released 9/30/23
 
-- [ ] Fix plotting regression
+- [x] Fix plotting regression
 
 ## 0.3.0 Released 9/30/23
 
