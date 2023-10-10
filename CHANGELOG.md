@@ -6,7 +6,7 @@
 - [ ] depricate Z_min/Z_max (abs_upper/abs_lower)
 - [ ] add rel_upper/rel_lower properties
 - [ ] abs_upper/abs_lower to display table
-- [ ] fix abs_upper and abs_lower for negative nominal dimensions
+- [ ] fix abs_upper and abs_lower for negative nominal dimensions and add tests
 
 
 ## 0.3.1 Released 9/30/23
