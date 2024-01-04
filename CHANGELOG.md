@@ -7,6 +7,7 @@
 - [ ] add rel_upper/rel_lower properties
 - [ ] abs_upper/abs_lower to display table
 - [ ] fix abs_upper and abs_lower for negative nominal dimensions and add tests
+- [ ] rename `process_sigma` to `target_process_sigma`
 
 
 ## 0.3.1 Released 9/30/23
