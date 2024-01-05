@@ -94,3 +94,5 @@ cython_debug/
 reference*
 .pdm-python
 .pyprojectx
+
+*.zip

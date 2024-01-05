@@ -13,4 +13,4 @@ from . import tolerance as tol
 
 __all__ = ["dim", "stats", "display", "tolerance", "utils", "dist", "plot"]
 
-__version__ = "0.1.0"
+# __version__ = "0.1.0"
