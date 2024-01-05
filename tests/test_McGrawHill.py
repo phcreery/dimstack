@@ -72,20 +72,20 @@ class McGrawHill_1(unittest.TestCase):
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.nominal), 0.0615)
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.tolerance.T / 2), 0.0955)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_min, 5), -0.034)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.Z_max, 3), 0.157)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.abs_lower, 5), -0.034)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.WC.abs_upper, 3), 0.157)
 
     def test_RSS(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.nominal), 0.0615)
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.tolerance.T / 2), 0.03808)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_min), 0.02342)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.Z_max), 0.09958)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.abs_lower), 0.02342)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.RSS.abs_upper), 0.09958)
 
     def test_MRSS(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.nominal), 0.0615)
         self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.tolerance.T / 2), 0.05047)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_min, 3), 0.011)
-        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.Z_max, 3), 0.112)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.abs_lower, 3), 0.011)
+        self.assertEqual(dimstack.utils.nround(McGrawHill_1.stack.MRSS.abs_upper, 3), 0.112)
 
 
 # this test is a copy Dimensioning and Tolerancing Handbook by McGraw Hill, Chaper 12-12
@@ -110,7 +110,7 @@ class McGrawHill_2(unittest.TestCase):
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.nominal), 0.07201)  # 0.0719
         self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.tolerance.T / 2), 0.09763)  # 0.0967
-        self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.Z_min, 5), -0.02561)  # -0.0248
+        self.assertEqual(dimstack.utils.nround(McGrawHill_2.stack.WC.abs_lower, 5), -0.02561)  # -0.0248
 
 
 if __name__ == "__main__":

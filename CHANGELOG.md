@@ -3,12 +3,14 @@
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] simplify from_basic_dim like the vlangs
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
-- [ ] depricate Z_min/Z_max (abs_upper/abs_lower)
 - [ ] add rel_upper/rel_lower properties
 - [ ] abs_upper/abs_lower to display table
-- [ ] fix abs_upper and abs_lower for negative nominal dimensions and add tests
-- [ ] rename `target_process_sigma` to `target_target_process_sigma`
 
+## 0.3.2
+
+- [x] fix abs_upper and abs_lower for negative nominal dimensions and add tests
+- [x] rename `process_sigma` to `target_process_sigma`
+- [x] deprecate Z_min/Z_max (abs_upper/abs_lower)
 
 ## 0.3.1 Released 9/30/23
 

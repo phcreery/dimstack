@@ -61,8 +61,8 @@ class MITCalc(unittest.TestCase):
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(stack.WC.nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.WC.tolerance.T / 2), 0.383)
-        self.assertEqual(dimstack.utils.nround(stack.WC.Z_min), 0.017)
-        self.assertEqual(dimstack.utils.nround(stack.WC.Z_max), 0.783)
+        self.assertEqual(dimstack.utils.nround(stack.WC.abs_lower), 0.017)
+        self.assertEqual(dimstack.utils.nround(stack.WC.abs_upper), 0.783)
 
     def test_RSS(self):
         # self.assertEqual(dimstack.utils.nround(stack.RSS.mean), 0.4)
@@ -94,8 +94,8 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).tolerance.T / 2), 0.26433)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).distribution.stdev, 6), 0.05874)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_min), 0.13567)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_max), 0.66433)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).abs_lower), 0.13567)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).abs_upper), 0.66433)
 
     def test_SixSigma_assembly(self):
         eval = stack.SixSigma(at=4.5)

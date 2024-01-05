@@ -78,12 +78,12 @@ class Basic:
     @property
     def abs_lower(self):
         """The minimum value of the measurement. AKA, absolute upper"""
-        return self.dir * (self.nominal + self.tolerance.lower)
+        return min(self.dir * self.nominal + self.tolerance.lower, self.dir * self.nominal + self.tolerance.upper)
 
     @property
     def abs_upper(self):
         """The maximum value of the measurement. AKA, absolute lower"""
-        return self.dir * (self.nominal + self.tolerance.upper)
+        return max(self.dir * self.nominal + self.tolerance.lower, self.dir * self.nominal + self.tolerance.upper)
 
     @property
     def abs_lower_tol(self):
@@ -101,15 +101,15 @@ class Basic:
         else:
             return -self.tolerance.lower
 
-    @property
-    def Z_min(self):
-        """The minimum value of the measurement. AKA, absolute upper"""
-        return self.abs_lower
+    # @property
+    # def Z_min(self):
+    #     """The minimum value of the measurement. AKA, absolute upper"""
+    #     return self.abs_lower
 
-    @property
-    def Z_max(self):
-        """The maximum value of the measurement. AKA, absolute lower"""
-        return self.abs_upper
+    # @property
+    # def Z_max(self):
+    #     """The maximum value of the measurement. AKA, absolute lower"""
+    #     return self.abs_upper
 
     @property
     def rel_lower(self):
