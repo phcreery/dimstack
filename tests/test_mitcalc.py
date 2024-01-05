@@ -6,7 +6,7 @@ import dimstack
 m1 = dimstack.dim.Statistical(
     nom=208,
     tol=dimstack.tolerance.SymmetricBilateral(0.036),
-    process_sigma=6,
+    target_process_sigma=6,
     name="a",
     desc="Shaft",
 )
@@ -14,32 +14,32 @@ m1.assume_normal_dist_skewed(0.25)
 m2 = dimstack.dim.Statistical(
     nom=-1.75,
     tol=dimstack.tolerance.UnequalBilateral(0, -0.06),
-    process_sigma=3,
+    target_process_sigma=3,
     name="b",
     desc="Retainer ring",
 )
 m2.assume_normal_dist()
-m3 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), process_sigma=3, name="c", desc="Bearing")
+m3 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), target_process_sigma=3, name="c", desc="Bearing")
 m3.assume_normal_dist()
 m4 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
-    process_sigma=3,
+    target_process_sigma=3,
     name="d",
     desc="Bearing Sleeve",
 )
 m4.assume_normal_dist()
-m5 = dimstack.dim.Statistical(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case")
+m5 = dimstack.dim.Statistical(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), target_process_sigma=3, name="e", desc="Case")
 m5.assume_normal_dist()
 m6 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
-    process_sigma=3,
+    target_process_sigma=3,
     name="f",
     desc="Bearing Sleeve",
 )
 m6.assume_normal_dist()
-m7 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), process_sigma=3, name="g", desc="Bearing")
+m7 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), target_process_sigma=3, name="g", desc="Bearing")
 m7.assume_normal_dist()
 dims = [m1, m2, m3, m4, m5, m6, m7]
 

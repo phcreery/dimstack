@@ -6,7 +6,7 @@ import dimstack
 m1 = dimstack.dim.Statistical(
     nom=-0.3190,
     tol=dimstack.tolerance.SymmetricBilateral(0.0050),
-    process_sigma=6,
+    target_process_sigma=6,
     name="PN16",
     desc="Mounting face to rt. end",
 )
@@ -14,12 +14,12 @@ m1.assume_normal_dist()
 m2 = dimstack.dim.Statistical(
     nom=10.4860,
     tol=dimstack.tolerance.SymmetricBilateral(0.0100),
-    process_sigma=6,
+    target_process_sigma=6,
     name="PN07",
     desc="Overall width",
 )
 m2.assume_normal_dist()
-m3 = dimstack.dim.Statistical(nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), process_sigma=6, name="PN16", desc="Mounting face to rt. end")
+m3 = dimstack.dim.Statistical(nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), target_process_sigma=6, name="PN16", desc="Mounting face to rt. end")
 m3.assume_normal_dist()
 dims = [m1, m2, m3]
 
@@ -49,7 +49,7 @@ class MITCalc(unittest.TestCase):
 
     # def test_SixSigma_assembly(self):
     #     dim = stack.SixSigma(at=4.5)
-    #     assy = dimstack.dim.Assembly("assy", "", dim=dim, LL=0.05, UL=0.8, process_sigma=4.5)
+    #     assy = dimstack.dim.Assembly("assy", "", dim=dim, LL=0.05, UL=0.8, target_process_sigma=4.5)
 
     #     self.assertEqual(dimstack.utils.nround(assy.C_p), 2.12804)
     #     self.assertEqual(dimstack.utils.nround(assy.C_pk), 1.98617)
