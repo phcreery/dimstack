@@ -1,10 +1,6 @@
 ## PLANNED
 
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
-- [ ] simplify from_basic_dim like the vlangs
-- [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
-- [ ] add rel_upper/rel_lower properties
-- [ ] abs_upper/abs_lower to display table
 
 ## 0.3.2
 

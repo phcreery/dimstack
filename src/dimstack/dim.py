@@ -194,7 +194,7 @@ class Statistical(Basic):
 
         logging.warning(f"Converting Basic ({basic}) to Statistical dimension")
         return cls(
-            nom=basic.nominal * basic.dir,
+            nom=basic.dir * basic.nominal,
             tol=basic.tolerance,
             a=basic.a,
             name=basic.name,
