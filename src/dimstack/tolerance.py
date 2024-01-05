@@ -1,4 +1,4 @@
-from .utils import nround
+from .utils import nround, sign_symbol
 
 
 class SymmetricBilateral:
@@ -21,7 +21,7 @@ class SymmetricBilateral:
 
     @property
     def lower(self):
-        return self._tol
+        return -self._tol
 
     @property
     def T(self):
@@ -34,14 +34,18 @@ class UnequalBilateral:
     """
 
     def __init__(self, upper: float, lower: float):
-        self.upper = abs(upper)
-        self.lower = abs(lower)
+        if upper < lower:
+            self.upper = lower
+            self.lower = upper
+        else:
+            self.upper = upper
+            self.lower = lower
 
     def __repr__(self) -> str:
         return f"UnequalBilateral({self.upper}, {self.lower})"
 
     def __str__(self) -> str:
-        return f"+ {nround(self.upper)} / - {nround(self.lower)}"
+        return f"{sign_symbol(self.upper)} {nround(abs(self.upper))} / {sign_symbol(self.lower)} {nround(abs(self.lower))}"
 
     @property
     def T(self):

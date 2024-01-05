@@ -2,10 +2,9 @@ import numpy as np
 from scipy.stats import norm, uniform
 from typing import Union, List
 import pandas as pd
+from .utils import nround
 
-DIST_UNIFORM = "Uniform"  # Uniform distribution.
-DIST_NORMAL = "Normal"  # Normal distribution.
-DIST_SCREENED = "Screened"  # Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.
+# TODO:
 # DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used.
 # DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
 # DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
@@ -24,7 +23,10 @@ class Uniform:
         self.upper = upper
 
     def __repr__(self) -> str:
-        return f"UniformDistribution({self.lower}, {self.upper})"
+        return f"UniformDistribution({nround(self.lower)}, {nround(self.upper)})"
+
+    def __str__(self) -> str:
+        return f"Uniform Dist. [{nround(self.lower)}, {nround(self.upper)}]"
 
     def sample(self, n: int):
         # return np.random.uniform(self.lower, self.upper, n)
@@ -48,9 +50,13 @@ class Normal:
     def __init__(self, mean: float, stdev: float):
         self.mean = mean
         self.stdev = stdev
+        self.data = None
 
     def __repr__(self) -> str:
-        return f"NormalDistribution({self.mean}, {self.stdev})"
+        return f"NormalDistribution({nround(self.mean)}, {nround(self.stdev)})"
+
+    def __str__(self) -> str:
+        return f"Normal Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
 
     def sample(self, n: int):
         # return np.random.normal(self.mean, self.stdev, n)
@@ -65,7 +71,9 @@ class Normal:
     @classmethod
     def fit(cls, data: Union[np.ndarray, List[float], List[int], List[np.float64], pd.Series]):
         mean, stdev = norm.fit(data)
-        return cls(mean, stdev)
+        inst = cls(mean, stdev)
+        inst.data = data
+        return inst
 
 
 class NormalScreened:
@@ -78,6 +86,8 @@ class NormalScreened:
         upper (float): Upper limit.
     """
 
+    # https://en.wikipedia.org/wiki/Truncated_normal_distribution
+
     def __init__(self, mean: float, stdev: float, lower: float, upper: float):
         self.mean = mean
         self.stdev = stdev
@@ -85,7 +95,7 @@ class NormalScreened:
         self.upper = upper
 
     def __repr__(self) -> str:
-        return f"NormalDistribution({self.mean}, {self.stdev})"
+        return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
 
     def sample(self, n: int):
         numbers = norm.rvs(loc=self.mean, scale=self.stdev, size=n)
