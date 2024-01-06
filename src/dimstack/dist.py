@@ -58,6 +58,10 @@ class Normal:
     def __str__(self) -> str:
         return f"Normal Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
 
+    @property
+    def variance(self):
+        return self.stdev**2
+
     def sample(self, n: int):
         # return np.random.normal(self.mean, self.stdev, n)
         return norm.rvs(loc=self.mean, scale=self.stdev, size=n)

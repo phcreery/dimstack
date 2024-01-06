@@ -1,6 +1,7 @@
 import dimstack as ds
 
-ds.display.mode("text")
+# ds.display.mode("text")
+ds.display.mode("rich")
 
 k = 0.25
 target_process_sigma = 6
@@ -46,9 +47,10 @@ stack.Closed.show()
 stack.WC.show()
 stack.RSS.show()
 stack.MRSS.show()
-stack.SixSigma(at=4.5).show()
+designed_for = stack.SixSigma(at=4.5)
+designed_for.show()
 
-spec = ds.Spec("stack spec", "", dim=stack.SixSigma(at=4.5), LL=0.05, UL=0.8)
+spec = ds.Spec("stack spec", "", dim=designed_for, LL=0.05, UL=0.8)
 spec.show()
 
-ds.plot.StackPlot().add(stack).add(stack.RSS).show()
+# ds.plot.StackPlot().add(stack).add(stack.RSS).show()
