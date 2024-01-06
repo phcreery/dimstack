@@ -11,7 +11,7 @@ def mode(dispmode: str):
     """Set the display mode for the stack.
 
     Args:
-        mode (str): "text"/"txt", "str"/"string", "plot", or "df"
+        mode (str): "text"/"txt", "str"/"string", "plot", "rich", or "df"
     """
     global DISPLAY_MODE
     DISPLAY_MODE = dispmode
