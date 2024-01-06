@@ -78,12 +78,12 @@ class Basic:
     @property
     def abs_lower(self):
         """The minimum value of the measurement. AKA, absolute upper"""
-        return self.dir * (self.nominal + self.tolerance.lower)
+        return min(self.dir * self.nominal + self.tolerance.lower, self.dir * self.nominal + self.tolerance.upper)
 
     @property
     def abs_upper(self):
         """The maximum value of the measurement. AKA, absolute lower"""
-        return self.dir * (self.nominal + self.tolerance.upper)
+        return max(self.dir * self.nominal + self.tolerance.lower, self.dir * self.nominal + self.tolerance.upper)
 
     @property
     def abs_lower_tol(self):
@@ -101,15 +101,15 @@ class Basic:
         else:
             return -self.tolerance.lower
 
-    @property
-    def Z_min(self):
-        """The minimum value of the measurement. AKA, absolute upper"""
-        return self.abs_lower
+    # @property
+    # def Z_min(self):
+    #     """The minimum value of the measurement. AKA, absolute upper"""
+    #     return self.abs_lower
 
-    @property
-    def Z_max(self):
-        """The maximum value of the measurement. AKA, absolute lower"""
-        return self.abs_upper
+    # @property
+    # def Z_max(self):
+    #     """The maximum value of the measurement. AKA, absolute lower"""
+    #     return self.abs_upper
 
     @property
     def rel_lower(self):
@@ -149,7 +149,7 @@ class Statistical(Basic):
     """Statistical
 
     Args:
-        process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
+        target_process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
         k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
                             standard deviation. Defaults to 0σ.
         distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
@@ -157,7 +157,7 @@ class Statistical(Basic):
 
     def __init__(
         self,
-        process_sigma: float = 3,
+        target_process_sigma: float = 3,
         distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened, None] = None,
         *args,
         **kwargs,
@@ -165,13 +165,13 @@ class Statistical(Basic):
         # super().__init__(*args, **kwargs)
         super(Statistical, self).__init__(*args, **kwargs)
         self.distribution = distribution
-        self.process_sigma = process_sigma
+        self.target_process_sigma = target_process_sigma
 
     def __repr__(self) -> str:
-        return f"Statistical({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
+        return f"Statistical({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.target_process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
 
     def __str__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)} @ ± {self.process_sigma}σ & k={self.k}"
+        return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)} @ ± {self.target_process_sigma}σ & k={self.k}"
 
     def _repr_html_(self) -> str:
         return display_df(self.dict, f"Dimension: {self.name} - {self.description}", dispmode="plot")._repr_html_()
@@ -183,20 +183,23 @@ class Statistical(Basic):
     def from_basic_dimension(
         cls,
         basic: Union[Basic, "Statistical"],
-        process_sigma: float = 3,
+        target_process_sigma: float = 3,
         distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened, None] = None,
     ):
         if type(basic) is Statistical:
             return basic
+        
+        if distribution is None:
+            distribution = dist.Uniform(basic.rel_upper, basic.rel_lower)
 
         logging.warning(f"Converting Basic ({basic}) to Statistical dimension")
         return cls(
-            nom=basic.nominal * basic.dir,
+            nom=basic.dir * basic.nominal,
             tol=basic.tolerance,
             a=basic.a,
             name=basic.name,
             desc=basic.description,
-            process_sigma=process_sigma,
+            target_process_sigma=target_process_sigma,
             distribution=distribution,
         )
 
@@ -216,7 +219,7 @@ class Statistical(Basic):
     #         a=1,
     #         name=name,
     #         desc=f"{desc} (from data)",
-    #         process_sigma=sigma,
+    #         target_process_sigma=sigma,
     #         k=0,
     #         distribution=None,
     #         data=data,
@@ -225,7 +228,7 @@ class Statistical(Basic):
     # Assume a normal distribution.
     def assume_normal_dist(self):
         mean = self.mean_eff
-        stdev = (self.rel_upper - self.rel_lower) / (2 * self.process_sigma)
+        stdev = (self.rel_upper - self.rel_lower) / (2 * self.target_process_sigma)
         distribution = dist.Normal(mean=mean, stdev=stdev)
         self.distribution = distribution
         return self
@@ -234,7 +237,7 @@ class Statistical(Basic):
     def assume_normal_dist_skewed(self, skew):
         self.assume_normal_dist()
         if isinstance(self.distribution, dist.Normal):  # which it will be
-            self.distribution.mean = self.distribution.mean + skew * (self.distribution.stdev * self.process_sigma)
+            self.distribution.mean = self.distribution.mean + skew * (self.distribution.stdev * self.target_process_sigma)
         return self
 
     @property
@@ -243,22 +246,21 @@ class Statistical(Basic):
             {
                 "ID": self.id,
                 "Name": self.name,
-                "Description": (self.description),
+                "Desc.": (self.description),
                 "dir": self.nom_direction_sign,
                 "Nom.": nround(self.nominal),
                 "Tol.": (str(self.tolerance)).ljust(14, " "),
                 "Sens. (a)": nround(self.a),
-                "Relative Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
+                "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
+                "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
                 "Distribution": f"{self.distribution}",
-                "Process Sigma": f"± {str(nround(self.process_sigma))}σ",
                 "Skew (k)": nround(self.k),
                 "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
                 "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
-                # "μ": nround(self.mean),
-                # "σ": nround(self.stdev),
                 "μ_eff": nround(self.mean_eff),
                 "σ_eff": nround(self.stdev_eff),
-                "Yield Probability": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
+                "Eff. Sigma": f"± {str(nround(self.process_sigma_eff))}σ",
+                "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
                 "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}" if self.yield_loss_probability is not None else "",
             }
         ]
@@ -297,11 +299,24 @@ class Statistical(Basic):
         return 0
 
     @property
+    def process_sigma_eff(self):
+        """
+        calculated sigma (# of eff_stdevs away fromm USL and LSL)
+        """
+        if self.stdev_eff == 0:
+            return 0
+        # print(self.tolerance.upper, self.stdev_eff)
+        # since we are using effective stdev, either USL or LSL should work.
+        min_tol_gap = min((self.rel_upper - self.mean_eff), (self.mean_eff - self.rel_lower))
+        return (min_tol_gap)/self.stdev_eff
+        # return 0
+
+    @property
     def k(self):
         if isinstance(self.distribution, dist.Normal):
-            ideal_process_stdev = (self.tolerance.T / 2) / self.process_sigma
+            ideal_process_stdev = (self.tolerance.T / 2) / self.target_process_sigma
             skew_in_stdevs = (self.distribution.mean - self.mean_eff) / ideal_process_stdev
-            return skew_in_stdevs / self.process_sigma
+            return skew_in_stdevs / self.target_process_sigma
         return 0
 
     @property
@@ -408,7 +423,7 @@ class Stack:
             tol=tolerance,
             name=f"{self.name} - RSS Analysis",
             desc="(assuming inputs with Normal Distribution & ± 3σ)",
-        )
+        ).assume_normal_dist()
 
     @property
     def MRSS(self) -> Statistical:
@@ -432,8 +447,8 @@ class Stack:
             tol=tolerance,
             name=f"{self.name} - MRSS Analysis",
             desc="(assuming inputs with Normal Distribution & ± 3σ)",
-            process_sigma=sigma,
-        )
+            target_process_sigma=sigma,
+        ).assume_normal_dist()
 
     def SixSigma(self, at: float = 3) -> Statistical:
         dims: List[Statistical] = [Statistical.from_basic_dimension(dim) for dim in self.dims]
@@ -443,7 +458,7 @@ class Stack:
         dim = Statistical(
             nom=mean,
             tol=tolerance,
-            process_sigma=at,
+            target_process_sigma=at,
             name=f"{self.name} - '6 Sigma' Analysis",
             desc="(assuming inputs with Normal Distribution)",
         )
@@ -456,22 +471,23 @@ class Stack:
             {
                 "ID": dim.id,
                 "Name": dim.name,
-                "Description": (dim.description),
+                "Desc.": (dim.description),
                 "dir": dim.nom_direction_sign,
                 "Nom.": nround(dim.nominal),
                 "Tol.": (str(dim.tolerance)).ljust(14, " "),
                 "Sens. (a)": f"{nround(dim.a)}",
-                "Relative Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
+                "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
+                "Target Sigma": f"± {str(nround(dim.target_process_sigma))}σ" if hasattr(dim, "target_process_sigma") else "",
                 "Distribution": f"{dim.distribution}" if hasattr(dim, "distribution") else "",
-                "Process Sigma": f"± {str(nround(dim.process_sigma))}σ" if hasattr(dim, "process_sigma") else "",
                 "Skew (k)": nround(dim.k) if hasattr(dim, "k") else "",
                 "C_p": nround(dim.C_p) if (hasattr(dim, "C_p") and isinstance(dim.distribution, dist.Normal)) else "",
                 "C_pk": nround(dim.C_pk) if (hasattr(dim, "C_pk") and isinstance(dim.distribution, dist.Normal)) else "",
-                "μ": nround(dim.mean) if hasattr(dim, "mean") else "",
-                "σ": nround(dim.stdev) if hasattr(dim, "stdev") else "",
+                # "μ": nround(dim.mean) if hasattr(dim, "mean") else "",
+                # "σ": nround(dim.stdev) if hasattr(dim, "stdev") else "",
                 "μ_eff": nround(dim.mean_eff) if hasattr(dim, "mean_eff") else "",
                 "σ_eff": nround(dim.stdev_eff) if hasattr(dim, "stdev_eff") else "",
-                "Yield Probability": f"{nround(dim.yield_probability*100, 8)}" if hasattr(dim, "yield_probability") else "",
+                "Eff. Sigma": f"± {str(nround(dim.process_sigma_eff))}σ" if hasattr(dim, "process_sigma_eff") else "",
+                "Yield Prob.": f"{nround(dim.yield_probability*100, 8)}" if hasattr(dim, "yield_probability") else "",
                 "Reject PPM": f"{nround(dim.yield_loss_probability*1000000, 2)}" if hasattr(dim, "yield_loss_probability") else "",
             }
             for dim in self.dims

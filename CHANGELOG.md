@@ -4,9 +4,15 @@
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
 
-## 0.3.3 Released 9/30/23
+## 0.3.2
 
-- [ ] Fix plotting regression
+- [x] fix abs_upper and abs_lower for negative nominal dimensions and add tests
+- [x] rename `process_sigma` to `target_process_sigma`
+- [x] deprecate Z_min/Z_max (abs_upper/abs_lower)
+
+## 0.3.1 Released 9/30/23
+
+- [x] Fix plotting regression
 
 ## 0.3.0 Released 9/30/23
 

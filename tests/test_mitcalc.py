@@ -6,7 +6,7 @@ import dimstack
 m1 = dimstack.dim.Statistical(
     nom=208,
     tol=dimstack.tolerance.SymmetricBilateral(0.036),
-    process_sigma=6,
+    target_process_sigma=6,
     name="a",
     desc="Shaft",
 )
@@ -14,32 +14,32 @@ m1.assume_normal_dist_skewed(0.25)
 m2 = dimstack.dim.Statistical(
     nom=-1.75,
     tol=dimstack.tolerance.UnequalBilateral(0, -0.06),
-    process_sigma=3,
+    target_process_sigma=3,
     name="b",
     desc="Retainer ring",
 )
 m2.assume_normal_dist()
-m3 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), process_sigma=3, name="c", desc="Bearing")
+m3 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), target_process_sigma=3, name="c", desc="Bearing")
 m3.assume_normal_dist()
 m4 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
-    process_sigma=3,
+    target_process_sigma=3,
     name="d",
     desc="Bearing Sleeve",
 )
 m4.assume_normal_dist()
-m5 = dimstack.dim.Statistical(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), process_sigma=3, name="e", desc="Case")
+m5 = dimstack.dim.Statistical(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), target_process_sigma=3, name="e", desc="Case")
 m5.assume_normal_dist()
 m6 = dimstack.dim.Statistical(
     nom=20,
     tol=dimstack.tolerance.SymmetricBilateral(0.026),
-    process_sigma=3,
+    target_process_sigma=3,
     name="f",
     desc="Bearing Sleeve",
 )
 m6.assume_normal_dist()
-m7 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), process_sigma=3, name="g", desc="Bearing")
+m7 = dimstack.dim.Statistical(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), target_process_sigma=3, name="g", desc="Bearing")
 m7.assume_normal_dist()
 dims = [m1, m2, m3, m4, m5, m6, m7]
 
@@ -61,8 +61,8 @@ class MITCalc(unittest.TestCase):
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(stack.WC.nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.WC.tolerance.T / 2), 0.383)
-        self.assertEqual(dimstack.utils.nround(stack.WC.Z_min), 0.017)
-        self.assertEqual(dimstack.utils.nround(stack.WC.Z_max), 0.783)
+        self.assertEqual(dimstack.utils.nround(stack.WC.abs_lower), 0.017)
+        self.assertEqual(dimstack.utils.nround(stack.WC.abs_upper), 0.783)
 
     def test_RSS(self):
         # self.assertEqual(dimstack.utils.nround(stack.RSS.mean), 0.4)
@@ -94,8 +94,8 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).tolerance.T / 2), 0.26433)
         self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).distribution.stdev, 6), 0.05874)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_min), 0.13567)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).Z_max), 0.66433)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).abs_lower), 0.13567)
+        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=4.5).abs_upper), 0.66433)
 
     def test_SixSigma_assembly(self):
         eval = stack.SixSigma(at=4.5)
