@@ -65,10 +65,6 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.Z_min">Z_min</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.Z_max">Z_max</a>
-    </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Statistical">Statistical</a>
@@ -76,6 +72,8 @@
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.mean_eff">mean_eff</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.process_sigma_eff">process_sigma_eff</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a>
     </li>
@@ -163,13 +161,12 @@
 <li><a href="#dimstack.dim.Basic.abs_upper">abs_upper</a></li>
 <li><a href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a></li>
 <li><a href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a></li>
-<li><a href="#dimstack.dim.Basic.Z_min">Z_min</a></li>
-<li><a href="#dimstack.dim.Basic.Z_max">Z_max</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Statistical">Statistical</a><ul>
 <li><a href="#dimstack.dim.Statistical.mean_eff">mean_eff</a></li>
 <li><a href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a></li>
+<li><a href="#dimstack.dim.Statistical.process_sigma_eff">process_sigma_eff</a></li>
 <li><a href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a></li>
 </ul>
 </li>
@@ -405,48 +402,6 @@
 
 </div>
 
-<div class="doc doc-object doc-attribute">
-
-
-
-<h5 id="dimstack.dim.Basic.Z_min" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Z_min</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h5>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>The minimum value of the measurement. AKA, absolute upper</p>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h5 id="dimstack.dim.Basic.Z_max" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Z_max</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h5>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>The maximum value of the measurement. AKA, absolute lower</p>
-  </div>
-
-</div>
-
 
 
 
@@ -487,7 +442,7 @@
     </thead>
     <tbody>
         <tr>
-          <td><code>process_sigma</code></td>
+          <td><code>target_process_sigma</code></td>
           <td>
                 <code>float</code>
           </td>
@@ -571,6 +526,27 @@
   
       <p>effective standard deviation
 "6 stdev" is the standard deviation of the distribution</p>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Statistical.process_sigma_eff" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">process_sigma_eff</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>calculated sigma (# of eff_stdevs away fromm USL and LSL)</p>
   </div>
 
 </div>
