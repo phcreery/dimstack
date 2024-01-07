@@ -48,10 +48,10 @@ class Basic:
         return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
 
     def _repr_html_(self) -> str:
-        return display_df(self.dict, f"Dimension: {self.name} - {self.description}", dispmode="plot")._repr_html_()
+        return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}", dispmode="plot")._repr_html_()
 
     def show(self):
-        return display_df(self.dict, f"Dimension: {self.name} - {self.description}")
+        return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}")
 
     @property
     def dict(self) -> List[Dict[str, Any]]:
@@ -206,7 +206,7 @@ class Statistical(Basic):
                 "Sens. (a)": nround(self.a),
                 "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
                 "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
-                "Distribution": f"{self.distribution}",
+                "Dist.": f"{self.distribution}",
                 "Skew (k)": nround(self.k),
                 "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
                 "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
@@ -228,9 +228,6 @@ class Statistical(Basic):
         if type(basic) is Statistical:
             return basic
 
-        if distribution is None:
-            distribution = dist.Uniform(basic.rel_upper, basic.rel_lower)
-
         logging.warning(f"Converting Basic Dim. ({basic}) to Statistical Dim.")
         return cls(
             nom=basic.dir * basic.nominal,
@@ -244,6 +241,9 @@ class Statistical(Basic):
 
     # Assume a normal distribution.
     def assume_normal_dist(self):
+        if isinstance(self.distribution, dist.Normal):
+            return self
+        logging.warning(f"Assuming Normal Dist. for {self}")
         mean = self.mean_eff
         stdev = (self.rel_upper - self.rel_lower) / (2 * self.target_process_sigma)
         distribution = dist.Normal(mean=mean, stdev=stdev)
@@ -418,7 +418,7 @@ class Stack:
             nom=d_g,
             tol=tolerance,
             name=f"{self.name} - RSS Analysis",
-            desc="(assuming inputs with Normal Distribution & ± 3σ)",
+            desc="(assuming inputs with Normal Dist. & uniform SD)",
         ).assume_normal_dist()
 
     @property
@@ -442,12 +442,12 @@ class Stack:
             nom=d_g,
             tol=tolerance,
             name=f"{self.name} - MRSS Analysis",
-            desc="(assuming inputs with Normal Distribution & ± 3σ)",
+            desc="(assuming inputs with Normal Dist. & uniform SD)",
             target_process_sigma=sigma,
         ).assume_normal_dist()
 
     def SixSigma(self, at: float = 3) -> Statistical:
-        dims: List[Statistical] = [Statistical.from_basic_dimension(dim) for dim in self.dims]
+        dims: List[Statistical] = [Statistical.from_basic_dimension(dim).assume_normal_dist() for dim in self.dims]
         mean = sum([dim.dir * dim.median for dim in dims])
         stdev = RSS([dim.stdev_eff for dim in dims])
         tolerance = Bilateral(stdev * at)
@@ -456,7 +456,7 @@ class Stack:
             tol=tolerance,
             target_process_sigma=at,
             name=f"{self.name} - '6 Sigma' Analysis",
-            desc="(assuming inputs with Normal Distribution)",
+            desc="(assuming inputs with Normal Dist.)",
         )
         dim.assume_normal_dist()
         return dim
@@ -474,7 +474,7 @@ class Stack:
                 "Sens. (a)": f"{nround(dim.a)}",
                 "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
                 "Target Sigma": f"± {str(nround(dim.target_process_sigma))}σ" if hasattr(dim, "target_process_sigma") else "",
-                "Distribution": f"{dim.distribution}" if hasattr(dim, "distribution") else "",
+                "Dist.": f"{dim.distribution}" if hasattr(dim, "distribution") else "",
                 "Skew (k)": nround(dim.k) if hasattr(dim, "k") else "",
                 "C_p": nround(dim.C_p) if (hasattr(dim, "C_p") and isinstance(dim.distribution, dist.Normal)) else "",
                 "C_pk": nround(dim.C_pk) if (hasattr(dim, "C_pk") and isinstance(dim.distribution, dist.Normal)) else "",
