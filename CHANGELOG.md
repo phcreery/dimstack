@@ -4,6 +4,10 @@
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
 
+## 0.3.3
+
+- [x] DivisionByZero regression fix in SixSigma analysis
+
 ## 0.3.2
 
 - [x] fix abs_upper and abs_lower for negative nominal dimensions and add tests
