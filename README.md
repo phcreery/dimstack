@@ -128,13 +128,13 @@ WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statist
 
 ## Usage
 
-dimstack can be used in a standard python script, or as a REPL, allowing use in JupyterLab.
+dimstack works great as a library in a python script, in REPL, or in JupyterLab.
 
 Demo usage in a JupyterLite Lab
 
 - https://phcreery.github.io/dimstack-demo/lab/index.html
 
-Demo usage in a JuptyerLite REPL:
+Demo usage in a JupyterLite REPL:
 
 - https://phcreery.github.io/dimstack-demo/repl/index.html?kernel=python&toolbar=1&code=%pip%20install%20-q%20dimstack%0Aimport%20dimstack%20as%20ds
 
@@ -171,7 +171,7 @@ pdm run deploydocs
 
 ### Deploying
 
-First bump version in pyproject.toml, then build and publish
+First bump version in pyproject.toml, then
 
 ```
 pdm build

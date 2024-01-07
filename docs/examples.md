@@ -4,6 +4,8 @@
 
 ## Motor Assembly textbook example, Chapter 9 through 11, Dimensioning and Tolerancing Handbook, McGraw Hill
 
+## Example (MIT Calc Demonstration Analysis)
+
 ```python
 import dimstack as ds
 

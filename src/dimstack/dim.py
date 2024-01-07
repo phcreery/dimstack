@@ -59,12 +59,12 @@ class Basic:
             {
                 "ID": self.id,
                 "Name": self.name,
-                "Description": (self.description),
-                "dir": self.nom_direction_sign,
+                "Desc.": (self.description),
+                "±": self.nom_direction_sign,
                 "Nom.": nround(self.nominal),
                 "Tol.": (str(self.tolerance)).ljust(14, " "),
                 "Sens. (a)": str(self.a),
-                "Relative Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
+                "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
             }
         ]
 
@@ -179,7 +179,7 @@ class Statistical(Basic):
 
     def show(self, expand=False):
         unused_keys = ["Name"]
-        simple_keys = ["ID", "Desc.", "dir", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
+        simple_keys = ["ID", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
         dict_copy = self.dict
         for entry in dict_copy:
             for key in unused_keys:
@@ -200,7 +200,7 @@ class Statistical(Basic):
                 "ID": self.id,
                 "Name": self.name,
                 "Desc.": (self.description),
-                "dir": self.nom_direction_sign,
+                "±": self.nom_direction_sign,
                 "Nom.": nround(self.nominal),
                 "Tol.": (str(self.tolerance)).ljust(14, " "),
                 "Sens. (a)": nround(self.a),
@@ -347,7 +347,7 @@ class Stack:
         return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
 
     def show(self, expand=False):
-        simple_keys = ["ID", "Name", "Desc.", "dir", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
+        simple_keys = ["ID", "Name", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
         dict_copy = self.dict
         if expand:
             return display_df(dict_copy, f"STACK: {self.name}")
@@ -468,8 +468,8 @@ class Stack:
                 "ID": dim.id,
                 "Name": dim.name,
                 "Desc.": (dim.description),
-                "dir": dim.nom_direction_sign,
-                "Nom.": nround(dim.nominal),
+                "±": dim.nom_direction_sign,
+                "Nom.": (str(dim.nominal)).rjust(8, " "),
                 "Tol.": (str(dim.tolerance)).ljust(14, " "),
                 "Sens. (a)": f"{nround(dim.a)}",
                 "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
@@ -509,7 +509,7 @@ class Spec:
 
     def show(self):
         unused_keys = ["Name"]
-        # simple_keys = ["ID", "Desc.", "dir", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
+        # simple_keys = ["ID", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
         dict_copy = self.dict
         for entry in dict_copy:
             for key in unused_keys:

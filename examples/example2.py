@@ -1,6 +1,8 @@
 import dimstack
 from copy import deepcopy
 
+dimstack.display.mode("rich")
+
 m1 = dimstack.dim.Basic(
     nom=-0.375,
     tol=dimstack.tolerance.UnequalBilateral(0, 0.031),
@@ -64,8 +66,8 @@ items = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
 stack = dimstack.dim.Stack(name="stacks on stacks", dims=items)
 
 stack.show()
-stack.Closed.show()
-stack.WC.show()
-stack.RSS.show()
-stack.MRSS.show()
+# stack.Closed.show()
+# stack.WC.show()
+# stack.RSS.show()
+# stack.MRSS.show()
 stack.SixSigma(at=4.5).show()
