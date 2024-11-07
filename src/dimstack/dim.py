@@ -1,13 +1,13 @@
 import itertools
 import logging
-from typing import List, Union, Dict, Any
 import textwrap
+from typing import Any, Dict, List, Union
 
-from .display import display_df
-from .stats import C_p, C_pk, RSS
-from .tolerance import SymmetricBilateral, UnequalBilateral, Bilateral
-from .utils import nround, sign, sign_symbol, POSITIVE, NEGATIVE
 from . import dist
+from .display import display_df
+from .stats import RSS, C_p, C_pk
+from .tolerance import Bilateral, SymmetricBilateral, UnequalBilateral
+from .utils import POSITIVE, nround, sign, sign_symbol
 
 
 class Basic:
@@ -204,7 +204,8 @@ class Statistical(Basic):
                 "Nom.": nround(self.nominal),
                 "Tol.": (str(self.tolerance)).ljust(14, " "),
                 "Sens. (a)": nround(self.a),
-                "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
+                # "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
+                "Abs. Bounds": f"[{nround(self.abs_lower)}, {nround(self.abs_upper)}]",
                 "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
                 "Dist.": f"{self.distribution}",
                 "Skew (k)": nround(self.k),
@@ -320,8 +321,8 @@ class Statistical(Basic):
     def yield_probability(self):
         if self.distribution is None:
             return 0
-        UL = self.rel_upper
-        LL = self.rel_lower
+        UL = self.abs_upper
+        LL = self.abs_lower
         # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
         return self.distribution.cdf(UL) - self.distribution.cdf(LL)
 
@@ -472,7 +473,8 @@ class Stack:
                 "Nom.": (str(dim.nominal)).rjust(8, " "),
                 "Tol.": (str(dim.tolerance)).ljust(14, " "),
                 "Sens. (a)": f"{nround(dim.a)}",
-                "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
+                # "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
+                "Abs. Bounds": f"[{nround(dim.abs_lower)}, {nround(dim.abs_upper)}]",
                 "Target Sigma": f"± {str(nround(dim.target_process_sigma))}σ" if hasattr(dim, "target_process_sigma") else "",
                 "Dist.": f"{dim.distribution}" if hasattr(dim, "distribution") else "",
                 "Skew (k)": nround(dim.k) if hasattr(dim, "k") else "",
