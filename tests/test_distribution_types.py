@@ -1,9 +1,11 @@
 import unittest
 
-import dimstack
 import numpy as np
 
+import dimstack
+
 dimstack.display.mode("rich")
+
 
 class PositiveDist(unittest.TestCase):
     def test_DoublePositiveBilateral(self):
@@ -16,7 +18,7 @@ class PositiveDist(unittest.TestCase):
             distribution=measurements_dist,
             name="1",
         )
-        
+
         self.assertEqual(dim.nominal, 1)
         self.assertEqual(dim.abs_lower, 0.7)
         self.assertEqual(dim.abs_upper, 1.3)
@@ -37,9 +39,8 @@ class NegativeDist(unittest.TestCase):
             distribution=measurements_dist,
             name="1",
         )
-        
+
         self.assertEqual(dim.nominal * dim.dir, -1)
-        # self.assertEqual(dim.
         self.assertEqual(dim.abs_lower, -1.3)
         self.assertEqual(dim.abs_upper, -0.7)
 

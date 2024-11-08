@@ -1,12 +1,12 @@
-from typing import Union
 import itertools
+from typing import Union
 
 import numpy as np
+import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import plotly.express as px
 
-from .dim import Stack, Basic, Statistical
+from .dim import Basic, Stack, Statistical
 
 
 class StackPlot:

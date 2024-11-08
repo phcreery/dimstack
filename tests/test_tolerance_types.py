@@ -1,4 +1,5 @@
 import unittest
+
 import dimstack
 
 
@@ -45,7 +46,7 @@ class AbsRelPosNeg(unittest.TestCase):
             desc="Washer Length",
         )
         self.assertAlmostEqual(d.abs_upper, 0.1)
-        self.assertAlmostEqual(d.abs_lower, -0.3) # Edge Case
+        self.assertAlmostEqual(d.abs_lower, -0.3)  # Edge Case
 
         # self.assertEqual(d.rel_upper, 0.3)
         # self.assertEqual(d.rel_lower, -0.1)
@@ -69,6 +70,7 @@ class AbsRelPosNeg(unittest.TestCase):
         )
         self.assertEqual(d.rel_upper, 0.6)
         self.assertAlmostEqual(d.rel_lower, 0.3)
+
 
 if __name__ == "__main__":
     unittest.main()

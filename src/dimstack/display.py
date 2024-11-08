@@ -1,5 +1,6 @@
+from typing import Any, Dict, Iterable
+
 import pandas as pd
-from typing import Dict, Any, Iterable
 from rich.console import Console
 from rich.table import Table
 

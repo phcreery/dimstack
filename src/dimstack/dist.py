@@ -1,7 +1,9 @@
+from typing import List, Union
+
 import numpy as np
-from scipy.stats import norm, uniform
-from typing import Union, List
 import pandas as pd
+from scipy.stats import norm, uniform
+
 from .utils import nround
 
 # TODO:
