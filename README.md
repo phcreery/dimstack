@@ -1,7 +1,5 @@
 # dimstack
 
-[![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
-
 Python library for mechanical engineers to help with statistical tolerancing analysis and design.
 
 https://pypi.org/project/dimstack/
@@ -153,20 +151,15 @@ Embed in your site:
 ### Testing
 
 ```
-pdm run test
-```
-
-OR
-
-```
+python -m unittest
 python -m unittest discover .\tests\
 ```
 
 ### Documenting
 
 ```
-pdm run docs
-pdm run deploydocs
+python -m mkdocs serve
+python -m mkdocs gh-deploy
 ```
 
 ### Deploying
@@ -174,8 +167,9 @@ pdm run deploydocs
 First bump version in pyproject.toml, then
 
 ```
-pdm build
-pdm publish --no-build
+uv build
+uv publish
+cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
 ```
 
 ### and Notebook setup

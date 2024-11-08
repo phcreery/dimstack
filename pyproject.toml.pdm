@@ -17,9 +17,9 @@ requires-python = ">=3.8, <3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
-
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
+    "black>=23.1.0",
     "Cython>=3.0.0",
     "ruff>=0.0.254",
     "pkginfo>=1.9.6",
@@ -31,7 +31,21 @@ dev = [
     "mkdocs-material>=9.1.9",
 ]
 
+[tool.black]
+line-length = 160
+
+[tool.ruff]
+# Same as Black.
+line-length = 160
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["pdm-pep517>=1.0"]
+build-backend = "pdm.pep517.api"
+
+[tool.pdm]
+
+[tool.pdm.scripts]
+after_build = "cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'"
+test = "python -m unittest"
+docs = "python -m mkdocs serve"
+deploydocs = "python -m mkdocs gh-deploy"

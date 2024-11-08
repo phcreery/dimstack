@@ -9,15 +9,8 @@
     "stackups",
     "Tolerancing"
   ],
-  "python.linting.flake8Enabled": true,
-  "python.linting.enabled": false,
-  "python.formatting.provider": "none",
   "python.languageServer": "Pylance",
   "editor.formatOnSave": true,
-  "python.linting.mypyEnabled": false,
   "python.analysis.typeCheckingMode": "basic",
-  "notebook.output.textLineLimit": 120,
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
-  }
+  "notebook.output.textLineLimit": 120
 }
