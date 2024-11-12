@@ -5,8 +5,8 @@ from typing import Any, Dict, List, Union
 
 from . import dist
 from .display import display_df
-from .stats import RSS, C_p, C_pk
-from .tolerance import Bilateral, SymmetricBilateral, UnequalBilateral
+from .stats import C_p, C_pk
+from .tolerance import SymmetricBilateral, UnequalBilateral
 from .utils import POSITIVE, nround, sign, sign_symbol
 
 
@@ -179,7 +179,7 @@ class Statistical(Basic):
 
     def show(self, expand=False):
         unused_keys = ["Name"]
-        simple_keys = ["ID", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
+        simple_keys = ["ID", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
         dict_copy = self.dict
         for entry in dict_copy:
             for key in unused_keys:
@@ -348,7 +348,7 @@ class Stack:
         return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
 
     def show(self, expand=False):
-        simple_keys = ["ID", "Name", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
+        simple_keys = ["ID", "Name", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
         dict_copy = self.dict
         if expand:
             return display_df(dict_copy, f"STACK: {self.name}")
@@ -360,107 +360,6 @@ class Stack:
 
     def append(self, measurement: Union[Basic, Statistical]):
         self.dims.append(measurement)
-
-    @property
-    def Closed(self) -> Basic:
-        nominal = sum([dim.dir * dim.nominal * dim.a for dim in self.dims])
-        tolerance = Bilateral(
-            sum(filter(None, [dim.abs_upper_tol for dim in self.dims])),
-            sum(filter(None, [dim.abs_lower_tol for dim in self.dims])),
-        )
-        return Basic(
-            nominal,
-            tolerance,
-            name=f"{self.name} - Closed Analysis",
-            desc="",
-        )
-
-    @property
-    def WC(self) -> Basic:
-        """
-        This is a simple WC calculation. This results in a Bilateral dimension with a tolerance that is the sum of the component tolerances.
-        It states that in any combination of tolerances, you can be sure the result will be within the this resulting tolerance.
-        """
-        mean = sum([dim.dir * dim.median * dim.a for dim in self.dims])
-        t_wc = sum([abs((dim.tolerance.T / 2) * dim.a) for dim in self.dims])
-        tolerance = Bilateral(t_wc)
-        return Basic(
-            nom=mean,
-            tol=tolerance,
-            name=f"{self.name} - WC Analysis",
-            desc="",
-        )
-
-    @property
-    def RSS(self) -> Statistical:
-        """
-        This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
-        It is really only useful for a Bilateral stack of same process-stdev dims. The RSS result has the same uncertainty as the measurements.
-        Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
-        manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
-        probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
-        normal and the probability that it is ±t_rss between is 99.73%.
-        Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
-        for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
-        manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
-        The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
-        equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
-        plus the RSS variation at the gap.
-
-        See:
-         - Dimensioning and Tolerancing Handbook, McGraw Hill
-         - http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
-        """
-        dims: List[Statistical] = [Statistical.from_basic_dimension(dim) for dim in self.dims]
-        d_g = sum([dim.dir * dim.median * dim.a for dim in dims])
-        t_rss = RSS([dim.dir * (dim.tolerance.T / 2) * dim.a for dim in dims])
-        tolerance = Bilateral(t_rss)
-        return Statistical(
-            nom=d_g,
-            tol=tolerance,
-            name=f"{self.name} - RSS Analysis",
-            desc="(assuming inputs with Normal Dist. & uniform SD)",
-        ).assume_normal_dist()
-
-    @property
-    def MRSS(self) -> Statistical:
-        """Basically RSS with a coefficient modifier to make the tolerance tighter.
-
-        Returns:
-            Statistical: _description_
-        """
-        dims: List[Statistical] = [Statistical.from_basic_dimension(dim) for dim in self.dims]
-        d_g = sum([dim.dir * dim.median * dim.a for dim in dims])
-        t_wc = sum([abs(dim.dir * (dim.tolerance.T / 2) * dim.a) for dim in dims])
-        t_rss = RSS([dim.dir * dim.a * (dim.tolerance.T / 2) for dim in dims])
-        n = len(self.dims)
-        C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1)) + 1
-        t_mrss = C_f * t_rss
-        tolerance = Bilateral(t_mrss)
-        stdev = t_wc / 6
-        sigma = t_mrss / stdev
-        return Statistical(
-            nom=d_g,
-            tol=tolerance,
-            name=f"{self.name} - MRSS Analysis",
-            desc="(assuming inputs with Normal Dist. & uniform SD)",
-            target_process_sigma=sigma,
-        ).assume_normal_dist()
-
-    def SixSigma(self, at: float = 3) -> Statistical:
-        dims: List[Statistical] = [Statistical.from_basic_dimension(dim).assume_normal_dist() for dim in self.dims]
-        mean = sum([dim.dir * dim.median for dim in dims])
-        stdev = RSS([dim.stdev_eff for dim in dims])
-        tolerance = Bilateral(stdev * at)
-        dim = Statistical(
-            nom=mean,
-            tol=tolerance,
-            target_process_sigma=at,
-            name=f"{self.name} - '6 Sigma' Analysis",
-            desc="(assuming inputs with Normal Dist.)",
-        )
-        dim.assume_normal_dist()
-        return dim
 
     @property
     def dict(self) -> List[Dict[str, Any]]:

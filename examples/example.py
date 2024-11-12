@@ -43,11 +43,11 @@ items = [m1, m2, m3, m4, m5, m6, m7]
 stack = ds.Stack(name="stacks on stacks", dims=items)
 
 stack.show()
-stack.Closed.show()
-stack.WC.show()
-stack.RSS.show()
-stack.MRSS.show()
-designed_for = stack.SixSigma(at=4.5)
+ds.calc.Closed(stack).show()
+ds.calc.WC(stack).show()
+ds.calc.RSS(stack).show()
+ds.calc.MRSS(stack).show()
+designed_for = ds.calc.SixSigma(stack, at=4.5)
 designed_for.show()
 
 spec = ds.Spec("stack spec", "", dim=designed_for, LL=0.05, UL=0.8)

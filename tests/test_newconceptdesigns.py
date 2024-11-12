@@ -1,4 +1,5 @@
 import unittest
+
 import dimstack
 
 # this test is a copy of "My First Stackup" in newconceptzdesign http://www.newconceptzdesign.com/tutorial/Tutorial-My_first_stackup.html
@@ -19,7 +20,9 @@ m2 = dimstack.dim.Statistical(
     desc="Overall width",
 )
 m2.assume_normal_dist()
-m3 = dimstack.dim.Statistical(nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), target_process_sigma=6, name="PN16", desc="Mounting face to rt. end")
+m3 = dimstack.dim.Statistical(
+    nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), target_process_sigma=6, name="PN16", desc="Mounting face to rt. end"
+)
 m3.assume_normal_dist()
 dims = [m1, m2, m3]
 
@@ -28,24 +31,27 @@ stack = dimstack.dim.Stack(name="PN16/NJ210E - gap between cover and bearing (sh
 
 class MITCalc(unittest.TestCase):
     def test_Closed(self):
-        self.assertEqual(dimstack.utils.nround(stack.Closed.nominal), 9.8480)
-        self.assertEqual(dimstack.utils.nround(stack.Closed.tolerance.T / 2), 0.0200)
-        self.assertEqual(dimstack.utils.nround(stack.Closed.abs_lower), 9.8280)
-        self.assertEqual(dimstack.utils.nround(stack.Closed.abs_upper), 9.8680)
+        Closed = dimstack.calc.Closed(stack)
+        self.assertEqual(dimstack.utils.nround(Closed.nominal), 9.8480)
+        self.assertEqual(dimstack.utils.nround(Closed.tolerance.T / 2), 0.0200)
+        self.assertEqual(dimstack.utils.nround(Closed.abs_lower), 9.8280)
+        self.assertEqual(dimstack.utils.nround(Closed.abs_upper), 9.8680)
 
     def test_WC(self):
-        self.assertEqual(dimstack.utils.nround(stack.WC.nominal), 9.8480)
-        self.assertEqual(dimstack.utils.nround(stack.WC.tolerance.T / 2), 0.0200)
-        self.assertEqual(dimstack.utils.nround(stack.WC.abs_lower), 9.8280)
-        self.assertEqual(dimstack.utils.nround(stack.WC.abs_upper), 9.8680)
+        WC = dimstack.calc.WC(stack)
+        self.assertEqual(dimstack.utils.nround(WC.nominal), 9.8480)
+        self.assertEqual(dimstack.utils.nround(WC.tolerance.T / 2), 0.0200)
+        self.assertEqual(dimstack.utils.nround(WC.abs_lower), 9.8280)
+        self.assertEqual(dimstack.utils.nround(WC.abs_upper), 9.8680)
 
     def test_SixSigma(self):
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).nominal), 9.8480)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).nominal), 9.8480)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).tolerance.T / 2, 4), 0.0122)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).distribution.stdev * 2, 5), 0.00408)  # times 2 !?!?
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).abs_lower, 4), 9.8358)
-        self.assertEqual(dimstack.utils.nround(stack.SixSigma(at=6).abs_upper, 4), 9.8602)
+        SixSigma = dimstack.calc.SixSigma(stack, at=6)
+        self.assertEqual(dimstack.utils.nround(SixSigma.nominal), 9.8480)
+        self.assertEqual(dimstack.utils.nround(SixSigma.nominal), 9.8480)
+        self.assertEqual(dimstack.utils.nround(SixSigma.tolerance.T / 2, 4), 0.0122)
+        self.assertEqual(dimstack.utils.nround(SixSigma.distribution.stdev * 2, 5), 0.00408)  # times 2 !?!?
+        self.assertEqual(dimstack.utils.nround(SixSigma.abs_lower, 4), 9.8358)
+        self.assertEqual(dimstack.utils.nround(SixSigma.abs_upper, 4), 9.8602)
 
     # def test_SixSigma_assembly(self):
     #     dim = stack.SixSigma(at=4.5)

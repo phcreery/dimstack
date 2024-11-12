@@ -55,21 +55,21 @@ def C_pk(UL: float, LL: float, mean: float, stdev: float) -> float:
 #     return stdev_i / n**0.5
 
 
-def RSS_args(*args):
+def rss_args(*args):
     """
     Root sum square.
 
-    >>> RSS_args(1, 2, 3)
+    >>> rss_args(1, 2, 3)
     3.7416573867739413
     """
     return (sum([arg**2 for arg in args])) ** 0.5
 
 
-def RSS(args: List[float]):
+def rss(args: List[float]):
     """
     Root sum square.
 
-    >>> RSS([1, 2, 3])
+    >>> rss([1, 2, 3])
     3.7416573867739413
     """
     val = 0
