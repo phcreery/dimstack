@@ -3,12 +3,20 @@
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
+- [ ] Auto and/or user specified plot dist data xbins (currently size=0.1)
+- [ ] is Target Sigma needed?
+- [ ] fix StackPlot.add_dimension() not returning self
+- [ ] is Statistical "@ ± {self.target_process_sigma}σ & k={self.k}" needed?
+
+## 0.5.0
+
+- [x] Move WC, RSS, MRSS calculations to separate locations
 
 ## 0.4.0 11/11/2024
 
-- [x] Move WC, RSS, MRSS calculations to separate locations
 - [x] Fix negative statistical data
-- [x] Show Abs. Bounds instead of Re;. Bounds
+- [x] Show Abs. Bounds instead of Rel. Bounds
+- [x] uv managed project
 
 ## 0.3.3
 
