@@ -4,7 +4,7 @@
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
 
-## 0.4.0
+## 0.4.0 11/11/2024
 
 - [x] Move WC, RSS, MRSS calculations to separate locations
 - [x] Fix negative statistical data
