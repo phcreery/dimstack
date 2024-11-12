@@ -4,6 +4,12 @@
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
 
+## 0.4.0
+
+- [x] Move WC, RSS, MRSS calculations to separate locations
+- [x] Fix negative statistical data
+- [x] Show Abs. Bounds instead of Re;. Bounds
+
 ## 0.3.3
 
 - [x] DivisionByZero regression fix in SixSigma analysis
