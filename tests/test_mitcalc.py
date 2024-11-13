@@ -73,7 +73,7 @@ class MITCalc(unittest.TestCase):
 
     def test_RSS_assembly(self):
         eval = dimstack.calc.RSS(stack)
-        spec = dimstack.dim.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
+        spec = dimstack.dim.Spec("spec", "", distribution=eval.distribution, LL=0.05, UL=0.8)
 
         self.assertEqual(dimstack.utils.nround(spec.R, 1), 0.0)
 
@@ -100,7 +100,7 @@ class MITCalc(unittest.TestCase):
 
     def test_SixSigma_assembly(self):
         eval = dimstack.calc.SixSigma(stack, at=4.5)
-        spec = dimstack.dim.Spec("spec", "", dim=eval, LL=0.05, UL=0.8)
+        spec = dimstack.dim.Spec("spec", "", distribution=eval.distribution, LL=0.05, UL=0.8)
 
         # self.assertEqual(dimstack.utils.nround(spec.C_p), 2.12804) # temporarily removed 20230623
         # self.assertEqual(dimstack.utils.nround(spec.C_pk), 1.98617) # temporarily removed 20230623

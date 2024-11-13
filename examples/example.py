@@ -50,7 +50,7 @@ ds.calc.MRSS(stack).show()
 designed_for = ds.calc.SixSigma(stack, at=4.5)
 designed_for.show()
 
-spec = ds.Spec("stack spec", "", dim=designed_for, LL=0.05, UL=0.8)
+spec = ds.Spec("stack spec", "", distribution=designed_for.distribution, LL=0.05, UL=0.8)
 spec.show()
 
 # ds.plot.StackPlot().add(stack).add(stack.RSS).show()

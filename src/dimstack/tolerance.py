@@ -45,7 +45,9 @@ class UnequalBilateral:
         return f"UnequalBilateral({self.upper}, {self.lower})"
 
     def __str__(self) -> str:
-        return f"{sign_symbol(self.upper)} {nround(abs(self.upper))} / {sign_symbol(self.lower)} {nround(abs(self.lower))}"
+        return (
+            f"{sign_symbol(self.upper)} {nround(abs(self.upper))} / {sign_symbol(self.lower)} {nround(abs(self.lower))}"
+        )
 
     @property
     def T(self):

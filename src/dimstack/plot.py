@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from .dim import Basic, Stack, Statistical
+from .dist import Normal, Uniform, NormalScreened
 
 
 class StackPlot:
@@ -27,7 +28,7 @@ class StackPlot:
         """Show the plot. This works in both Jupyter notebooks and in a Python script."""
         return self.fig.show()
 
-    def add_dimension(self, item: Union[Basic, Statistical], start_pos: float = 0):
+    def add_dimension(self, item: Union[Basic, Statistical], start_pos: float = 0, xbins_size=None):
         """Add a dimension to the plot.
 
         Args:
@@ -81,42 +82,85 @@ class StackPlot:
         )
 
         # plot the default distribution
-        xrange = np.arange(item.nominal + item.abs_lower_tol, item.nominal + item.abs_upper_tol, 0.001)
-        if hasattr(item, "distribution") and item.distribution is not None:
-            self.fig.add_trace(
-                go.Scatter(
-                    line=dict(color=color, width=1),
-                    name=f"{item.name} Distribution",
-                    x=xrange + prev_pos,
-                    y=item.distribution.pdf(xrange),
-                    legendgroup=f"{item.name}",
-                ),
-                secondary_y=True,
-            )
-            # plot any alternate distributions
-            # for dist in item.get_alt_dists():
-            #     self.fig.add_trace(
-            #         go.Scatter(
-            #             line=dict(color=color, width=1),
-            #             name=f"{item.name} Distribution",
-            #             x=xrange * item.dir + prev_pos,
-            #             y=dist.pdf(xrange),
-            #             legendgroup=f"{item.name}",
-            #             opacity=0.5,
-            #         ),
-            #         secondary_y=True,
-            #     )
+        # xrange = np.arange(item.nominal + item.abs_lower_tol, item.nominal + item.abs_upper_tol, 0.001)
+        # if hasattr(item, "distribution") and item.distribution is not None:
+        #     self.fig.add_trace(
+        #         go.Scatter(
+        #             line=dict(color=color, width=1),
+        #             name=f"{item.name} Distribution",
+        #             x=xrange + prev_pos,
+        #             y=item.distribution.pdf(xrange),
+        #             legendgroup=f"{item.name}",
+        #         ),
+        #         secondary_y=True,
+        #     )
 
-            if hasattr(item.distribution, "data") and item.distribution.data is not None:
-                self.fig.add_histogram(
-                    x=item.distribution.data,
-                    histnorm="probability",
-                    xbins=dict(size=0.1),
-                    name=f"{item.name} Data",
-                    legendgroup=f"{item.name}",
-                    marker_color=color,
-                    opacity=0.5,
-                )
+        #     if hasattr(item.distribution, "data") and item.distribution.data is not None:
+        #         self.fig.add_histogram(
+        #             x=item.distribution.data,
+        #             histnorm="probability",
+        #             xbins=dict(size=xbins_size),
+        #             name=f"{item.name} Data",
+        #             legendgroup=f"{item.name}",
+        #             marker_color=color,
+        #             opacity=0.5,
+        #         )
+
+        if hasattr(item, "distribution") and item.distribution is not None:
+            xbins_size = item.stdev_eff * 0.5 if xbins_size is None else xbins_size
+            self.add_distribution(
+                item.distribution,
+                item.name,
+                item.nominal + item.abs_lower_tol,
+                item.nominal + item.abs_upper_tol,
+                xbins_size=xbins_size,
+                color=color,
+            )
+
+        return self
+
+    def add_distribution(
+        self,
+        distribution: Union[Normal, Uniform, NormalScreened],
+        name: str,
+        start: float,
+        stop: float,
+        xbins_size=0.1,
+        color=None,
+    ):
+        """Add a distribution to the plot.
+
+        Args:
+            distribution (Union[Normal, Uniform, NormalScreened]): _description_
+            name (str): _description_
+            xrange (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        color = next(self.col_pal_iterator) if color is None else color
+        xrange = np.arange(start, stop, 0.001)
+        self.fig.add_trace(
+            go.Scatter(
+                line=dict(color=color, width=1),
+                name=name,
+                x=xrange,
+                y=distribution.pdf(xrange),
+            ),
+            secondary_y=True,
+        )
+
+        if hasattr(distribution, "data") and distribution.data is not None:
+            self.fig.add_histogram(
+                x=distribution.data,
+                histnorm="probability",
+                xbins=dict(size=xbins_size),
+                name=f"{name} Data",
+                marker_color=color,
+                opacity=0.5,
+            )
+
+        return self
 
     def add_stack(self, stack: Stack):
         """Add a stack of dimensions to the plot.

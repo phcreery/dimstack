@@ -3,14 +3,13 @@
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
-- [ ] Auto and/or user specified plot dist data xbins (currently size=0.1)
-- [ ] is Target Sigma needed?
-- [ ] fix StackPlot.add_dimension() not returning self
-- [ ] is Statistical "@ ± {self.target_process_sigma}σ & k={self.k}" needed?
 
-## 0.5.0
+## 0.5.0 11/12/2024
 
 - [x] Move WC, RSS, MRSS calculations to separate locations
+- [x] is Statistical "@ ± {self.target_process_sigma}σ & k={self.k}" needed?
+- [x] fix StackPlot.add_dimension() not returning self
+- [x] automatic or user specified plot dist data xbins (currently size=0.1)
 
 ## 0.4.0 11/11/2024
 
@@ -28,11 +27,11 @@
 - [x] rename `process_sigma` to `target_process_sigma`
 - [x] deprecate Z_min/Z_max (abs_upper/abs_lower)
 
-## 0.3.1 Released 9/30/23
+## 0.3.1 Released 9/30/2023
 
 - [x] Fix plotting regression
 
-## 0.3.0 Released 9/30/23
+## 0.3.0 Released 9/30/2023
 
 - [x] remove self.items in MRSS(), they should just be items
 - [x] reorder mean and stdev in C_pk()

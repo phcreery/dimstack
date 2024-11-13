@@ -169,10 +169,10 @@ class Statistical(Basic):
         self.target_process_sigma = target_process_sigma
 
     def __repr__(self) -> str:
-        return f"Statistical({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.target_process_sigma}, {self.k}, {self.distribution})"  # noqa: E501
+        return f"Statistical({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.distribution})"  # noqa: E501
 
     def __str__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)} @ ± {self.target_process_sigma}σ & k={self.k}"
+        return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)} @ {self.distribution}"
 
     def _repr_html_(self) -> str:
         return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}", dispmode="plot")._repr_html_()
@@ -206,7 +206,7 @@ class Statistical(Basic):
                 "Sens. (a)": nround(self.a),
                 # "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
                 "Abs. Bounds": f"[{nround(self.abs_lower)}, {nround(self.abs_upper)}]",
-                "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
+                # "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
                 "Dist.": f"{self.distribution}",
                 "Skew (k)": nround(self.k),
                 "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
@@ -215,7 +215,9 @@ class Statistical(Basic):
                 "σ_eff": nround(self.stdev_eff),
                 "Eff. Sigma": f"± {str(nround(self.process_sigma_eff))}σ",
                 "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
-                "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}" if self.yield_loss_probability is not None else "",
+                "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}"
+                if self.yield_loss_probability is not None
+                else "",
             }
         ]
 
@@ -244,18 +246,20 @@ class Statistical(Basic):
     def assume_normal_dist(self):
         if isinstance(self.distribution, dist.Normal):
             return self
-        logging.warning(f"Assuming Normal Dist. for {self}")
         mean = self.mean_eff
         stdev = (self.rel_upper - self.rel_lower) / (2 * self.target_process_sigma)
         distribution = dist.Normal(mean=mean, stdev=stdev)
         self.distribution = distribution
+        logging.warning(f"Assuming Normal Dist. for {self}")
         return self
 
     # Assume a normal distribution with a skew
     def assume_normal_dist_skewed(self, skew):
         self.assume_normal_dist()
         if isinstance(self.distribution, dist.Normal):  # which it will be
-            self.distribution.mean = self.distribution.mean + skew * (self.distribution.stdev * self.target_process_sigma)
+            self.distribution.mean = self.distribution.mean + skew * (
+                self.distribution.stdev * self.target_process_sigma
+            )
         return self
 
     @property
@@ -374,33 +378,40 @@ class Stack:
                 "Sens. (a)": f"{nround(dim.a)}",
                 # "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
                 "Abs. Bounds": f"[{nround(dim.abs_lower)}, {nround(dim.abs_upper)}]",
-                "Target Sigma": f"± {str(nround(dim.target_process_sigma))}σ" if hasattr(dim, "target_process_sigma") else "",
+                "Target Sigma": f"± {str(nround(dim.target_process_sigma))}σ"
+                if hasattr(dim, "target_process_sigma")
+                else "",
                 "Dist.": f"{dim.distribution}" if hasattr(dim, "distribution") else "",
                 "Skew (k)": nround(dim.k) if hasattr(dim, "k") else "",
                 "C_p": nround(dim.C_p) if (hasattr(dim, "C_p") and isinstance(dim.distribution, dist.Normal)) else "",
-                "C_pk": nround(dim.C_pk) if (hasattr(dim, "C_pk") and isinstance(dim.distribution, dist.Normal)) else "",
+                "C_pk": nround(dim.C_pk)
+                if (hasattr(dim, "C_pk") and isinstance(dim.distribution, dist.Normal))
+                else "",
                 # "μ": nround(dim.mean) if hasattr(dim, "mean") else "",
                 # "σ": nround(dim.stdev) if hasattr(dim, "stdev") else "",
                 "μ_eff": nround(dim.mean_eff) if hasattr(dim, "mean_eff") else "",
                 "σ_eff": nround(dim.stdev_eff) if hasattr(dim, "stdev_eff") else "",
                 "Eff. Sigma": f"± {str(nround(dim.process_sigma_eff))}σ" if hasattr(dim, "process_sigma_eff") else "",
                 "Yield Prob.": f"{nround(dim.yield_probability*100, 8)}" if hasattr(dim, "yield_probability") else "",
-                "Reject PPM": f"{nround(dim.yield_loss_probability*1000000, 2)}" if hasattr(dim, "yield_loss_probability") else "",
+                "Reject PPM": f"{nround(dim.yield_loss_probability*1000000, 2)}"
+                if hasattr(dim, "yield_loss_probability")
+                else "",
             }
             for dim in self.dims
         ]
 
 
 class Spec:
-    def __init__(self, name, description, dim: Union[Statistical, Basic], LL, UL):
+    def __init__(self, name, description, distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened], LL, UL):
         self.name = name
         self.description = description
-        self.dim = dim
+        # self.dim = dim
+        self.distribution = distribution
         self.LL = LL
         self.UL = UL
 
     def __repr__(self) -> str:
-        return f"Spec({self.name}, {self.description}, {repr(self.dim)}, {self.LL}, {self.UL})"
+        return f"Spec({self.name}, {self.description}, {repr(self.distribution)}, {self.LL}, {self.UL})"
 
     def __str__(self) -> str:
         return f"SPEC: {self.name}"
@@ -427,15 +438,11 @@ class Spec:
         """
         Returns the probability of a part being out of spec.
         """
-        if not isinstance(self.dim, Statistical) or self.dim.distribution is None:
-            return 0
         return 1 - self.yield_probability
 
     @property
     def yield_probability(self):
-        if not isinstance(self.dim, Statistical) or self.dim.distribution is None:
-            return 0
-        return self.dim.distribution.cdf(self.UL) - self.dim.distribution.cdf(self.LL)
+        return self.distribution.cdf(self.UL) - self.distribution.cdf(self.LL)
 
     @property
     def R(self):
@@ -448,7 +455,7 @@ class Spec:
             {
                 "Name": textwrap.shorten(self.name, width=10, placeholder="..."),
                 "Desc.": textwrap.shorten(self.description, width=10, placeholder="..."),
-                "Dimension": self.dim.__str__(),
+                "Distribution": self.distribution.__str__(),
                 "Median": nround(self.median),
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
                 "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
