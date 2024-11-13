@@ -8,7 +8,7 @@
     <title>Examples - dimstack</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -46,7 +45,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Examples</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Examples</a>
     <ul class="current">
     </ul>
                 </li>
@@ -71,8 +70,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Examples</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/phcreery/dimstack/edit/master/docs/examples.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -85,8 +84,10 @@
                 <h2 id="interactive-jupyter-notebook">Interactive Jupyter Notebook</h2>
 <p><a href="../example.html">Example Notebook</a></p>
 <h2 id="motor-assembly-textbook-example-chapter-9-through-11-dimensioning-and-tolerancing-handbook-mcgraw-hill">Motor Assembly textbook example, Chapter 9 through 11, Dimensioning and Tolerancing Handbook, McGraw Hill</h2>
+<h2 id="example-mit-calc-demonstration-analysis">Example (MIT Calc Demonstration Analysis)</h2>
 <pre><code class="language-python">import dimstack as ds
 
+# ds.display.mode(&quot;text&quot;)
 ds.display.mode(&quot;rich&quot;)
 
 k = 0.25
@@ -129,71 +130,77 @@ items = [m1, m2, m3, m4, m5, m6, m7]
 stack = ds.Stack(name=&quot;stacks on stacks&quot;, dims=items)
 
 stack.show()
-stack.Closed.show()
-stack.WC.show()
-stack.RSS.show()
-stack.MRSS.show()
-designed_for = stack.SixSigma(at=4.5)
+ds.calc.Closed(stack).show()
+ds.calc.WC(stack).show()
+ds.calc.RSS(stack).show()
+ds.calc.MRSS(stack).show()
+designed_for = ds.calc.SixSigma(stack, at=4.5)
 designed_for.show()
 
-spec = ds.Spec(&quot;stack spec&quot;, &quot;&quot;, dim=designed_for, LL=0.05, UL=0.8)
+spec = ds.Spec(&quot;stack spec&quot;, &quot;&quot;, distribution=designed_for.distribution, LL=0.05, UL=0.8)
 spec.show()
-
-ds.plot.StackPlot().add(stack).add(stack.RSS).show()
 </code></pre>
 <p>Returns:</p>
-<pre><code>                                   STACK: stacks on stacks
-┏━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Name ┃ Desc.          ┃ dir ┃ Nom.  ┃ Tol.           ┃ Sens. (a) ┃ Rel. Bounds        ┃
-┡━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
-│ 0  │ a    │ Shaft          │ +   │ 208.0 │ ± 0.036        │ 1         │ [207.964, 208.036] │
-│ 1  │ b    │ Retainer ring  │ -   │ 1.75  │ + 0.06 / + 0   │ 1         │ [1.75, 1.81]       │
-│ 2  │ c    │ Bearing        │ -   │ 23.0  │ + 0.12 / + 0   │ 1         │ [23, 23.12]        │
-│ 3  │ d    │ Bearing Sleeve │ +   │ 20.0  │ ± 0.026        │ 1         │ [19.974, 20.026]   │
-│ 4  │ e    │ Case           │ -   │ 200.0 │ ± 0.145        │ 1         │ [199.855, 200.145] │
-│ 5  │ f    │ Bearing Sleeve │ +   │ 20.0  │ ± 0.026        │ 1         │ [19.974, 20.026]   │
-│ 6  │ g    │ Bearing        │ -   │ 23.0  │ + 0.12 / + 0   │ 1         │ [23, 23.12]        │
-└────┴──────┴────────────────┴─────┴───────┴────────────────┴───────────┴────────────────────┘
-                                    Dimension: stacks on stacks - Closed Analysis -
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Name                               ┃ Description ┃ dir ┃ Nom. ┃ Tol.              ┃ Sens. (a) ┃ Relative Bounds ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
-│ 7  │ stacks on stacks - Closed Analysis │             │ +   │ 0.25 │ + 0.233 / - 0.533 │ 1         │ [-0.283, 0.483] │
-└────┴────────────────────────────────────┴─────────────┴─────┴──────┴───────────────────┴───────────┴─────────────────┘
-                                   Dimension: stacks on stacks - WC Analysis -
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Name                           ┃ Description ┃ dir ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Relative Bounds ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
-│ 8  │ stacks on stacks - WC Analysis │             │ +   │ 0.1  │ ± 0.383        │ 1         │ [-0.283, 0.483] │
-└────┴────────────────────────────────┴─────────────┴─────┴──────┴────────────────┴───────────┴─────────────────┘
+<pre><code>                                     STACK: stacks on stacks
+┏━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name ┃ Desc.          ┃ ± ┃ Nom.     ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds          ┃
+┡━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩
+│ 0  │ a    │ Shaft          │ + │      208 │ ± 0.036        │ 1         │ [207.964, 208.036]   │
+│ 1  │ b    │ Retainer ring  │ - │     1.75 │ + 0.06 / + 0   │ 1         │ [-1.75, -1.69]       │
+│ 2  │ c    │ Bearing        │ - │       23 │ + 0.12 / + 0   │ 1         │ [-23, -22.88]        │
+│ 3  │ d    │ Bearing Sleeve │ + │       20 │ ± 0.026        │ 1         │ [19.974, 20.026]     │
+│ 4  │ e    │ Case           │ - │      200 │ ± 0.145        │ 1         │ [-200.145, -199.855] │
+│ 5  │ f    │ Bearing Sleeve │ + │       20 │ ± 0.026        │ 1         │ [19.974, 20.026]     │
+│ 6  │ g    │ Bearing        │ - │       23 │ + 0.12 / + 0   │ 1         │ [-23, -22.88]        │
+└────┴──────┴────────────────┴───┴──────────┴────────────────┴───────────┴──────────────────────┘
+                                DIMENSION: stacks on stacks - Closed Analysis -
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name                               ┃ Desc. ┃ ± ┃ Nom. ┃ Tol.              ┃ Sens. (a) ┃ Rel. Bounds     ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ 7  │ stacks on stacks - Closed Analysis │       │ + │ 0.25 │ + 0.233 / - 0.533 │ 1         │ [-0.283, 0.483] │
+└────┴────────────────────────────────────┴───────┴───┴──────┴───────────────────┴───────────┴─────────────────┘
+                               DIMENSION: stacks on stacks - WC Analysis -
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name                           ┃ Desc. ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Rel. Bounds     ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ 8  │ stacks on stacks - WC Analysis │       │ + │ 0.1  │ ± 0.383        │ 1         │ [-0.283, 0.483] │
+└────┴────────────────────────────────┴───────┴───┴──────┴────────────────┴───────────┴─────────────────┘
 WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statistical Dim.
-              DIMENSION: stacks on stacks - RSS Analysis - (assuming inputs with Normal Distribution &amp; ± 3σ)
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Desc.                                             ┃ dir ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Rel. Bounds         ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
-│ 10 │ (assuming inputs with Normal Distribution &amp; ± 3σ) │ +   │ 0.1  │ ± 0.17825      │ 1         │ [-0.07825, 0.27825] │
-└────┴───────────────────────────────────────────────────┴─────┴──────┴────────────────┴───────────┴─────────────────────┘
+WARNING:root:Assuming Normal Dist. for 10: stacks on stacks - RSS Analysis (assuming inputs with Normal Dist. &amp; uniform SD) +0.1 ± 0.17825 @ Normal Dist. (μ=0.1, σ=0.05942)
+             DIMENSION: stacks on stacks - RSS Analysis - (assuming inputs with Normal Dist. &amp; uniform SD)
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Desc.                                            ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds         ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ 10 │ (assuming inputs with Normal Dist. &amp; uniform SD) │ + │ 0.1  │ ± 0.17825      │ 1         │ [-0.07825, 0.27825] │
+└────┴──────────────────────────────────────────────────┴───┴──────┴────────────────┴───────────┴─────────────────────┘
 WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statistical Dim.
-             DIMENSION: stacks on stacks - MRSS Analysis - (assuming inputs with Normal Distribution &amp; ± 3σ)
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Desc.                                             ┃ dir ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Rel. Bounds         ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
-│ 12 │ (assuming inputs with Normal Distribution &amp; ± 3σ) │ +   │ 0.1  │ ± 0.24046      │ 1         │ [-0.14046, 0.34046] │
-└────┴───────────────────────────────────────────────────┴─────┴──────┴────────────────┴───────────┴─────────────────────┘
+WARNING:root:Assuming Normal Dist. for 12: stacks on stacks - MRSS Analysis (assuming inputs with Normal Dist. &amp; uniform SD) +0.1 ± 0.24046 @ Normal Dist. (μ=0.1, σ=0.06383)
+            DIMENSION: stacks on stacks - MRSS Analysis - (assuming inputs with Normal Dist. &amp; uniform SD)
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Desc.                                            ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds         ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ 12 │ (assuming inputs with Normal Dist. &amp; uniform SD) │ + │ 0.1  │ ± 0.24046      │ 1         │ [-0.14046, 0.34046] │
+└────┴──────────────────────────────────────────────────┴───┴──────┴────────────────┴───────────┴─────────────────────┘
+WARNING:root:Assuming Normal Dist. for 1: b Retainer ring -1.75 + 0.06 / + 0 @ Normal Dist. (μ=1.78, σ=0.01)
+WARNING:root:Assuming Normal Dist. for 2: c Bearing -23 + 0.12 / + 0 @ Normal Dist. (μ=23.06, σ=0.02)
+WARNING:root:Assuming Normal Dist. for 3: d Bearing Sleeve +20 ± 0.026 @ Normal Dist. (μ=20.0, σ=0.00867)
+WARNING:root:Assuming Normal Dist. for 4: e Case -200 ± 0.145 @ Normal Dist. (μ=200.0, σ=0.04833)
 WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statistical Dim.
-        DIMENSION: stacks on stacks - '6 Sigma' Analysis - (assuming inputs with Normal Distribution)
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Desc.                                      ┃ dir ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Rel. Bounds    ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-│ 14 │ (assuming inputs with Normal Distribution) │ +   │ 0.1  │ ± 0.036        │ 1         │ [0.064, 0.136] │
-└────┴────────────────────────────────────────────┴─────┴──────┴────────────────┴───────────┴────────────────┘
-                                                     SPEC: stack spec
-┏━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
-┃ Desc. ┃ Dimension                                                    ┃ Median ┃ Spec. Limits ┃ Yield Prob. ┃ Reject PPM ┃
-┡━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
-│       │ 14: stacks on stacks - '6 Sigma' Analysis (assuming inputs   │ 0.425  │ [0.05, 0.8]  │ 99.99999998 │ 0.0        │
-│       │ with Normal Distribution) +0.1 ± 0.036 @ ± 4.5σ &amp; k=0.0      │        │              │             │            │
-└───────┴──────────────────────────────────────────────────────────────┴────────┴──────────────┴─────────────┴────────────┘
+WARNING:root:Assuming Normal Dist. for 13: f Bearing Sleeve +20 ± 0.026 @ Normal Dist. (μ=20.0, σ=0.00867)
+WARNING:root:Assuming Normal Dist. for 6: g Bearing -23 + 0.12 / + 0 @ Normal Dist. (μ=23.06, σ=0.02)
+WARNING:root:Assuming Normal Dist. for 14: stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Dist.) +0.1 ± 0.26433 @ Normal Dist. (μ=0.1, σ=0.05874)
+          DIMENSION: stacks on stacks - '6 Sigma' Analysis - (assuming inputs with Normal Dist.)
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Desc.                               ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds         ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ 14 │ (assuming inputs with Normal Dist.) │ + │ 0.1  │ ± 0.26433      │ 1         │ [-0.16433, 0.36433] │
+└────┴─────────────────────────────────────┴───┴──────┴────────────────┴───────────┴─────────────────────┘
+                                       SPEC: stack spec
+┏━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Desc. ┃ Distribution                    ┃ Median ┃ Spec. Limits ┃ Yield Prob. ┃ Reject PPM ┃
+┡━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│       │ Normal Dist. (μ=0.1, σ=0.05874) │ 0.425  │ [0.05, 0.8]  │ 80.2675148  │ 197324.85  │
+└───────┴─────────────────────────────────┴────────┴──────────────┴─────────────┴────────────┘
 </code></pre>
               
             </div>
@@ -234,14 +241,15 @@ WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statist
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

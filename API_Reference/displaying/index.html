@@ -8,7 +8,7 @@
     <title>Displaying - dimstack</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -53,13 +52,13 @@
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../basics/">Basics</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Displaying</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Displaying</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.display">display</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.mode">mode()</a>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.mode">mode</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.display_df">display_df()</a>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.display_df">display_df</a>
     </li>
         </ul>
     </li>
@@ -67,13 +66,15 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.plot.StackPlot">StackPlot</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.show">show()</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.show">show</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_dimension">add_dimension()</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_dimension">add_dimension</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_stack">add_stack()</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_distribution">add_distribution</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add">add()</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_stack">add_stack</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add">add</a>
     </li>
         </ul>
     </li>
@@ -95,9 +96,9 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-          <li>API Reference &raquo;</li>
-      <li>Displaying</li>
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Reference</li>
+      <li class="breadcrumb-item active">Displaying</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/phcreery/dimstack/edit/master/docs/API_Reference/displaying.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -112,16 +113,17 @@
 <ul>
 <li><a href="#displaying">Displaying</a><ul>
 <li><a href="#dimstack.display">display</a><ul>
-<li><a href="#dimstack.display.mode">mode()</a></li>
-<li><a href="#dimstack.display.display_df">display_df()</a></li>
+<li><a href="#dimstack.display.mode">mode</a></li>
+<li><a href="#dimstack.display.display_df">display_df</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.plot">plot</a><ul>
 <li><a href="#dimstack.plot.StackPlot">StackPlot</a><ul>
-<li><a href="#dimstack.plot.StackPlot.show">show()</a></li>
-<li><a href="#dimstack.plot.StackPlot.add_dimension">add_dimension()</a></li>
-<li><a href="#dimstack.plot.StackPlot.add_stack">add_stack()</a></li>
-<li><a href="#dimstack.plot.StackPlot.add">add()</a></li>
+<li><a href="#dimstack.plot.StackPlot.show">show</a></li>
+<li><a href="#dimstack.plot.StackPlot.add_dimension">add_dimension</a></li>
+<li><a href="#dimstack.plot.StackPlot.add_distribution">add_distribution</a></li>
+<li><a href="#dimstack.plot.StackPlot.add_stack">add_stack</a></li>
+<li><a href="#dimstack.plot.StackPlot.add">add</a></li>
 </ul>
 </li>
 </ul>
@@ -137,14 +139,14 @@
 
 
 <h3 id="dimstack.display" class="doc doc-heading">
-          <code>dimstack.display</code>
+            <code>dimstack.display</code>
 
 
 </h3>
 
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
-  
+
 
   <div class="doc doc-children">
 
@@ -159,84 +161,82 @@
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="dimstack.display.mode" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">mode</span><span class="p">(</span><span class="n">dispmode</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">mode</span><span class="p">(</span><span class="n">dispmode</span><span class="p">)</span></code>
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Set the display mode for the stack.</p>
+    <div class="doc doc-contents ">
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>mode</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>"text"/"txt", "str"/"string", "plot", "rich", or "df"</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+        <p>Set the display mode for the stack.</p>
 
-  </div>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>mode</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>"text"/"txt", "str"/"string", "plot", "rich", or "df"</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
 
 </div>
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="dimstack.display.display_df" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">display_df</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dispmode</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">display_df</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dispmode</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Display a dataframe.</p>
+    <div class="doc doc-contents ">
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>df</code></td>
-          <td>
-                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
-          </td>
-          <td><p><em>description</em></p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+        <p>Display a dataframe.</p>
 
-  </div>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
 
 </div>
 
@@ -244,7 +244,7 @@
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -253,14 +253,14 @@
 
 
 <h3 id="dimstack.plot" class="doc doc-heading">
-          <code>dimstack.plot</code>
+            <code>dimstack.plot</code>
 
 
 </h3>
 
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
-  
+
 
   <div class="doc doc-children">
 
@@ -276,20 +276,19 @@
 
 
 <h4 id="dimstack.plot.StackPlot" class="doc doc-heading">
-        <code>StackPlot</code>
+            <code>StackPlot</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-
-  
-      <p>Plot a stack of dimensions. This is a wrapper around Plotly.</p>
+    <div class="doc doc-contents ">
 
 
+        <p>Plot a stack of dimensions. This is a wrapper around Plotly.</p>
 
-  
+
+
 
   <div class="doc doc-children">
 
@@ -304,206 +303,296 @@
 <div class="doc doc-object doc-function">
 
 
-
 <h5 id="dimstack.plot.StackPlot.show" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">show</span><span class="p">()</span></code>
+            <code class="highlight language-python"><span class="n">show</span><span class="p">()</span></code>
 
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Show the plot. This works in both Jupyter notebooks and in a Python script.</p>
+    <div class="doc doc-contents ">
 
-  </div>
+        <p>Show the plot. This works in both Jupyter notebooks and in a Python script.</p>
+
+    </div>
 
 </div>
 
 <div class="doc doc-object doc-function">
-
 
 
 <h5 id="dimstack.plot.StackPlot.add_dimension" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_dimension</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">add_dimension</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xbins_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Add a dimension to the plot.</p>
+    <div class="doc doc-contents ">
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>item</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="../basics/#dimstack.dim.Statistical">Statistical</a>]</code>
-          </td>
-          <td><p><em>description</em></p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>start_pos</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td><p><em>description</em>. Defaults to 0.</p></td>
-          <td>
-                <code>0</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+        <p>Add a dimension to the plot.</p>
 
-  </div>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>item</code></b>
+                  (<code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="../basics/#dimstack.dim.Statistical">Statistical</a>]</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+            <li>
+              <b><code>start_pos</code></b>
+                  (<code>int</code>, default:
+                      <code>0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em>. Defaults to 0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
 
 </div>
 
 <div class="doc doc-object doc-function">
 
+
+<h5 id="dimstack.plot.StackPlot.add_distribution" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_distribution</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">xbins_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add a distribution to the plot.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>distribution</code></b>
+                  (<code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.dist.Normal" href="../basics/#dimstack.dist.Normal">Normal</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.Uniform" href="../basics/#dimstack.dist.Uniform">Uniform</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.NormalScreened" href="../basics/#dimstack.dist.NormalScreened">NormalScreened</a>]</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+            <li>
+              <b><code>name</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+            <li>
+              <b><code>xrange</code></b>
+                  (<code>_type_</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>_type_</code></b>              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
 
 
 <h5 id="dimstack.plot.StackPlot.add_stack" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">add_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span></code>
 
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Add a stack of dimensions to the plot.</p>
+    <div class="doc doc-contents ">
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>stack</code></td>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="dimstack.dim.Stack" href="../basics/#dimstack.dim.Stack">Stack</a></code>
-          </td>
-          <td><p><em>description</em></p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+        <p>Add a stack of dimensions to the plot.</p>
 
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-<th>Name</th>        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-<td><code>_type_</code></td>          <td>
-          </td>
-          <td><p><em>description</em></p></td>
-        </tr>
-    </tbody>
-  </table>
 
-  </div>
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>stack</code></b>
+                  (<code><span title="dimstack.dim.Stack">Stack</span></code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>_type_</code></b>              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
 
 </div>
 
 <div class="doc doc-object doc-function">
 
 
-
 <h5 id="dimstack.plot.StackPlot.add" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></code>
 
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Add a dimension or stack to the plot.</p>
+    <div class="doc doc-contents ">
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>item</code></td>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="dimstack.dim.Stack" href="../basics/#dimstack.dim.Stack">Stack</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="../basics/#dimstack.dim.Statistical">Statistical</a></code>
-          </td>
-          <td><p><em>description</em></p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+        <p>Add a dimension or stack to the plot.</p>
 
-  <p><strong>Raises:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code>TypeError</code>
-          </td>
-          <td><p>If the item is not a Stack, Basic, or Statistical.</p></td>
-        </tr>
-    </tbody>
-  </table>
 
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-<th>Name</th>        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-<td><code>StackPlot</code></td>          <td>
-          </td>
-          <td><p>self</p></td>
-        </tr>
-    </tbody>
-  </table>
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>item</code></b>
+                  (<code>(<span title="dimstack.dim.Stack">Stack</span>, <a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="../basics/#dimstack.dim.Statistical">Statistical</a>)</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-  </div>
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>TypeError</code>
+              –
+              <div class="doc-md-description">
+                <p>If the item is not a Stack, Basic, or Statistical.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>StackPlot</code></b>              –
+              <div class="doc-md-description">
+                <p>self</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
 
 </div>
 
@@ -511,7 +600,7 @@
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -520,7 +609,7 @@
 
   </div>
 
-  </div>
+    </div>
 
 </div>
               
@@ -559,14 +648,15 @@
     
   </span>
 </div>
-    <script>var base_url = '../..';</script>
-    <script src="../../js/theme_extra.js" defer></script>
-    <script src="../../js/theme.js" defer></script>
-      <script src="../../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

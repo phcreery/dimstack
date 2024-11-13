@@ -8,7 +8,7 @@
     <title>Basics - dimstack</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -51,7 +50,7 @@
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Basics</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Basics</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.dim">dim</a>
         <ul>
@@ -79,16 +78,6 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Stack">Stack</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.WC">WC</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.RSS">RSS</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.MRSS">MRSS</a>
-    </li>
-        </ul>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Spec">Spec</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.median">median</a>
@@ -107,7 +96,7 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.Bilateral">Bilateral()</a>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.Bilateral">Bilateral</a>
     </li>
         </ul>
     </li>
@@ -139,9 +128,9 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-          <li>API Reference &raquo;</li>
-      <li>Basics</li>
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Reference</li>
+      <li class="breadcrumb-item active">Basics</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/phcreery/dimstack/edit/master/docs/API_Reference/basics.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -170,12 +159,6 @@
 <li><a href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a></li>
 </ul>
 </li>
-<li><a href="#dimstack.dim.Stack">Stack</a><ul>
-<li><a href="#dimstack.dim.Stack.WC">WC</a></li>
-<li><a href="#dimstack.dim.Stack.RSS">RSS</a></li>
-<li><a href="#dimstack.dim.Stack.MRSS">MRSS</a></li>
-</ul>
-</li>
 <li><a href="#dimstack.dim.Spec">Spec</a><ul>
 <li><a href="#dimstack.dim.Spec.median">median</a></li>
 <li><a href="#dimstack.dim.Spec.yield_loss_probability">yield_loss_probability</a></li>
@@ -187,7 +170,7 @@
 <li><a href="#dimstack.tolerance">tolerance</a><ul>
 <li><a href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a></li>
 <li><a href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></li>
-<li><a href="#dimstack.tolerance.Bilateral">Bilateral()</a></li>
+<li><a href="#dimstack.tolerance.Bilateral">Bilateral</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dist">dist</a><ul>
@@ -207,14 +190,14 @@
 
 
 <h3 id="dimstack.dim" class="doc doc-heading">
-          <code>dimstack.dim</code>
+            <code>dimstack.dim</code>
 
 
 </h3>
 
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
-  
+
 
   <div class="doc doc-children">
 
@@ -230,85 +213,82 @@
 
 
 <h4 id="dimstack.dim.Basic" class="doc doc-heading">
-        <code>Basic</code>
+            <code>Basic</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-
-  
-      <p>A measurement is a single measurement of a part.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>nom</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>The nominal value of the measurement. Defaults to 0.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>tol</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>, <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>]</code>
-          </td>
-          <td><p>The tolerance of the measurement. Defaults to SymmetricBilateral(0).</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>a</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
-                and the nominal value will be made positive.</p></td>
-          <td>
-                <code>1</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>name</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The name of the measurement. Defaults to "Dimension".</p></td>
-          <td>
-                <code>&#39;Dimension&#39;</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>desc</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The description of the measurement. Defaults to "Dimension".</p></td>
-          <td>
-                <code>&#39;Dimension&#39;</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+    <div class="doc doc-contents ">
 
 
+        <p>A measurement is a single measurement of a part.</p>
 
-  
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>nom</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>The nominal value of the measurement. Defaults to 0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tol</code></b>
+                  (<code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>, <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>The tolerance of the measurement. Defaults to SymmetricBilateral(0).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a</code></b>
+                  (<code>float</code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
+                and the nominal value will be made positive.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>name</code></b>
+                  (<code>str</code>, default:
+                      <code>&#39;Dimension&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The name of the measurement. Defaults to "Dimension".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>desc</code></b>
+                  (<code>str</code>, default:
+                      <code>&#39;Dimension&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The description of the measurement. Defaults to "Dimension".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
   <div class="doc doc-children">
 
@@ -323,8 +303,8 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_lower" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">abs_lower</span></code>
-  
+            <code class="highlight language-python"><span class="n">abs_lower</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -332,10 +312,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>The minimum value of the measurement. AKA, absolute upper</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>The minimum value of the measurement. AKA, absolute upper</p>
+    </div>
 
 </div>
 
@@ -344,8 +324,8 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_upper" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">abs_upper</span></code>
-  
+            <code class="highlight language-python"><span class="n">abs_upper</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -353,10 +333,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>The maximum value of the measurement. AKA, absolute lower</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>The maximum value of the measurement. AKA, absolute lower</p>
+    </div>
 
 </div>
 
@@ -365,8 +345,8 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_lower_tol" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">abs_lower_tol</span></code>
-  
+            <code class="highlight language-python"><span class="n">abs_lower_tol</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -374,10 +354,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>The absolute minimum value of the tolerance.</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>The absolute minimum value of the tolerance.</p>
+    </div>
 
 </div>
 
@@ -386,8 +366,8 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_upper_tol" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">abs_upper_tol</span></code>
-  
+            <code class="highlight language-python"><span class="n">abs_upper_tol</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -395,10 +375,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>The absolute maximum value of the tolerance.</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>The absolute maximum value of the tolerance.</p>
+    </div>
 
 </div>
 
@@ -408,7 +388,7 @@
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -417,67 +397,66 @@
 
 
 <h4 id="dimstack.dim.Statistical" class="doc doc-heading">
-        <code>Statistical</code>
+            <code>Statistical</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code></p>
-
-  
-      <p>Statistical</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>target_process_sigma</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>The standard deviation of the process represented as ±σ. Defaults to ±3σ.</p></td>
-          <td>
-                <code>3</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>k</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
-                standard deviation. Defaults to 0σ.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>distribution</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The distribution of the measurement. Defaults to "Normal".</p></td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code></p>
 
 
+        <p>Statistical</p>
 
-  
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>target_process_sigma</code></b>
+                  (<code>float</code>, default:
+                      <code>3</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The standard deviation of the process represented as ±σ. Defaults to ±3σ.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>k</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
+                standard deviation. Defaults to 0σ.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>distribution</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The distribution of the measurement. Defaults to "Normal".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
   <div class="doc doc-children">
 
@@ -492,8 +471,8 @@
 
 
 <h5 id="dimstack.dim.Statistical.mean_eff" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">mean_eff</span></code>
-  
+            <code class="highlight language-python"><span class="n">mean_eff</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -501,10 +480,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>effective mean</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>effective mean</p>
+    </div>
 
 </div>
 
@@ -513,8 +492,8 @@
 
 
 <h5 id="dimstack.dim.Statistical.stdev_eff" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">stdev_eff</span></code>
-  
+            <code class="highlight language-python"><span class="n">stdev_eff</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -522,11 +501,11 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>effective standard deviation
+    <div class="doc doc-contents ">
+
+        <p>effective standard deviation
 "6 stdev" is the standard deviation of the distribution</p>
-  </div>
+    </div>
 
 </div>
 
@@ -535,8 +514,8 @@
 
 
 <h5 id="dimstack.dim.Statistical.process_sigma_eff" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">process_sigma_eff</span></code>
-  
+            <code class="highlight language-python"><span class="n">process_sigma_eff</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -544,10 +523,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>calculated sigma (# of eff_stdevs away fromm USL and LSL)</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>calculated sigma (# of eff_stdevs away fromm USL and LSL)</p>
+    </div>
 
 </div>
 
@@ -556,8 +535,8 @@
 
 
 <h5 id="dimstack.dim.Statistical.yield_loss_probability" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
-  
+            <code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -565,10 +544,10 @@
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Returns the probability of a part being out of spec.</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>Returns the probability of a part being out of spec.</p>
+    </div>
 
 </div>
 
@@ -578,143 +557,7 @@
 
   </div>
 
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h4 id="dimstack.dim.Stack" class="doc doc-heading">
-        <code>Stack</code>
-
-
-</h4>
-
-
-  <div class="doc doc-contents ">
-
-
-
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h5 id="dimstack.dim.Stack.WC" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">WC</span><span class="p">:</span> <span class="n">Basic</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h5>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>This is a simple WC calculation. This results in a Bilateral dimension with a tolerance that is the sum of the component tolerances.
-It states that in any combination of tolerances, you can be sure the result will be within the this resulting tolerance.</p>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h5 id="dimstack.dim.Stack.RSS" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">RSS</span><span class="p">:</span> <span class="n">Statistical</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h5>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
-It is really only useful for a Bilateral stack of same process-stdev dims. The RSS result has the same uncertainty as the measurements.
-Historically, Eq. (9.11) assumed that all of the component tolerances (t_i) represent a 3si value for their
-manufacturing processes. Thus, if all the component distributions are assumed to be normal, then the
-probability that a dimension is between ±t_i is 99.73%. If this is true, then the assembly gap distribution is
-normal and the probability that it is ±t_rss between is 99.73%.
-Although most people have assumed a value of ±3s for piecepart tolerances, the RSS equation works
-for “equal s” values. If the designer assumed that the input tolerances were ±4s values for the piecepart
-manufacturing processes, then the probability that the assembly is between ±t_rss is 99.9937 (4s).
-The 3s process limits using the RSS Model are similar to the Worst Case Model. The minimum gap is
-equal to the mean value minus the RSS variation at the gap. The maximum gap is equal to the mean value
-plus the RSS variation at the gap.</p>
-
-<details class="see" open>
-  <summary>See</summary>
-  <ul>
-<li>Dimensioning and Tolerancing Handbook, McGraw Hill</li>
-<li>http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&amp;file=RSS_explanation.GIF</li>
-</ul>
-</details>  </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h5 id="dimstack.dim.Stack.MRSS" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">MRSS</span><span class="p">:</span> <span class="n">Statistical</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h5>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Basically RSS with a coefficient modifier to make the tolerance tighter.</p>
-
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-<th>Name</th>        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-<td><code>Statistical</code></td>          <td>
-                <code><a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="#dimstack.dim.Statistical">Statistical</a></code>
-          </td>
-          <td><p><em>description</em></p></td>
-        </tr>
-    </tbody>
-  </table>
-  </div>
-
-</div>
-
-
-
-
-
-  </div>
-
-  </div>
+    </div>
 
 </div>
 
@@ -723,18 +566,17 @@ plus the RSS variation at the gap.</p>
 
 
 <h4 id="dimstack.dim.Spec" class="doc doc-heading">
-        <code>Spec</code>
+            <code>Spec</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
 
 
 
-  
 
   <div class="doc doc-children">
 
@@ -749,8 +591,8 @@ plus the RSS variation at the gap.</p>
 
 
 <h5 id="dimstack.dim.Spec.median" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">median</span></code>
-  
+            <code class="highlight language-python"><span class="n">median</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -758,10 +600,10 @@ plus the RSS variation at the gap.</p>
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>median</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>median</p>
+    </div>
 
 </div>
 
@@ -770,8 +612,8 @@ plus the RSS variation at the gap.</p>
 
 
 <h5 id="dimstack.dim.Spec.yield_loss_probability" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
-  
+            <code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -779,10 +621,10 @@ plus the RSS variation at the gap.</p>
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Returns the probability of a part being out of spec.</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>Returns the probability of a part being out of spec.</p>
+    </div>
 
 </div>
 
@@ -791,8 +633,8 @@ plus the RSS variation at the gap.</p>
 
 
 <h5 id="dimstack.dim.Spec.R" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">R</span></code>
-  
+            <code class="highlight language-python"><span class="n">R</span></code>
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
@@ -800,10 +642,10 @@ plus the RSS variation at the gap.</p>
 </h5>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Return the yield loss probability in PPM</p>
-  </div>
+    <div class="doc doc-contents ">
+
+        <p>Return the yield loss probability in PPM</p>
+    </div>
 
 </div>
 
@@ -813,7 +655,7 @@ plus the RSS variation at the gap.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -822,7 +664,7 @@ plus the RSS variation at the gap.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -831,14 +673,14 @@ plus the RSS variation at the gap.</p>
 
 
 <h3 id="dimstack.tolerance" class="doc doc-heading">
-          <code>dimstack.tolerance</code>
+            <code>dimstack.tolerance</code>
 
 
 </h3>
 
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
-  
+
 
   <div class="doc doc-children">
 
@@ -854,21 +696,20 @@ plus the RSS variation at the gap.</p>
 
 
 <h4 id="dimstack.tolerance.SymmetricBilateral" class="doc doc-heading">
-        <code>SymmetricBilateral</code>
+            <code>SymmetricBilateral</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-  
-      <p>Bilateral tolerancing is a method of specifying a tolerance that is symmetrical about the nominal value.
+
+        <p>Bilateral tolerancing is a method of specifying a tolerance that is symmetrical about the nominal value.
 This is the most common type of tolerancing.</p>
 
 
 
-  
 
   <div class="doc doc-children">
 
@@ -884,7 +725,7 @@ This is the most common type of tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -893,21 +734,20 @@ This is the most common type of tolerancing.</p>
 
 
 <h4 id="dimstack.tolerance.UnequalBilateral" class="doc doc-heading">
-        <code>UnequalBilateral</code>
+            <code>UnequalBilateral</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-  
-      <p>Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
+
+        <p>Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
 This can also be used for Unilateral tolerancing.</p>
 
 
 
-  
 
   <div class="doc doc-children">
 
@@ -923,7 +763,7 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -931,70 +771,74 @@ This can also be used for Unilateral tolerancing.</p>
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="dimstack.tolerance.Bilateral" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Bilateral</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">Bilateral</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Automatically determine the type of bilateral tolerance to use from the upper and lower inputs.</p>
+    <div class="doc doc-contents ">
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>upper</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p><em>description</em></p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>lower</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p><em>description</em>. Defaults to None.</p></td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+        <p>Automatically determine the type of bilateral tolerance to use from the upper and lower inputs.</p>
 
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a> | <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></code>
-          </td>
-          <td><p><em>description</em></p></td>
-        </tr>
-    </tbody>
-  </table>
 
-  </div>
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>upper</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+            <li>
+              <b><code>lower</code></b>
+                  (<code>float</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em>. Defaults to None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a> | <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></code>
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
 
 </div>
 
@@ -1002,7 +846,7 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -1011,14 +855,14 @@ This can also be used for Unilateral tolerancing.</p>
 
 
 <h3 id="dimstack.dist" class="doc doc-heading">
-          <code>dimstack.dist</code>
+            <code>dimstack.dist</code>
 
 
 </h3>
 
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1034,54 +878,51 @@ This can also be used for Unilateral tolerancing.</p>
 
 
 <h4 id="dimstack.dist.Uniform" class="doc doc-heading">
-        <code>Uniform</code>
+            <code>Uniform</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-
-  
-      <p>Uniform distribution.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>lower</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Lower limit.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>upper</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Upper limit.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+    <div class="doc doc-contents ">
 
 
+        <p>Uniform distribution.</p>
 
-  
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>lower</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Lower limit.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>upper</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Upper limit.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
   <div class="doc doc-children">
 
@@ -1097,7 +938,7 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -1106,54 +947,51 @@ This can also be used for Unilateral tolerancing.</p>
 
 
 <h4 id="dimstack.dist.Normal" class="doc doc-heading">
-        <code>Normal</code>
+            <code>Normal</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-
-  
-      <p>Normal distribution.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>mean</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Mean.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>stdev</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Standard deviation.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+    <div class="doc doc-contents ">
 
 
+        <p>Normal distribution.</p>
 
-  
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>mean</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Mean.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>stdev</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Standard deviation.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
   <div class="doc doc-children">
 
@@ -1169,7 +1007,7 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -1178,74 +1016,67 @@ This can also be used for Unilateral tolerancing.</p>
 
 
 <h4 id="dimstack.dist.NormalScreened" class="doc doc-heading">
-        <code>NormalScreened</code>
+            <code>NormalScreened</code>
 
 
 </h4>
 
 
-  <div class="doc doc-contents ">
-
-  
-      <p>Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>mean</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Mean.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>stdev</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Standard deviation.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>lower</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Lower limit.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>upper</code></td>
-          <td>
-                <code>float</code>
-          </td>
-          <td><p>Upper limit.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+    <div class="doc doc-contents ">
 
 
+        <p>Normal distribution which has been screened. e.g. Go-NoGo or Pass-Fail fixture.</p>
 
-  
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>mean</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Mean.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>stdev</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Standard deviation.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lower</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Lower limit.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>upper</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Upper limit.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
   <div class="doc doc-children">
 
@@ -1261,7 +1092,7 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -1270,7 +1101,7 @@ This can also be used for Unilateral tolerancing.</p>
 
   </div>
 
-  </div>
+    </div>
 
 </div>
               
@@ -1312,14 +1143,15 @@ This can also be used for Unilateral tolerancing.</p>
     
   </span>
 </div>
-    <script>var base_url = '../..';</script>
-    <script src="../../js/theme_extra.js" defer></script>
-    <script src="../../js/theme.js" defer></script>
-      <script src="../../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
