@@ -11,7 +11,6 @@ dependencies = [
     "plotly>=5.14.1",
     "scipy>=1.8.1",
     "rich>=13.7.0",
-    "ruff>=0.7.3",
 ]
 requires-python = ">=3.8"
 readme = "README.md"
@@ -28,6 +27,7 @@ dev = [
     "ipython>=8.12.3",
     "ipykernel>=6.29.5",
     "nbformat>=5.10.4",
+    "ruff>=0.7.3",
 ]
 
 [build-system]
