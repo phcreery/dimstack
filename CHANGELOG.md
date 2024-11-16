@@ -4,6 +4,10 @@
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
 
+## 0.5.1 11/15/2024
+
+- [x] move ruff to dev dependency
+
 ## 0.5.0 11/12/2024
 
 - [x] Move WC, RSS, MRSS calculations to separate locations
