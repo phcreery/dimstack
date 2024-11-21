@@ -3,6 +3,12 @@
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
+- [ ] Separate Dimension and StatisticalDim/Data. (AKA, merge StatisticalDim and Spec.)
+  - [ ] Dimension, Distribution, Spec (Spec just points at dimension and Distribution/Data)
+  - [ ] WC takes all Dimensions, or all Distributions
+  - [ ] RSS, MRSS, SixSigma takes all Distributions
+  - [ ] MonteCarlo takes Distributions (with or without data)
+
 
 ## 0.5.1 11/15/2024
 
