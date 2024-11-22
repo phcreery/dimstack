@@ -67,7 +67,7 @@ class McGrawHill_1(unittest.TestCase):
     )
     dims = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
 
-    stack = dimstack.dim.Stack(name="stacks on stacks", dims=dims)
+    stack = dimstack.dim.BasicStack(name="stacks on stacks", dims=dims)
 
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(dimstack.calc.WC(McGrawHill_1.stack).nominal), 0.0615)
@@ -105,7 +105,7 @@ class McGrawHill_2(unittest.TestCase):
     m11 = dimstack.dim.Basic(nom=1.000, tol=dimstack.tolerance.SymmetricBilateral(0.010), a=-1.0914, name="M")
     dims = [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11]
 
-    stack = dimstack.dim.Stack(name="stacks on stacks", dims=dims)
+    stack = dimstack.dim.BasicStack(name="stacks on stacks", dims=dims)
 
     def test_WC(self):
         self.assertEqual(dimstack.utils.nround(dimstack.calc.WC(McGrawHill_2.stack).nominal), 0.07201)  # 0.0719

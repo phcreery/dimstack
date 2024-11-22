@@ -41,32 +41,31 @@ class Basic:
         self.name = name
         self.description = desc
 
-    def __repr__(self) -> str:
-        return f"Basic({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description})"
+    # def __repr__(self) -> str:
+    #     return f"Basic({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description})"
 
     def __str__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
 
-    def _repr_html_(self) -> str:
-        return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}", dispmode="plot")._repr_html_()
+    # def _repr_html_(self) -> str:
+    #     return display_df([self.dict], f"DIMENSION: {self.name} - {self.description}", dispmode="plot")._repr_html_()
 
     def show(self):
-        return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}")
+        return display_df([self.dict], f"DIMENSION: {self}")
 
     @property
-    def dict(self) -> List[Dict[str, Any]]:
-        return [
-            {
-                "ID": self.id,
-                "Name": self.name,
-                "Desc.": (self.description),
-                "±": self.nom_direction_sign,
-                "Nom.": nround(self.nominal),
-                "Tol.": (str(self.tolerance)).ljust(14, " "),
-                "Sens. (a)": str(self.a),
-                "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
-            }
-        ]
+    def dict(self) -> Dict[str, Any]:
+        return {
+            "ID": self.id,
+            "Name": self.name,
+            "Desc.": (self.description),
+            "±": self.nom_direction_sign,
+            "Nom.": nround(self.nominal),
+            "Tol.": (str(self.tolerance)).ljust(14, " "),
+            "Sens. (a)": str(self.a),
+            # "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
+            "Abs. Bounds": f"[{nround(self.abs_lower)}, {nround(self.abs_upper)}]",
+        }
 
     @property
     def nom_direction_sign(self):
@@ -128,26 +127,26 @@ class Basic:
         self.tolerance = SymmetricBilateral(tol)
         return self
 
-    @classmethod
-    def from_statistical_dimension(
-        cls,
-        stat: "Statistical",
-    ):
-        if type(stat) is Basic:
-            return stat
+    # @classmethod
+    # def from_statistical_dimension(
+    #     cls,
+    #     stat: "Statistical",
+    # ):
+    #     if type(stat) is Basic:
+    #         return stat
 
-        logging.warning(f"Converting Statistical Dim. ({stat}) to Basic Dim.")
-        return cls(
-            nom=stat.nominal * stat.dir,
-            tol=stat.tolerance,
-            a=stat.a,
-            name=stat.name,
-            desc=stat.description,
-        )
+    #     logging.warning(f"Converting Statistical Dim. ({stat}) to Basic Dim.")
+    #     return cls(
+    #         nom=stat.nominal * stat.dir,
+    #         tol=stat.tolerance,
+    #         a=stat.a,
+    #         name=stat.name,
+    #         desc=stat.description,
+    #     )
 
 
-class Statistical(Basic):
-    """Statistical
+class Reviewed:
+    """Reviewed
 
     Args:
         target_process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
@@ -156,98 +155,64 @@ class Statistical(Basic):
         distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
     """
 
+    distribution: dist.Uniform | dist.Normal | dist.NormalScreened
+
     def __init__(
         self,
+        dim: Basic,
         target_process_sigma: float = 3,
         distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened, None] = None,
-        *args,
-        **kwargs,
+        # *args,
+        # **kwargs,
     ):
         # super().__init__(*args, **kwargs)
-        super(Statistical, self).__init__(*args, **kwargs)
-        self.distribution = distribution
+        # super(Reviewed, self).__init__(*args, **kwargs)
+        self.dim = dim
         self.target_process_sigma = target_process_sigma
+        if distribution is None:
+            self.assume_normal_dist()
+        else:
+            self.distribution = distribution
 
-    def __repr__(self) -> str:
-        return f"Statistical({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description}, {self.distribution})"  # noqa: E501
+    # def __repr__(self) -> str:
+    #     return f"Reviewed({self.dim}, {self.distribution}. {self.target_process_sigma})"  # noqa: E501
+
+    # def _repr_html_(self) -> str:
+    #     return display_df(
+    #         self.dict, f"REVIEWED DIMENSION: {self.name} - {self.description}", dispmode="plot"
+    #     )._repr_html_()
 
     def __str__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)} @ {self.distribution}"
+        return f"{self.dim} @ {self.distribution}"
 
-    def _repr_html_(self) -> str:
-        return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}", dispmode="plot")._repr_html_()
-
-    def show(self, expand=False):
-        unused_keys = ["Name"]
-        simple_keys = ["ID", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
-        dict_copy = self.dict
-        for entry in dict_copy:
-            for key in unused_keys:
-                entry.pop(key, None)
-        if expand:
-            return display_df(dict_copy, f"DIMENSION: {self.name} - {self.description}")
-        else:
-            new_dict = []
-            for d in dict_copy:
-                new_dict.append({k: d[k] for k in simple_keys})
-            return display_df(new_dict, f"DIMENSION: {self.name} - {self.description}")
-        # return display_df(self.dict, f"DIMENSION: {self.name} - {self.description}")
+    def show(self):
+        return display_df([self.dict], f"REVIEWED DIMENSION: {self}")
 
     @property
-    def dict(self) -> List[Dict[str, Any]]:
-        return [
-            {
-                "ID": self.id,
-                "Name": self.name,
-                "Desc.": (self.description),
-                "±": self.nom_direction_sign,
-                "Nom.": nround(self.nominal),
-                "Tol.": (str(self.tolerance)).ljust(14, " "),
-                "Sens. (a)": nround(self.a),
-                # "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
-                "Abs. Bounds": f"[{nround(self.abs_lower)}, {nround(self.abs_upper)}]",
-                # "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
-                "Dist.": f"{self.distribution}",
-                "Skew (k)": nround(self.k),
-                "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
-                "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
-                "μ_eff": nround(self.mean_eff),
-                "σ_eff": nround(self.stdev_eff),
-                "Eff. Sigma": f"± {str(nround(self.process_sigma_eff))}σ",
-                "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
-                "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}"
-                if self.yield_loss_probability is not None
-                else "",
-            }
-        ]
-
-    @classmethod
-    def from_basic_dimension(
-        cls,
-        basic: Union[Basic, "Statistical"],
-        target_process_sigma: float = 3,
-        distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened, None] = None,
-    ):
-        if type(basic) is Statistical:
-            return basic
-
-        logging.warning(f"Converting Basic Dim. ({basic}) to Statistical Dim.")
-        return cls(
-            nom=basic.dir * basic.nominal,
-            tol=basic.tolerance,
-            a=basic.a,
-            name=basic.name,
-            desc=basic.description,
-            target_process_sigma=target_process_sigma,
-            distribution=distribution,
-        )
+    def dict(self) -> Dict[str, Any]:
+        return {
+            # **self.dim.dict,
+            "Dim.": f"{self.dim}",
+            "Dist.": f"{self.distribution}",
+            "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
+            "Skew (k)": nround(self.k),
+            "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
+            "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
+            "μ_eff": nround(self.mean_eff),
+            "σ_eff": nround(self.stdev_eff),
+            "Eff. Sigma": f"± {str(nround(self.process_sigma_eff))}σ",
+            "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
+            "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}"
+            if self.yield_loss_probability is not None
+            else "",
+        }
 
     # Assume a normal distribution.
     def assume_normal_dist(self):
-        if isinstance(self.distribution, dist.Normal):
+        if hasattr(self, "distribution") and self.distribution is not None:
             return self
         mean = self.mean_eff
-        stdev = (self.rel_upper - self.rel_lower) / (2 * self.target_process_sigma)
+        stdev = (self.dim.abs_upper - self.dim.abs_lower) / (2 * self.target_process_sigma)
         distribution = dist.Normal(mean=mean, stdev=stdev)
         self.distribution = distribution
         logging.warning(f"Assuming Normal Dist. for {self}")
@@ -265,19 +230,19 @@ class Statistical(Basic):
     @property
     def C_p(self):
         if isinstance(self.distribution, dist.Normal):
-            return C_p(self.rel_upper, self.rel_lower, self.distribution.stdev)
+            return C_p(self.dim.rel_upper, self.dim.rel_lower, self.distribution.stdev)
         return 0
 
     @property
     def C_pk(self):
         if isinstance(self.distribution, dist.Normal):
-            return C_pk(self.rel_upper, self.rel_lower, self.distribution.mean, self.distribution.stdev)
+            return C_pk(self.dim.abs_upper, self.dim.abs_lower, self.distribution.mean, self.distribution.stdev)
         return 0
 
     @property
     def mean_eff(self):
         """effective mean"""
-        return (self.rel_lower + self.rel_upper) / 2
+        return (self.dim.abs_lower + self.dim.abs_upper) / 2
 
     @property
     def stdev_eff(self):
@@ -287,8 +252,10 @@ class Statistical(Basic):
         """
         # return abs(self.tolerance.T) / (6 * self.C_pk)
         if isinstance(self.distribution, dist.Normal):
-            outer_shift = min((self.rel_upper - self.distribution.mean), (self.distribution.mean - self.rel_lower))
-            return (self.tolerance.T * self.distribution.stdev) / (2 * outer_shift)
+            outer_shift = min(
+                (self.dim.abs_upper - self.distribution.mean), (self.distribution.mean - self.dim.abs_lower)
+            )
+            return (self.dim.tolerance.T * self.distribution.stdev) / (2 * outer_shift)
         return 0
 
     @property
@@ -300,14 +267,14 @@ class Statistical(Basic):
             return 0
         # print(self.tolerance.upper, self.stdev_eff)
         # since we are using effective stdev, either USL or LSL should work.
-        min_tol_gap = min((self.rel_upper - self.mean_eff), (self.mean_eff - self.rel_lower))
+        min_tol_gap = min((self.dim.abs_upper - self.mean_eff), (self.mean_eff - self.dim.abs_lower))
         return (min_tol_gap) / self.stdev_eff
         # return 0
 
     @property
     def k(self):
         if isinstance(self.distribution, dist.Normal):
-            ideal_process_stdev = (self.tolerance.T / 2) / self.target_process_sigma
+            ideal_process_stdev = (self.dim.tolerance.T / 2) / self.target_process_sigma
             skew_in_stdevs = (self.distribution.mean - self.mean_eff) / ideal_process_stdev
             return skew_in_stdevs / self.target_process_sigma
         return 0
@@ -325,83 +292,98 @@ class Statistical(Basic):
     def yield_probability(self):
         if self.distribution is None:
             return 0
-        UL = self.abs_upper
-        LL = self.abs_lower
+        UL = self.dim.abs_upper
+        LL = self.dim.abs_lower
         # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
         return self.distribution.cdf(UL) - self.distribution.cdf(LL)
 
 
-class Stack:
+class BasicStack:
     def __init__(
         self,
         name: str = "Stack",
         description: str = "",
-        dims: List[Union[Basic, Statistical]] = [],
+        dims: List[Basic] = [],
     ):
         self.name = name
         self.description = description
         self.dims = dims
 
-    def __repr__(self) -> str:
-        return f"Stack({self.name}, {self.description}, [{', '.join([repr(dim) for dim in self.dims])}])"
+    # def __repr__(self) -> str:
+    #     return f"Stack({self.name}, {self.description}, [{', '.join([repr(dim) for dim in self.dims])}])"
 
-    def __str__(self) -> str:
-        return f"{self.name}: {self.dims}"
+    # def __str__(self) -> str:
+    #     return f"{self.name}: {self.dims}"
 
-    def _repr_html_(self) -> str:
-        return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
+    # def _repr_html_(self) -> str:
+    #     return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
 
     def show(self, expand=False):
-        simple_keys = ["ID", "Name", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
-        dict_copy = self.dict
-        if expand:
-            return display_df(dict_copy, f"STACK: {self.name}")
-        else:
-            new_dict = []
-            for d in dict_copy:
-                new_dict.append({k: d[k] for k in simple_keys})
-            return display_df(new_dict, f"STACK: {self.name}")
+        return display_df(self.dict, f"DIMENSION STACK: {self.name}")
+        # if expand:
+        # else:
+        #     new_dict = []
+        #     simple_keys = ["Dim.", "Dist.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
+        #     for d in self.dict:
+        #         print(d)
+        #         new_dict.append({k: d[k] for k in simple_keys})
+        #     return display_df(new_dict, f"STACK: {self.name}")
 
-    def append(self, measurement: Union[Basic, Statistical]):
+    def append(self, measurement: Basic):
         self.dims.append(measurement)
 
     @property
     def dict(self) -> List[Dict[str, Any]]:
-        return [
-            {
-                "ID": dim.id,
-                "Name": dim.name,
-                "Desc.": (dim.description),
-                "±": dim.nom_direction_sign,
-                "Nom.": (str(dim.nominal)).rjust(8, " "),
-                "Tol.": (str(dim.tolerance)).ljust(14, " "),
-                "Sens. (a)": f"{nround(dim.a)}",
-                # "Rel. Bounds": f"[{nround(dim.rel_lower)}, {nround(dim.rel_upper)}]",
-                "Abs. Bounds": f"[{nround(dim.abs_lower)}, {nround(dim.abs_upper)}]",
-                "Target Sigma": f"± {str(nround(dim.target_process_sigma))}σ"
-                if hasattr(dim, "target_process_sigma")
-                else "",
-                "Dist.": f"{dim.distribution}" if hasattr(dim, "distribution") else "",
-                "Skew (k)": nround(dim.k) if hasattr(dim, "k") else "",
-                "C_p": nround(dim.C_p) if (hasattr(dim, "C_p") and isinstance(dim.distribution, dist.Normal)) else "",
-                "C_pk": nround(dim.C_pk)
-                if (hasattr(dim, "C_pk") and isinstance(dim.distribution, dist.Normal))
-                else "",
-                # "μ": nround(dim.mean) if hasattr(dim, "mean") else "",
-                # "σ": nround(dim.stdev) if hasattr(dim, "stdev") else "",
-                "μ_eff": nround(dim.mean_eff) if hasattr(dim, "mean_eff") else "",
-                "σ_eff": nround(dim.stdev_eff) if hasattr(dim, "stdev_eff") else "",
-                "Eff. Sigma": f"± {str(nround(dim.process_sigma_eff))}σ" if hasattr(dim, "process_sigma_eff") else "",
-                "Yield Prob.": f"{nround(dim.yield_probability*100, 8)}" if hasattr(dim, "yield_probability") else "",
-                "Reject PPM": f"{nround(dim.yield_loss_probability*1000000, 2)}"
-                if hasattr(dim, "yield_loss_probability")
-                else "",
-            }
-            for dim in self.dims
-        ]
+        return [dim.dict for dim in self.dims]
 
 
-class Spec:
+class ReviewedStack:
+    def __init__(
+        self,
+        name: str = "Stack",
+        description: str = "",
+        dims: List[Reviewed] = [],
+    ):
+        self.name = name
+        self.description = description
+        self.dims = dims
+
+    # def __repr__(self) -> str:
+    #     return f"Stack({self.name}, {self.description}, [{', '.join([repr(dim) for dim in self.dims])}])"
+
+    # def _repr_html_(self) -> str:
+    #     return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
+
+    def __str__(self) -> str:
+        return f"{self.name}: {self.dims}"
+
+    def show(self, expand=False):
+        return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}")
+        # if expand:
+        #     return display_df(self.dict, f"STACK: {self.name}")
+        # else:
+        #     new_dict = []
+        #     simple_keys = ["ID", "Name", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
+        #     for d in self.dict:
+        #         new_dict.append({k: d[k] for k in simple_keys})
+        #     return display_df(new_dict, f"STACK: {self.name}")
+
+    def append(self, measurement: Reviewed):
+        self.dims.append(measurement)
+
+    @property
+    def dict(self) -> List[Dict[str, Any]]:
+        return [dim.dict for dim in self.dims]
+
+    def to_basic_stack(self) -> BasicStack:
+        return BasicStack(
+            name=self.name,
+            description=self.description,
+            dims=[rdim.dim for rdim in self.dims],
+        )
+
+
+class Requirement:
     def __init__(self, name, description, distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened], LL, UL):
         self.name = name
         self.description = description
@@ -410,14 +392,14 @@ class Spec:
         self.LL = LL
         self.UL = UL
 
-    def __repr__(self) -> str:
-        return f"Spec({self.name}, {self.description}, {repr(self.distribution)}, {self.LL}, {self.UL})"
+    # def __repr__(self) -> str:
+    #     return f"Requirement({self.name}, {self.description}, {repr(self.distribution)}, {self.LL}, {self.UL})"
+
+    # def _repr_html_(self) -> str:
+    #     return display_df(self.dict, f"REQUIREMENT: {self.name}", dispmode="plot")._repr_html_()
 
     def __str__(self) -> str:
-        return f"SPEC: {self.name}"
-
-    def _repr_html_(self) -> str:
-        return display_df(self.dict, f"SPEC: {self.name}", dispmode="plot")._repr_html_()
+        return f"REQUIREMENT: {self.name}"
 
     def show(self):
         unused_keys = ["Name"]
@@ -426,7 +408,7 @@ class Spec:
         for entry in dict_copy:
             for key in unused_keys:
                 entry.pop(key, None)
-        return display_df(dict_copy, f"SPEC: {self.name}")
+        return display_df(dict_copy, f"REQUIREMENT: {self.name}")
 
     @property
     def median(self):

@@ -46,7 +46,7 @@ class UnequalBilateral:
 
     def __str__(self) -> str:
         return (
-            f"{sign_symbol(self.upper)} {nround(abs(self.upper))} / {sign_symbol(self.lower)} {nround(abs(self.lower))}"
+            f"{sign_symbol(self.upper)}{nround(abs(self.upper))} / {sign_symbol(self.lower)}{nround(abs(self.lower))}"
         )
 
     @property
@@ -54,7 +54,7 @@ class UnequalBilateral:
         return self.upper - self.lower
 
 
-def Bilateral(upper: float, lower: float = None):
+def Bilateral(upper: float, lower: float | None = None):
     """Automatically determine the type of bilateral tolerance to use from the upper and lower inputs.
 
     Args:

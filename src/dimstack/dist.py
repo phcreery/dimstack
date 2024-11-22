@@ -24,8 +24,8 @@ class Uniform:
         self.lower = lower
         self.upper = upper
 
-    def __repr__(self) -> str:
-        return f"UniformDistribution({nround(self.lower)}, {nround(self.upper)})"
+    # def __repr__(self) -> str:
+    #     return f"UniformDistribution({nround(self.lower)}, {nround(self.upper)})"
 
     def __str__(self) -> str:
         return f"Uniform Dist. [{nround(self.lower)}, {nround(self.upper)}]"
@@ -54,11 +54,11 @@ class Normal:
         self.stdev = stdev
         self.data = None
 
-    def __repr__(self) -> str:
-        return f"NormalDistribution({nround(self.mean)}, {nround(self.stdev)})"
+    # def __repr__(self) -> str:
+    #     return f"NormalDistribution({nround(self.mean)}, {nround(self.stdev)})"
 
     def __str__(self) -> str:
-        return f"Normal Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
+        return f"Normal Dist. μ={nround(self.mean)}, σ={nround(self.stdev)}"
 
     @property
     def variance(self):
@@ -100,8 +100,10 @@ class NormalScreened:
         self.lower = lower
         self.upper = upper
 
-    def __repr__(self) -> str:
-        return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
+    # def __repr__(self) -> str:
+    #     return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
+    def __str__(self) -> str:
+        return f"Normal Screened Dist. μ={nround(self.mean)}, σ={nround(self.stdev)} [{nround(self.lower)}, {nround(self.upper)}]"
 
     def sample(self, n: int):
         numbers = norm.rvs(loc=self.mean, scale=self.stdev, size=n)

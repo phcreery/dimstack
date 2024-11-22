@@ -3,12 +3,26 @@
 - [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
 - [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
-- [ ] Separate Dimension and StatisticalDim/Data. (AKA, merge StatisticalDim and Spec.)
-  - [ ] Dimension, Distribution, Spec (Spec just points at dimension and Distribution/Data)
-  - [ ] WC takes all Dimensions, or all Distributions
-  - [ ] RSS, MRSS, SixSigma takes all Distributions
-  - [ ] MonteCarlo takes Distributions (with or without data)
+- [ ] Tolerance Optimization [Simple Arithmetic, Fig 9-9, 11-7 in McGraw Hill,](https://www.mitcalc.com/en/ui/ui_tanalysis1.htm)
+- [ ] Dimension.from_distribution() (nice to have for montecarlo)
+- [ ] Add Triangular Distribution
+- [ ] Stack combined Yield (not for stackup analysis, but combined yield)
 
+- [ ] Fix abs abounds with negative nom and asymmetric tol (ex. -2 +0.1/-0.2  !=  [-2.2, -1.9] )
+  - [ ] should we just decouple direction from nom?
+
+## 0.6.0
+
+- [x] Fix negative distribution
+- [x] Separate Dimension and StatisticalDim/Data. (AKA, merge StatisticalDim and Reviewed)
+    - Basic Dimension
+    - Reviewed Dimension (Reviewed just points at dimension and Distribution/Data)
+    - Distribution
+    - Requirement (For distribution or distribution data)
+  - [x] WC, RSS, MRSS takes all Basic Dimensions
+  - [x] SixSigma, MonteCarlo takes all Reviewed Dimensions
+  - [x] Spec renamed to Requirement
+  - [ ] Plots work with new dims
 
 ## 0.5.1 11/15/2024
 

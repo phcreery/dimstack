@@ -36,8 +36,10 @@ def display_df(data: Iterable[Dict[Any, Any]], title: str = "", dispmode=None):
         print()
     elif dispmode == "string" or dispmode == "str":
         return df.to_string(index=False)
+        print()
     elif dispmode == "plot":
         return df.style.hide(axis="index").set_caption(title)
+        print()
     elif dispmode == "df":
         return df
     elif dispmode == "rich":
@@ -48,5 +50,6 @@ def display_df(data: Iterable[Dict[Any, Any]], title: str = "", dispmode=None):
         for row in df.itertuples(index=False):
             table.add_row(*row)
         console.print(table)
+        print()
     else:
         return data
