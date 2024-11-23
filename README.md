@@ -136,22 +136,10 @@ WARNING:root:Assuming Normal Dist. for 14: stacks on stacks - '6 Sigma' Analysis
 
 dimstack works great as a library in a python script, in REPL, or in JupyterLab.
 
-Demo usage in a JupyterLite Lab
+### and Notebook setup
 
-- https://phcreery.github.io/dimstack-demo/lab/index.html
-
-Demo usage in a JupyterLite REPL:
-
-- https://phcreery.github.io/dimstack-demo/repl/index.html?kernel=python&toolbar=1&code=%pip%20install%20-q%20dimstack%0Aimport%20dimstack%20as%20ds
-
-Embed in your site:
-
-```html
-<iframe
-  src="https://phcreery.github.io/dimstack-demo/repl/index.html?kernel=python&toolbar=1&code=%pip%20install%20-q%20dimstack%0Aimport%20dimstack%20as%20ds"
-  width="100%"
-  height="100%"
-></iframe>
+```
+%pip install -q dimstack
 ```
 
 ## Development
@@ -185,14 +173,6 @@ First bump version in pyproject.toml, then
 uv build
 uv publish
 cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
-```
-
-### and Notebook setup
-
-See https://github.com/phcreery/dimstack-demo
-
-```
-%pip install -q dimstack
 ```
 
 # Acknowledgements
