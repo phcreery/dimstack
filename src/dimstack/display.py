@@ -12,7 +12,7 @@ def mode(dispmode: str):
     """Set the display mode for the stack.
 
     Args:
-        mode (str): "text"/"txt", "str"/"string", "plot", "rich", or "df"
+        mode (str): "text"/"txt", "str"/"string", "html", "rich", "notebook", or "df"
     """
     global DISPLAY_MODE
     DISPLAY_MODE = dispmode
@@ -36,10 +36,12 @@ def display_df(data: Iterable[Dict[Any, Any]], title: str = "", dispmode=None):
         print()
     elif dispmode == "string" or dispmode == "str":
         return df.to_string(index=False)
-        print()
-    elif dispmode == "plot":
+    elif dispmode == "html":
         return df.style.hide(axis="index").set_caption(title)
-        print()
+    elif dispmode == "notebook":
+        return df
+    # elif dispmode == "dict":
+    #     print(df.to_dict())
     elif dispmode == "df":
         return df
     elif dispmode == "rich":

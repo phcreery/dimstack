@@ -73,6 +73,7 @@ stack = ds.ReviewedStack(name="stacks on stacks", dims=items)
 
 stack.to_basic_stack().show()
 stack.show()
+
 ds.calc.Closed(stack).show()
 ds.calc.WC(stack).show()
 ds.calc.RSS(stack).show()

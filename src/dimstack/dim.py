@@ -47,8 +47,8 @@ class Basic:
     def __str__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
 
-    # def _repr_html_(self) -> str:
-    #     return display_df([self.dict], f"DIMENSION: {self.name} - {self.description}", dispmode="plot")._repr_html_()
+    def _repr_html_(self):
+        return display_df([self.dict], f"DIMENSION: {self}", dispmode="html")
 
     def show(self):
         return display_df([self.dict], f"DIMENSION: {self}")
@@ -78,12 +78,12 @@ class Basic:
     @property
     def abs_lower(self):
         """The minimum value of the measurement. AKA, absolute upper"""
-        return min(self.dir * self.nominal + self.tolerance.lower, self.dir * self.nominal + self.tolerance.upper)
+        return min(self.dir * self.nominal + self.abs_lower_tol, self.dir * self.nominal + self.abs_upper_tol)
 
     @property
     def abs_upper(self):
         """The maximum value of the measurement. AKA, absolute lower"""
-        return max(self.dir * self.nominal + self.tolerance.lower, self.dir * self.nominal + self.tolerance.upper)
+        return max(self.dir * self.nominal + self.abs_lower_tol, self.dir * self.nominal + self.abs_upper_tol)
 
     @property
     def abs_lower_tol(self):
@@ -162,11 +162,7 @@ class Reviewed:
         dim: Basic,
         target_process_sigma: float = 3,
         distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened, None] = None,
-        # *args,
-        # **kwargs,
     ):
-        # super().__init__(*args, **kwargs)
-        # super(Reviewed, self).__init__(*args, **kwargs)
         self.dim = dim
         self.target_process_sigma = target_process_sigma
         if distribution is None:
@@ -174,16 +170,11 @@ class Reviewed:
         else:
             self.distribution = distribution
 
-    # def __repr__(self) -> str:
-    #     return f"Reviewed({self.dim}, {self.distribution}. {self.target_process_sigma})"  # noqa: E501
-
-    # def _repr_html_(self) -> str:
-    #     return display_df(
-    #         self.dict, f"REVIEWED DIMENSION: {self.name} - {self.description}", dispmode="plot"
-    #     )._repr_html_()
-
     def __str__(self) -> str:
         return f"{self.dim} @ {self.distribution}"
+
+    def _repr_html_(self):
+        return display_df([self.dict], f"REVIEWED DIMENSION: {self}", dispmode="html")
 
     def show(self):
         return display_df([self.dict], f"REVIEWED DIMENSION: {self}")
@@ -309,25 +300,14 @@ class BasicStack:
         self.description = description
         self.dims = dims
 
-    # def __repr__(self) -> str:
-    #     return f"Stack({self.name}, {self.description}, [{', '.join([repr(dim) for dim in self.dims])}])"
+    def __str__(self) -> str:
+        return f"{self.name}: {self.dims}"
 
-    # def __str__(self) -> str:
-    #     return f"{self.name}: {self.dims}"
-
-    # def _repr_html_(self) -> str:
-    #     return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
+    def _repr_html_(self):
+        return display_df(self.dict, f"DIMENSION STACK: {self.name}", dispmode="html")
 
     def show(self, expand=False):
         return display_df(self.dict, f"DIMENSION STACK: {self.name}")
-        # if expand:
-        # else:
-        #     new_dict = []
-        #     simple_keys = ["Dim.", "Dist.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
-        #     for d in self.dict:
-        #         print(d)
-        #         new_dict.append({k: d[k] for k in simple_keys})
-        #     return display_df(new_dict, f"STACK: {self.name}")
 
     def append(self, measurement: Basic):
         self.dims.append(measurement)
@@ -348,25 +328,14 @@ class ReviewedStack:
         self.description = description
         self.dims = dims
 
-    # def __repr__(self) -> str:
-    #     return f"Stack({self.name}, {self.description}, [{', '.join([repr(dim) for dim in self.dims])}])"
-
-    # def _repr_html_(self) -> str:
-    #     return display_df(self.dict, f"STACK: {self.name}", dispmode="plot")._repr_html_()
-
     def __str__(self) -> str:
         return f"{self.name}: {self.dims}"
 
+    def _repr_html_(self):
+        return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}", dispmode="html")
+
     def show(self, expand=False):
         return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}")
-        # if expand:
-        #     return display_df(self.dict, f"STACK: {self.name}")
-        # else:
-        #     new_dict = []
-        #     simple_keys = ["ID", "Name", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Abs. Bounds"]
-        #     for d in self.dict:
-        #         new_dict.append({k: d[k] for k in simple_keys})
-        #     return display_df(new_dict, f"STACK: {self.name}")
 
     def append(self, measurement: Reviewed):
         self.dims.append(measurement)
@@ -392,23 +361,14 @@ class Requirement:
         self.LL = LL
         self.UL = UL
 
-    # def __repr__(self) -> str:
-    #     return f"Requirement({self.name}, {self.description}, {repr(self.distribution)}, {self.LL}, {self.UL})"
-
-    # def _repr_html_(self) -> str:
-    #     return display_df(self.dict, f"REQUIREMENT: {self.name}", dispmode="plot")._repr_html_()
-
     def __str__(self) -> str:
-        return f"REQUIREMENT: {self.name}"
+        return f"{self.name} [{self.LL}, {self.UL}] {self.distribution}"
+
+    def _repr_html_(self):
+        return display_df(self.dict, f"REQUIREMENT: {self.name}", dispmode="html")
 
     def show(self):
-        unused_keys = ["Name"]
-        # simple_keys = ["ID", "Desc.", "±", "Nom.", "Tol.", "Sens. (a)", "Rel. Bounds"]
-        dict_copy = self.dict
-        for entry in dict_copy:
-            for key in unused_keys:
-                entry.pop(key, None)
-        return display_df(dict_copy, f"REQUIREMENT: {self.name}")
+        return display_df(self.dict, f"REQUIREMENT: {self.name}")
 
     @property
     def median(self):
