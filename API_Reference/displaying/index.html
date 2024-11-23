@@ -74,6 +74,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_stack">add_stack</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_reviewed_stack">add_reviewed_stack</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add">add</a>
     </li>
         </ul>
@@ -123,6 +125,7 @@
 <li><a href="#dimstack.plot.StackPlot.add_dimension">add_dimension</a></li>
 <li><a href="#dimstack.plot.StackPlot.add_distribution">add_distribution</a></li>
 <li><a href="#dimstack.plot.StackPlot.add_stack">add_stack</a></li>
+<li><a href="#dimstack.plot.StackPlot.add_reviewed_stack">add_reviewed_stack</a></li>
 <li><a href="#dimstack.plot.StackPlot.add">add</a></li>
 </ul>
 </li>
@@ -187,7 +190,7 @@
                   (<code>str</code>)
               –
               <div class="doc-md-description">
-                <p>"text"/"txt", "str"/"string", "plot", "rich", or "df"</p>
+                <p>"text"/"txt", "str"/"string", "html", "rich", "notebook", or "df"</p>
               </div>
             </li>
         </ul>
@@ -311,7 +314,7 @@
 
     <div class="doc doc-contents ">
 
-        <p>Show the plot. This works in both Jupyter notebooks and in a Python script.</p>
+        <p>Show the plot. This works in both Jupyter notebooks and in a Python scripts.</p>
 
     </div>
 
@@ -321,7 +324,7 @@
 
 
 <h5 id="dimstack.plot.StackPlot.add_dimension" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">add_dimension</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xbins_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">add_dimension</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h5>
 
@@ -343,20 +346,20 @@
         <ul class="first simple">
             <li>
               <b><code>item</code></b>
-                  (<code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="../basics/#dimstack.dim.Statistical">Statistical</a>]</code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a></code>)
               –
               <div class="doc-md-description">
                 <p><em>description</em></p>
               </div>
             </li>
             <li>
-              <b><code>start_pos</code></b>
-                  (<code>int</code>, default:
-                      <code>0</code>
+              <b><code>title</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p><em>description</em>. Defaults to 0.</p>
+                <p><em>description</em></p>
               </div>
             </li>
         </ul>
@@ -372,7 +375,7 @@
 
 
 <h5 id="dimstack.plot.StackPlot.add_distribution" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">add_distribution</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">xbins_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">add_distribution</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">xbins_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h5>
 
@@ -394,7 +397,7 @@
         <ul class="first simple">
             <li>
               <b><code>distribution</code></b>
-                  (<code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.dist.Normal" href="../basics/#dimstack.dist.Normal">Normal</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.Uniform" href="../basics/#dimstack.dist.Uniform">Uniform</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.NormalScreened" href="../basics/#dimstack.dist.NormalScreened">NormalScreened</a>]</code>)
+                  (<code>Union[<a class="autorefs autorefs-internal" title="dimstack.dist.Normal" href="../basics/#dimstack.dist.Normal">Normal</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.Uniform" href="../basics/#dimstack.dist.Uniform">Uniform</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.NormalScreened" href="../basics/#dimstack.dist.NormalScreened">NormalScreened</a>]</code>)
               –
               <div class="doc-md-description">
                 <p><em>description</em></p>
@@ -513,6 +516,69 @@
 <div class="doc doc-object doc-function">
 
 
+<h5 id="dimstack.plot.StackPlot.add_reviewed_stack" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_reviewed_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add a stack of reviewed dimensions to the plot.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>stack</code></b>
+                  (<code><span title="dimstack.dim.ReviewedStack">ReviewedStack</span></code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>StackPlot</code></b>              –
+              <div class="doc-md-description">
+                <p>self</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h5 id="dimstack.plot.StackPlot.add" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></code>
 
@@ -536,7 +602,7 @@
         <ul class="first simple">
             <li>
               <b><code>item</code></b>
-                  (<code>(<span title="dimstack.dim.Stack">Stack</span>, <a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a>, <a class="autorefs autorefs-internal" title="dimstack.dim.Statistical" href="../basics/#dimstack.dim.Statistical">Statistical</a>)</code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a> | <a class="autorefs autorefs-internal" title="dimstack.dim.Reviewed" href="../basics/#dimstack.dim.Reviewed">Reviewed</a> | BasicStack | <span title="dimstack.dim.ReviewedStack">ReviewedStack</span></code>)
               –
               <div class="doc-md-description">
                 <p><em>description</em></p>
@@ -562,7 +628,7 @@
                   <code>TypeError</code>
               –
               <div class="doc-md-description">
-                <p>If the item is not a Stack, Basic, or Statistical.</p>
+                <p>If the item is not a Basic, Reviewed, BasicStack, or ReviewedStack</p>
               </div>
             </li>
         </ul>

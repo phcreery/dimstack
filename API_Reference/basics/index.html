@@ -66,25 +66,29 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Statistical">Statistical</a>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Reviewed">Reviewed</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.mean_eff">mean_eff</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.stdev_eff">stdev_eff</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.process_sigma_eff">process_sigma_eff</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.process_sigma_eff">process_sigma_eff</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Spec">Spec</a>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Requirement">Requirement</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.median">median</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.median">median</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.yield_loss_probability">yield_loss_probability</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.yield_loss_probability">yield_loss_probability</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Spec.R">R</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.R">R</a>
     </li>
         </ul>
     </li>
@@ -152,17 +156,19 @@
 <li><a href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a></li>
 </ul>
 </li>
-<li><a href="#dimstack.dim.Statistical">Statistical</a><ul>
-<li><a href="#dimstack.dim.Statistical.mean_eff">mean_eff</a></li>
-<li><a href="#dimstack.dim.Statistical.stdev_eff">stdev_eff</a></li>
-<li><a href="#dimstack.dim.Statistical.process_sigma_eff">process_sigma_eff</a></li>
-<li><a href="#dimstack.dim.Statistical.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Reviewed">Reviewed</a><ul>
+<li><a href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a></li>
+<li><a href="#dimstack.dim.Reviewed.stdev_eff">stdev_eff</a></li>
+<li><a href="#dimstack.dim.Reviewed.process_sigma_eff">process_sigma_eff</a></li>
+<li><a href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a></li>
+<li><a href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a></li>
 </ul>
 </li>
-<li><a href="#dimstack.dim.Spec">Spec</a><ul>
-<li><a href="#dimstack.dim.Spec.median">median</a></li>
-<li><a href="#dimstack.dim.Spec.yield_loss_probability">yield_loss_probability</a></li>
-<li><a href="#dimstack.dim.Spec.R">R</a></li>
+<li><a href="#dimstack.dim.Requirement">Requirement</a><ul>
+<li><a href="#dimstack.dim.Requirement.median">median</a></li>
+<li><a href="#dimstack.dim.Requirement.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Requirement.R">R</a></li>
 </ul>
 </li>
 </ul>
@@ -245,7 +251,7 @@
             </li>
             <li>
               <b><code>tol</code></b>
-                  (<code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>, <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>]</code>)
+                  (<code>Union[<a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>, <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>]</code>)
               –
               <div class="doc-md-description">
                 <p>The tolerance of the measurement. Defaults to SymmetricBilateral(0).</p>
@@ -396,19 +402,17 @@
 
 
 
-<h4 id="dimstack.dim.Statistical" class="doc doc-heading">
-            <code>Statistical</code>
+<h4 id="dimstack.dim.Reviewed" class="doc doc-heading">
+            <code>Reviewed</code>
 
 
 </h4>
 
 
     <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code></p>
 
 
-        <p>Statistical</p>
+        <p>Reviewed</p>
 
 
 <table class="field-list">
@@ -470,7 +474,7 @@
 
 
 
-<h5 id="dimstack.dim.Statistical.mean_eff" class="doc doc-heading">
+<h5 id="dimstack.dim.Reviewed.mean_eff" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">mean_eff</span></code>
 
   <span class="doc doc-labels">
@@ -491,7 +495,7 @@
 
 
 
-<h5 id="dimstack.dim.Statistical.stdev_eff" class="doc doc-heading">
+<h5 id="dimstack.dim.Reviewed.stdev_eff" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">stdev_eff</span></code>
 
   <span class="doc doc-labels">
@@ -513,7 +517,7 @@
 
 
 
-<h5 id="dimstack.dim.Statistical.process_sigma_eff" class="doc doc-heading">
+<h5 id="dimstack.dim.Reviewed.process_sigma_eff" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">process_sigma_eff</span></code>
 
   <span class="doc doc-labels">
@@ -534,7 +538,7 @@
 
 
 
-<h5 id="dimstack.dim.Statistical.yield_loss_probability" class="doc doc-heading">
+<h5 id="dimstack.dim.Reviewed.yield_loss_probability" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
 
   <span class="doc doc-labels">
@@ -553,6 +557,40 @@
 
 
 
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Reviewed.assume_normal_dist" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">assume_normal_dist</span><span class="p">()</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Assume a normal distribution.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Reviewed.assume_normal_dist_skewed" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">assume_normal_dist_skewed</span><span class="p">(</span><span class="n">skew</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Assume a normal distribution with a skew</p>
+
+    </div>
+
+</div>
+
 
 
   </div>
@@ -565,8 +603,8 @@
 
 
 
-<h4 id="dimstack.dim.Spec" class="doc doc-heading">
-            <code>Spec</code>
+<h4 id="dimstack.dim.Requirement" class="doc doc-heading">
+            <code>Requirement</code>
 
 
 </h4>
@@ -590,7 +628,7 @@
 
 
 
-<h5 id="dimstack.dim.Spec.median" class="doc doc-heading">
+<h5 id="dimstack.dim.Requirement.median" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">median</span></code>
 
   <span class="doc doc-labels">
@@ -611,7 +649,7 @@
 
 
 
-<h5 id="dimstack.dim.Spec.yield_loss_probability" class="doc doc-heading">
+<h5 id="dimstack.dim.Requirement.yield_loss_probability" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
 
   <span class="doc doc-labels">
@@ -632,7 +670,7 @@
 
 
 
-<h5 id="dimstack.dim.Spec.R" class="doc doc-heading">
+<h5 id="dimstack.dim.Requirement.R" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">R</span></code>
 
   <span class="doc doc-labels">
