@@ -43,20 +43,21 @@ class Basic:
 
     def __str__(self) -> str:
         # return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
+        desc_width = 30
         return (
             textwrap.shorten(
                 f"{self.id}: {self.name} {self.description} ",
-                width=20,
+                width=desc_width,
                 placeholder="...",
-            ).ljust(20)
+            ).ljust(desc_width)
             + f" {self.nom_direction_sign}{str(nround(self.nominal)).rjust(6)} {str(self.tolerance)}"
         )
 
     def _repr_html_(self):
-        return display_df([self.dict], f"DIMENSION: {self}", dispmode="html")
+        return display_df([self.dict], f"DIMENSION: {self.name}", dispmode="html")
 
     def show(self):
-        return display_df([self.dict], f"DIMENSION: {self}")
+        return display_df([self.dict], f"DIMENSION: {self.name}")
 
     @property
     def dict(self) -> dict[str, Any]:
@@ -205,10 +206,10 @@ class Reviewed:
         return f"{self.dim} @ {self.distribution}"
 
     def _repr_html_(self):
-        return display_df([self.dict], f"REVIEWED DIMENSION: {self}", dispmode="html")
+        return display_df([self.dict], f"REVIEWED DIMENSION: {self.dim.name}", dispmode="html")
 
     def show(self):
-        return display_df([self.dict], f"REVIEWED DIMENSION: {self}")
+        return display_df([self.dict], f"REVIEWED DIMENSION: {self.dim.name}")
 
     @property
     def dict(self) -> dict[str, Any]:
