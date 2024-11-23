@@ -42,7 +42,15 @@ class Basic:
         self.description = desc
 
     def __str__(self) -> str:
-        return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
+        # return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
+        return (
+            textwrap.shorten(
+                f"{self.id}: {self.name} {self.description} ",
+                width=20,
+                placeholder="...",
+            ).ljust(20)
+            + f" {self.nom_direction_sign}{str(nround(self.nominal)).rjust(6)} {str(self.tolerance)}"
+        )
 
     def _repr_html_(self):
         return display_df([self.dict], f"DIMENSION: {self}", dispmode="html")

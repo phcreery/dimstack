@@ -37,9 +37,9 @@ def display_df(data: Iterable[dict[Any, Any]], title: str = "", dispmode=None):
     elif dispmode == "string" or dispmode == "str":
         return df.to_string(index=False)
     elif dispmode == "html":
-        return df.style.hide(axis="index").set_caption(title)
+        return df.style.hide(axis="index").set_caption(title).set_properties(**{"text-align": "left"})
     elif dispmode == "notebook":
-        return df.style.hide(axis="index").set_caption(title)
+        return df.style.hide(axis="index").set_caption(title).set_properties(**{"text-align": "left"})
     # elif dispmode == "dict":
     #     print(df.to_dict())
     elif dispmode == "df":
