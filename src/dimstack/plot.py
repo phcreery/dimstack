@@ -1,12 +1,11 @@
 import itertools
-from typing import Union
 
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from .dim import Basic, BasicStack, Reviewed, ReviewedStack
+from .dim import Basic, Stack, Reviewed, ReviewedStack
 from .dist import Normal, NormalScreened, Uniform
 
 
@@ -28,7 +27,7 @@ class StackPlot:
 
     def show(self):
         """
-        Show the plot. This works in both Jupyter notebooks and in a Python script.
+        Show the plot. This works in both Jupyter notebooks and in a Python scripts.
         """
         return self.fig.show()
 
@@ -36,8 +35,8 @@ class StackPlot:
         """Add a dimension to the plot.
 
         Args:
-            item (Union[Basic, Reviewed]): _description_
-            start_pos (int, optional): _description_. Defaults to None.
+            item (Basic): _description_
+            title (str): _description_
         """
         if start_pos is None:
             start_pos = self.start_pos
@@ -145,7 +144,7 @@ class StackPlot:
 
         return self
 
-    def add_stack(self, stack: BasicStack):
+    def add_stack(self, stack: Stack):
         """Add a stack of dimensions to the plot.
 
         Args:
@@ -164,10 +163,10 @@ class StackPlot:
         """Add a stack of reviewed dimensions to the plot.
 
         Args:
-            stack (Stack): _description_
+            stack (ReviewedStack): _description_
 
         Returns:
-            _type_: _description_
+            StackPlot: self
         """ """"""
         for item in stack.dims:
             this_start_pos = self.start_pos
@@ -176,10 +175,8 @@ class StackPlot:
             self.add_distribution(
                 item.distribution,
                 item.dim.name,
-                item.dim.dir * item.dim.nominal + item.dim.abs_lower_tol,
-                item.dim.dir * item.dim.nominal + item.dim.abs_upper_tol,
-                # item.dim.dir * item.dim.nominal + item.dim.tolerance.lower,
-                # item.dim.dir * item.dim.nominal + item.dim.tolerance.upper,
+                item.dim.abs_nominal + item.dim.abs_lower_tol,
+                item.dim.abs_nominal + item.dim.abs_upper_tol,
                 xbins_size=xbins_size,
                 start_pos=this_start_pos,
             )
@@ -187,11 +184,11 @@ class StackPlot:
 
         return self
 
-    def add(self, item: Basic | Reviewed | BasicStack | ReviewedStack):
+    def add(self, item: Basic | Reviewed | Stack | ReviewedStack):
         """Add a dimension or stack to the plot.
 
         Args:
-            item (Union[Basic, Reviewed, BasicStack, ReviewedStack]): _description_
+            item (Basic | Reviewed | BasicStack | ReviewedStack): _description_
 
         Raises:
             TypeError: If the item is not a Basic, Reviewed, BasicStack, or ReviewedStack
@@ -210,14 +207,12 @@ class StackPlot:
             self.add_distribution(
                 item.distribution,
                 item.dim.name,
-                item.dim.nominal + item.dim.abs_lower_tol,
-                item.dim.nominal + item.dim.abs_upper_tol,
-                # item.dim.dir * item.dim.nominal + item.dim.tolerance.lower,
-                # item.dim.dir * item.dim.nominal + item.dim.tolerance.upper,
+                item.dim.abs_nominal + item.dim.abs_lower_tol,
+                item.dim.abs_nominal + item.dim.abs_upper_tol,
                 xbins_size=xbins_size,
                 start_pos=this_start_pos,
             )
-        elif isinstance(item, BasicStack):
+        elif isinstance(item, Stack):
             self.add_stack(item)
         elif isinstance(item, ReviewedStack):
             self.add_reviewed_stack(item)

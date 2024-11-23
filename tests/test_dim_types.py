@@ -29,6 +29,8 @@ class Negative(unittest.TestCase):
             desc="",
         )
 
+        self.assertEqual(d.nominal, 1)
+        self.assertEqual(d.abs_nominal, -1)
         self.assertEqual(d.tolerance.upper, 0.005)
         self.assertEqual(d.tolerance.lower, -0.004)
 

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterable
+from typing import Any, Iterable
 
 import pandas as pd
 from rich.console import Console
@@ -18,7 +18,7 @@ def mode(dispmode: str):
     DISPLAY_MODE = dispmode
 
 
-def display_df(data: Iterable[Dict[Any, Any]], title: str = "", dispmode=None):
+def display_df(data: Iterable[dict[Any, Any]], title: str = "", dispmode=None):
     """Display a dataframe.
 
     Args:
@@ -39,7 +39,7 @@ def display_df(data: Iterable[Dict[Any, Any]], title: str = "", dispmode=None):
     elif dispmode == "html":
         return df.style.hide(axis="index").set_caption(title)
     elif dispmode == "notebook":
-        return df
+        return df.style.hide(axis="index").set_caption(title)
     # elif dispmode == "dict":
     #     print(df.to_dict())
     elif dispmode == "df":

@@ -1,19 +1,38 @@
-from .dim import Basic, BasicStack, Reviewed, ReviewedStack
+from .dim import Basic, Stack, Reviewed, ReviewedStack
 from .stats import rss
 from .tolerance import Bilateral
+from .dist import Normal
 
 
-def Closed(self: BasicStack | ReviewedStack) -> Basic:
-    if isinstance(self, BasicStack):
+def Closed(self: Stack | ReviewedStack) -> Basic:
+    if isinstance(self, Stack):
         dims = self.dims
     elif isinstance(self, ReviewedStack):
         dims = [rdim.dim for rdim in self.dims]
 
     nominal = sum([dim.dir * dim.nominal * dim.a for dim in dims])
-    tolerance = Bilateral(
-        sum(filter(None, [dim.abs_upper_tol for dim in dims])),
-        sum(filter(None, [dim.abs_lower_tol for dim in dims])),
-    )
+
+    if nominal < 0:
+        # tolerance = Bilateral(
+        #     nominal - sum(dim.abs_lower for dim in dims),
+        #     nominal - sum(dim.abs_upper for dim in dims),
+        # )
+
+        tolerance = Bilateral(
+            -sum(dim.abs_lower_tol for dim in dims),
+            -sum(dim.abs_upper_tol for dim in dims),
+        )
+    else:
+        # tolerance = Bilateral(
+        #     sum(dim.abs_upper for dim in dims) - nominal,
+        #     sum(dim.abs_lower for dim in dims) - nominal,
+        # )
+
+        tolerance = Bilateral(
+            sum(dim.abs_upper_tol for dim in dims),
+            sum(dim.abs_lower_tol for dim in dims),
+        )
+
     return Basic(
         nominal,
         tolerance,
@@ -22,13 +41,13 @@ def Closed(self: BasicStack | ReviewedStack) -> Basic:
     )
 
 
-def WC(self: BasicStack | ReviewedStack) -> Basic:
+def WC(self: Stack | ReviewedStack) -> Basic:
     """
     This is a simple WC calculation. This results in a Bilateral dimension with a tolerance that is the sum of the component tolerances.
     It states that in any combination of tolerances, you can be sure the result will be within the this resulting tolerance.
     """
 
-    if isinstance(self, BasicStack):
+    if isinstance(self, Stack):
         dims = self.dims
     elif isinstance(self, ReviewedStack):
         dims = [rdim.dim for rdim in self.dims]
@@ -44,7 +63,7 @@ def WC(self: BasicStack | ReviewedStack) -> Basic:
     )
 
 
-def RSS(self: BasicStack | ReviewedStack) -> Basic:
+def RSS(self: Stack | ReviewedStack) -> Basic:
     """
     This is a simple RSS calculation. This is uses the RSS calculation method in the Dimensioning and Tolerancing Handbook, McGraw Hill.
     It is really only useful for a Bilateral stack of same process-stdev dims. The RSS result has the same uncertainty as the measurements.
@@ -63,7 +82,7 @@ def RSS(self: BasicStack | ReviewedStack) -> Basic:
         - Dimensioning and Tolerancing Handbook, McGraw Hill
         - http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&file=RSS_explanation.GIF
     """
-    if isinstance(self, BasicStack):
+    if isinstance(self, Stack):
         dims = self.dims
     elif isinstance(self, ReviewedStack):
         dims = [rdim.dim for rdim in self.dims]
@@ -79,13 +98,13 @@ def RSS(self: BasicStack | ReviewedStack) -> Basic:
     )
 
 
-def MRSS(self: BasicStack | ReviewedStack) -> Basic:
+def MRSS(self: Stack | ReviewedStack) -> Basic:
     """Basically RSS with a coefficient modifier to make the tolerance tighter.
 
     Returns:
         Statistical: _description_
     """
-    if isinstance(self, BasicStack):
+    if isinstance(self, Stack):
         dims = self.dims
     elif isinstance(self, ReviewedStack):
         dims = [rdim.dim for rdim in self.dims]
@@ -110,6 +129,7 @@ def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
     mean = sum([rdim.dim.dir * rdim.dim.median for rdim in self.dims])
     stdev = rss([dim.stdev_eff for dim in self.dims])
     tolerance = Bilateral(stdev * at)
+    dist = Normal(mean, stdev)
     dim = Reviewed(
         Basic(
             nom=mean,
@@ -118,5 +138,6 @@ def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
             desc="(assuming inputs with Normal Dist.)",
         ),
         target_process_sigma=at,
+        distribution=dist,
     )
     return dim

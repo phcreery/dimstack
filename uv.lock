@@ -389,14 +389,13 @@ wheels = [
 
 [[package]]
 name = "dimstack"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "jinja2" },
     { name = "pandas" },
     { name = "plotly" },
     { name = "rich" },
-    { name = "ruff" },
     { name = "scipy" },
 ]
 
@@ -419,7 +418,6 @@ requires-dist = [
     { name = "pandas", specifier = ">=1.5.2" },
     { name = "plotly", specifier = ">=5.14.1" },
     { name = "rich", specifier = ">=13.7.0" },
-    { name = "ruff", specifier = ">=0.7.3" },
     { name = "scipy", specifier = ">=1.8.1" },
 ]
 
@@ -434,6 +432,7 @@ dev = [
     { name = "nbformat", specifier = ">=5.10.4" },
     { name = "pkginfo", specifier = ">=1.9.6" },
     { name = "ruff", specifier = ">=0.0.254" },
+    { name = "ruff", specifier = ">=0.7.3" },
 ]
 
 [[package]]

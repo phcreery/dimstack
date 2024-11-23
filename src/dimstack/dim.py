@@ -1,13 +1,13 @@
 import itertools
 import logging
 import textwrap
-from typing import Any, Dict, List, Union
+from typing import Any
 
 from . import dist
 from .display import display_df
-from .stats import C_p, C_pk
 from .tolerance import SymmetricBilateral, UnequalBilateral
 from .utils import POSITIVE, nround, sign, sign_symbol
+from .stats import C_p, C_pk
 
 
 class Basic:
@@ -28,7 +28,7 @@ class Basic:
     def __init__(
         self,
         nom: float,
-        tol: Union[SymmetricBilateral, UnequalBilateral],
+        tol: SymmetricBilateral | UnequalBilateral,
         a: float = 1,
         name: str = "Dimension",
         desc: str = "Dimension",
@@ -41,9 +41,6 @@ class Basic:
         self.name = name
         self.description = desc
 
-    # def __repr__(self) -> str:
-    #     return f"Basic({self.nominal}, {repr(self.tolerance)}, {self.a}, {self.name}, {self.description})"
-
     def __str__(self) -> str:
         return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
 
@@ -54,7 +51,7 @@ class Basic:
         return display_df([self.dict], f"DIMENSION: {self}")
 
     @property
-    def dict(self) -> Dict[str, Any]:
+    def dict(self) -> dict[str, Any]:
         return {
             "ID": self.id,
             "Name": self.name,
@@ -72,8 +69,16 @@ class Basic:
         return sign_symbol(self.dir)
 
     @property
+    def abs_nominal(self):
+        return self.dir * self.nominal
+
+    @property
     def median(self):
         return (self.rel_lower + self.rel_upper) / 2
+
+    @property
+    def abs_median(self):
+        return (self.abs_lower + self.abs_upper) / 2
 
     @property
     def abs_lower(self):
@@ -127,22 +132,40 @@ class Basic:
         self.tolerance = SymmetricBilateral(tol)
         return self
 
-    # @classmethod
-    # def from_statistical_dimension(
-    #     cls,
-    #     stat: "Statistical",
-    # ):
-    #     if type(stat) is Basic:
-    #         return stat
+    def review(
+        self,
+        target_process_sigma: float = 3,
+        distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
+    ):
+        return Reviewed(self, target_process_sigma, distribution)
 
-    #     logging.warning(f"Converting Statistical Dim. ({stat}) to Basic Dim.")
-    #     return cls(
-    #         nom=stat.nominal * stat.dir,
-    #         tol=stat.tolerance,
-    #         a=stat.a,
-    #         name=stat.name,
-    #         desc=stat.description,
-    #     )
+
+class Stack:
+    def __init__(
+        self,
+        name: str = "Stack",
+        description: str = "",
+        dims: list[Basic] = [],
+    ):
+        self.name = name
+        self.description = description
+        self.dims = dims
+
+    def __str__(self) -> str:
+        return f"{self.name}: {self.dims}"
+
+    def _repr_html_(self):
+        return display_df(self.dict, f"DIMENSION STACK: {self.name}", dispmode="html")
+
+    def show(self, expand=False):
+        return display_df(self.dict, f"DIMENSION STACK: {self.name}")
+
+    def append(self, measurement: Basic):
+        self.dims.append(measurement)
+
+    @property
+    def dict(self) -> list[dict[str, Any]]:
+        return [dim.dict for dim in self.dims]
 
 
 class Reviewed:
@@ -161,7 +184,7 @@ class Reviewed:
         self,
         dim: Basic,
         target_process_sigma: float = 3,
-        distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened, None] = None,
+        distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
     ):
         self.dim = dim
         self.target_process_sigma = target_process_sigma
@@ -180,7 +203,7 @@ class Reviewed:
         return display_df([self.dict], f"REVIEWED DIMENSION: {self}")
 
     @property
-    def dict(self) -> Dict[str, Any]:
+    def dict(self) -> dict[str, Any]:
         return {
             # **self.dim.dict,
             "Dim.": f"{self.dim}",
@@ -198,8 +221,8 @@ class Reviewed:
             else "",
         }
 
-    # Assume a normal distribution.
     def assume_normal_dist(self):
+        """Assume a normal distribution."""
         if hasattr(self, "distribution") and self.distribution is not None:
             return self
         mean = self.mean_eff
@@ -209,8 +232,8 @@ class Reviewed:
         logging.warning(f"Assuming Normal Dist. for {self}")
         return self
 
-    # Assume a normal distribution with a skew
     def assume_normal_dist_skewed(self, skew):
+        """Assume a normal distribution with a skew"""
         self.assume_normal_dist()
         if isinstance(self.distribution, dist.Normal):  # which it will be
             self.distribution.mean = self.distribution.mean + skew * (
@@ -289,40 +312,12 @@ class Reviewed:
         return self.distribution.cdf(UL) - self.distribution.cdf(LL)
 
 
-class BasicStack:
-    def __init__(
-        self,
-        name: str = "Stack",
-        description: str = "",
-        dims: List[Basic] = [],
-    ):
-        self.name = name
-        self.description = description
-        self.dims = dims
-
-    def __str__(self) -> str:
-        return f"{self.name}: {self.dims}"
-
-    def _repr_html_(self):
-        return display_df(self.dict, f"DIMENSION STACK: {self.name}", dispmode="html")
-
-    def show(self, expand=False):
-        return display_df(self.dict, f"DIMENSION STACK: {self.name}")
-
-    def append(self, measurement: Basic):
-        self.dims.append(measurement)
-
-    @property
-    def dict(self) -> List[Dict[str, Any]]:
-        return [dim.dict for dim in self.dims]
-
-
 class ReviewedStack:
     def __init__(
         self,
         name: str = "Stack",
         description: str = "",
-        dims: List[Reviewed] = [],
+        dims: list[Reviewed] = [],
     ):
         self.name = name
         self.description = description
@@ -341,11 +336,11 @@ class ReviewedStack:
         self.dims.append(measurement)
 
     @property
-    def dict(self) -> List[Dict[str, Any]]:
+    def dict(self) -> list[dict[str, Any]]:
         return [dim.dict for dim in self.dims]
 
-    def to_basic_stack(self) -> BasicStack:
-        return BasicStack(
+    def to_basic_stack(self) -> Stack:
+        return Stack(
             name=self.name,
             description=self.description,
             dims=[rdim.dim for rdim in self.dims],
@@ -353,7 +348,7 @@ class ReviewedStack:
 
 
 class Requirement:
-    def __init__(self, name, description, distribution: Union[dist.Uniform, dist.Normal, dist.NormalScreened], LL, UL):
+    def __init__(self, name, description, distribution: dist.Uniform | dist.Normal | dist.NormalScreened, LL, UL):
         self.name = name
         self.description = description
         # self.dim = dim
@@ -392,7 +387,7 @@ class Requirement:
         return self.yield_loss_probability * 1000000
 
     @property
-    def dict(self) -> List[Dict[str, Any]]:
+    def dict(self) -> list[dict[str, Any]]:
         return [
             {
                 "Name": textwrap.shorten(self.name, width=10, placeholder="..."),

@@ -1,5 +1,3 @@
-from typing import List, Union
-
 import numpy as np
 import pandas as pd
 from scipy.stats import norm, uniform
@@ -10,6 +8,7 @@ from .utils import nround
 # DIST_NOTCHED = "Notched"  # This is a common distribution when parts are being sorted and the leftover parts are used.
 # DIST_NORMAL_LT = "Normal LT"  # Normal distribution which has been screened in order to remove lengths above a limit.
 # DIST_NORMAL_GT = "Normal GT"  # Normal distribution which has been screened in order to remove lengths below a limit.
+# Triangular, LogNormal, Weibull, Exponential, Gamma, Beta, Gumbel, Frechet
 
 
 class Uniform:
@@ -75,7 +74,7 @@ class Normal:
         return norm.cdf(x, loc=self.mean, scale=self.stdev)
 
     @classmethod
-    def fit(cls, data: Union[np.ndarray, List[float], List[int], List[np.float64], pd.Series]):
+    def fit(cls, data: np.ndarray | list[float] | list[int] | list[np.float64] | pd.Series):
         mean, stdev = norm.fit(data)
         inst = cls(mean, stdev)
         inst.data = data

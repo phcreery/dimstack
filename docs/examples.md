@@ -13,45 +13,71 @@ import dimstack as ds
 ds.display.mode("rich")
 
 k = 0.25
-target_process_sigma = 6
+target_process_sigma = 3
 stdev = 0.036 / target_process_sigma
-m1 = ds.dim.Statistical(
+m1 = dim = ds.dim.Basic(
     nom=208,
     tol=ds.tol.SymmetricBilateral(0.036),
-    distribution=ds.dist.Normal(208 + k * target_process_sigma * stdev, stdev),
-    target_process_sigma=target_process_sigma,
     name="a",
     desc="Shaft",
+).review(
+    distribution=ds.dist.Normal(208 + k * target_process_sigma * stdev, stdev),
+    target_process_sigma=target_process_sigma,
 )
-m2 = ds.dim.Statistical(
+m2 = dim = ds.dim.Basic(
     nom=-1.75,
     tol=ds.tol.UnequalBilateral(0, 0.06),
-    target_process_sigma=3,
     name="b",
     desc="Retainer ring",
+).review(
+    target_process_sigma=3,
 )
-m3 = ds.dim.Statistical(nom=-23, tol=ds.tol.UnequalBilateral(0, 0.12), target_process_sigma=3, name="c", desc="Bearing")
-m4 = ds.dim.Statistical(
+
+m3 = dim = ds.dim.Basic(
+    nom=-23,
+    tol=ds.tol.UnequalBilateral(0, 0.12),
+    name="c",
+    desc="Bearing",
+).review(
+    target_process_sigma=3,
+)
+m4 = dim = ds.dim.Basic(
     nom=20,
     tol=ds.tol.SymmetricBilateral(0.026),
-    target_process_sigma=3,
     name="d",
     desc="Bearing Sleeve",
+).review(
+    target_process_sigma=3,
 )
-m5 = ds.dim.Statistical(nom=-200, tol=ds.tol.SymmetricBilateral(0.145), target_process_sigma=3, name="e", desc="Case")
+m5 = dim = ds.dim.Basic(
+    nom=-200,
+    tol=ds.tol.SymmetricBilateral(0.145),
+    name="e",
+    desc="Case",
+).review(
+    target_process_sigma=3,
+)
 m6 = ds.dim.Basic(
     nom=20,
     tol=ds.tol.SymmetricBilateral(0.026),
-    # target_process_sigma=3,
     name="f",
     desc="Bearing Sleeve",
 )
-m7 = ds.dim.Statistical(nom=-23, tol=ds.tol.UnequalBilateral(0, 0.12), target_process_sigma=3, name="g", desc="Bearing")
-items = [m1, m2, m3, m4, m5, m6, m7]
+m7 = dim = ds.dim.Basic(
+    nom=-23,
+    tol=ds.tol.UnequalBilateral(0, 0.12),
+    name="g",
+    desc="Bearing",
+).review(
+    target_process_sigma=3,
+)
+items = [m1, m2, m3, m4, m5, m7]
 
-stack = ds.Stack(name="stacks on stacks", dims=items)
+stack = ds.dim.ReviewedStack(name="stacks on stacks", dims=items)
 
+stack.to_basic_stack().show()
 stack.show()
+
 ds.calc.Closed(stack).show()
 ds.calc.WC(stack).show()
 ds.calc.RSS(stack).show()
@@ -59,71 +85,86 @@ ds.calc.MRSS(stack).show()
 designed_for = ds.calc.SixSigma(stack, at=4.5)
 designed_for.show()
 
-spec = ds.Spec("stack spec", "", distribution=designed_for.distribution, LL=0.05, UL=0.8)
+spec = ds.dim.Requirement("stack spec", "", distribution=designed_for.distribution, LL=0.05, UL=0.8)
 spec.show()
+
+ds.plot.StackPlot().add(stack).add(ds.calc.RSS(stack)).show()
+
+
 ```
 
 Returns:
 
 ```
-                                     STACK: stacks on stacks
-┏━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Name ┃ Desc.          ┃ ± ┃ Nom.     ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds          ┃
-┡━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩
-│ 0  │ a    │ Shaft          │ + │      208 │ ± 0.036        │ 1         │ [207.964, 208.036]   │
-│ 1  │ b    │ Retainer ring  │ - │     1.75 │ + 0.06 / + 0   │ 1         │ [-1.75, -1.69]       │
-│ 2  │ c    │ Bearing        │ - │       23 │ + 0.12 / + 0   │ 1         │ [-23, -22.88]        │
-│ 3  │ d    │ Bearing Sleeve │ + │       20 │ ± 0.026        │ 1         │ [19.974, 20.026]     │
-│ 4  │ e    │ Case           │ - │      200 │ ± 0.145        │ 1         │ [-200.145, -199.855] │
-│ 5  │ f    │ Bearing Sleeve │ + │       20 │ ± 0.026        │ 1         │ [19.974, 20.026]     │
-│ 6  │ g    │ Bearing        │ - │       23 │ + 0.12 / + 0   │ 1         │ [-23, -22.88]        │
-└────┴──────┴────────────────┴───┴──────────┴────────────────┴───────────┴──────────────────────┘
-                                DIMENSION: stacks on stacks - Closed Analysis -
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Name                               ┃ Desc. ┃ ± ┃ Nom. ┃ Tol.              ┃ Sens. (a) ┃ Rel. Bounds     ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
-│ 7  │ stacks on stacks - Closed Analysis │       │ + │ 0.25 │ + 0.233 / - 0.533 │ 1         │ [-0.283, 0.483] │
-└────┴────────────────────────────────────┴───────┴───┴──────┴───────────────────┴───────────┴─────────────────┘
-                               DIMENSION: stacks on stacks - WC Analysis -
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Name                           ┃ Desc. ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Rel. Bounds     ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
-│ 8  │ stacks on stacks - WC Analysis │       │ + │ 0.1  │ ± 0.383        │ 1         │ [-0.283, 0.483] │
-└────┴────────────────────────────────┴───────┴───┴──────┴────────────────┴───────────┴─────────────────┘
-WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statistical Dim.
-WARNING:root:Assuming Normal Dist. for 10: stacks on stacks - RSS Analysis (assuming inputs with Normal Dist. & uniform SD) +0.1 ± 0.17825 @ Normal Dist. (μ=0.1, σ=0.05942)
-             DIMENSION: stacks on stacks - RSS Analysis - (assuming inputs with Normal Dist. & uniform SD)
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Desc.                                            ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds         ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
-│ 10 │ (assuming inputs with Normal Dist. & uniform SD) │ + │ 0.1  │ ± 0.17825      │ 1         │ [-0.07825, 0.27825] │
-└────┴──────────────────────────────────────────────────┴───┴──────┴────────────────┴───────────┴─────────────────────┘
-WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statistical Dim.
-WARNING:root:Assuming Normal Dist. for 12: stacks on stacks - MRSS Analysis (assuming inputs with Normal Dist. & uniform SD) +0.1 ± 0.24046 @ Normal Dist. (μ=0.1, σ=0.06383)
-            DIMENSION: stacks on stacks - MRSS Analysis - (assuming inputs with Normal Dist. & uniform SD)
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Desc.                                            ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds         ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
-│ 12 │ (assuming inputs with Normal Dist. & uniform SD) │ + │ 0.1  │ ± 0.24046      │ 1         │ [-0.14046, 0.34046] │
-└────┴──────────────────────────────────────────────────┴───┴──────┴────────────────┴───────────┴─────────────────────┘
-WARNING:root:Assuming Normal Dist. for 1: b Retainer ring -1.75 + 0.06 / + 0 @ Normal Dist. (μ=1.78, σ=0.01)
-WARNING:root:Assuming Normal Dist. for 2: c Bearing -23 + 0.12 / + 0 @ Normal Dist. (μ=23.06, σ=0.02)
-WARNING:root:Assuming Normal Dist. for 3: d Bearing Sleeve +20 ± 0.026 @ Normal Dist. (μ=20.0, σ=0.00867)
-WARNING:root:Assuming Normal Dist. for 4: e Case -200 ± 0.145 @ Normal Dist. (μ=200.0, σ=0.04833)
-WARNING:root:Converting Basic Dim. (5: f Bearing Sleeve +20 ± 0.026) to Statistical Dim.
-WARNING:root:Assuming Normal Dist. for 13: f Bearing Sleeve +20 ± 0.026 @ Normal Dist. (μ=20.0, σ=0.00867)
-WARNING:root:Assuming Normal Dist. for 6: g Bearing -23 + 0.12 / + 0 @ Normal Dist. (μ=23.06, σ=0.02)
-WARNING:root:Assuming Normal Dist. for 14: stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Dist.) +0.1 ± 0.26433 @ Normal Dist. (μ=0.1, σ=0.05874)
-          DIMENSION: stacks on stacks - '6 Sigma' Analysis - (assuming inputs with Normal Dist.)
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID ┃ Desc.                               ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds         ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
-│ 14 │ (assuming inputs with Normal Dist.) │ + │ 0.1  │ ± 0.26433      │ 1         │ [-0.16433, 0.36433] │
-└────┴─────────────────────────────────────┴───┴──────┴────────────────┴───────────┴─────────────────────┘
-                                       SPEC: stack spec
-┏━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
-┃ Desc. ┃ Distribution                    ┃ Median ┃ Spec. Limits ┃ Yield Prob. ┃ Reject PPM ┃
-┡━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
-│       │ Normal Dist. (μ=0.1, σ=0.05874) │ 0.425  │ [0.05, 0.8]  │ 80.2675148  │ 197324.85  │
-└───────┴─────────────────────────────────┴────────┴──────────────┴─────────────┴────────────┘
+WARNING:root:Assuming Normal Dist. for 1: b Retainer ring -1.75 +0.06 / +0 @ Normal Dist. μ=-1.78, σ=0.01
+WARNING:root:Assuming Normal Dist. for 2: c Bearing -23 +0.12 / +0 @ Normal Dist. μ=-23.06, σ=0.02
+WARNING:root:Assuming Normal Dist. for 3: d Bearing Sleeve +20 ± 0.026 @ Normal Dist. μ=20.0, σ=0.00867
+WARNING:root:Assuming Normal Dist. for 4: e Case -200 ± 0.145 @ Normal Dist. μ=-200.0, σ=0.04833
+WARNING:root:Assuming Normal Dist. for 6: g Bearing -23 +0.12 / +0 @ Normal Dist. μ=-23.06, σ=0.02
+                              DIMENSION STACK: stacks on stacks
+┏━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name ┃ Desc.          ┃ ± ┃ Nom.  ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds          ┃
+┡━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩
+│ 0  │ a    │ Shaft          │ + │ 208.0 │ ± 0.036        │ 1         │ [207.964, 208.036]   │
+│ 1  │ b    │ Retainer ring  │ - │ 1.75  │ +0.06 / +0     │ 1         │ [-1.81, -1.75]       │
+│ 2  │ c    │ Bearing        │ - │ 23.0  │ +0.12 / +0     │ 1         │ [-23.12, -23]        │
+│ 3  │ d    │ Bearing Sleeve │ + │ 20.0  │ ± 0.026        │ 1         │ [19.974, 20.026]     │
+│ 4  │ e    │ Case           │ - │ 200.0 │ ± 0.145        │ 1         │ [-200.145, -199.855] │
+│ 6  │ g    │ Bearing        │ - │ 23.0  │ +0.12 / +0     │ 1         │ [-23.12, -23]        │
+└────┴──────┴────────────────┴───┴───────┴────────────────┴───────────┴──────────────────────┘
+
+                                                                 REVIEWED DIMENSION STACK: stacks on stacks
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Dim.                                ┃ Dist.                            ┃ Target Sigma ┃ Skew (k) ┃ C_p ┃ C_pk ┃ μ_eff  ┃ σ_eff   ┃ Eff. Sigma ┃ Yield Prob. ┃ Reject PPM ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ 0: a Shaft +208 ± 0.036             │ Normal Dist. μ=208.009, σ=0.012  │ ± 3σ         │ 0.25     │ 1.0 │ 0.75 │ 208.0  │ 0.016   │ ± 2.25σ    │ 98.76871101 │ 12312.89   │
+│ 1: b Retainer ring -1.75 +0.06 / +0 │ Normal Dist. μ=-1.78, σ=0.01     │ ± 3σ         │ 0.0      │ 1.0 │ 1.0  │ -1.78  │ 0.01    │ ± 3.0σ     │ 99.73002039 │ 2699.8     │
+│ 2: c Bearing -23 +0.12 / +0         │ Normal Dist. μ=-23.06, σ=0.02    │ ± 3σ         │ 0.0      │ 1.0 │ 1.0  │ -23.06 │ 0.02    │ ± 3.0σ     │ 99.73002039 │ 2699.8     │
+│ 3: d Bearing Sleeve +20 ± 0.026     │ Normal Dist. μ=20.0, σ=0.00867   │ ± 3σ         │ 0.0      │ 1.0 │ 1.0  │ 20.0   │ 0.00867 │ ± 3.0σ     │ 99.73002039 │ 2699.8     │
+│ 4: e Case -200 ± 0.145              │ Normal Dist. μ=-200.0, σ=0.04833 │ ± 3σ         │ 0.0      │ 1.0 │ 1.0  │ -200.0 │ 0.04833 │ ± 3.0σ     │ 99.73002039 │ 2699.8     │
+│ 6: g Bearing -23 +0.12 / +0         │ Normal Dist. μ=-23.06, σ=0.02    │ ± 3σ         │ 0.0      │ 1.0 │ 1.0  │ -23.06 │ 0.02    │ ± 3.0σ     │ 99.73002039 │ 2699.8     │
+└─────────────────────────────────────┴──────────────────────────────────┴──────────────┴──────────┴─────┴──────┴────────┴─────────┴────────────┴─────────────┴────────────┘
+
+                     DIMENSION: 7: stacks on stacks - Closed Analysis  -19.75 +0.507 / -0.207
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name                               ┃ Desc. ┃ ± ┃ Nom.  ┃ Tol.            ┃ Sens. (a) ┃ Abs. Bounds        ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ 7  │ stacks on stacks - Closed Analysis │       │ - │ 19.75 │ +0.507 / -0.207 │ 1         │ [-20.257, -19.543] │
+└────┴────────────────────────────────────┴───────┴───┴───────┴─────────────────┴───────────┴────────────────────┘
+
+                        DIMENSION: 8: stacks on stacks - WC Analysis  -19.9 ± 0.357
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name                           ┃ Desc. ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds        ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ 8  │ stacks on stacks - WC Analysis │       │ - │ 19.9 │ ± 0.357        │ 1         │ [-20.257, -19.543] │
+└────┴────────────────────────────────┴───────┴───┴──────┴────────────────┴───────────┴────────────────────┘
+
+                       DIMENSION: 9: stacks on stacks - RSS Analysis (assuming inputs with Normal Dist. & uniform SD) -19.9 ± 0.17634
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name                            ┃ Desc.                                            ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds            ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ 9  │ stacks on stacks - RSS Analysis │ (assuming inputs with Normal Dist. & uniform SD) │ - │ 19.9 │ ± 0.17634      │ 1         │ [-20.07634, -19.72366] │
+└────┴─────────────────────────────────┴──────────────────────────────────────────────────┴───┴──────┴────────────────┴───────────┴────────────────────────┘
+
+                      DIMENSION: 10: stacks on stacks - MRSS Analysis (assuming inputs with Normal Dist. & uniform SD) -19.9 ± 0.23866
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID ┃ Name                             ┃ Desc.                                            ┃ ± ┃ Nom. ┃ Tol.           ┃ Sens. (a) ┃ Abs. Bounds            ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ 10 │ stacks on stacks - MRSS Analysis │ (assuming inputs with Normal Dist. & uniform SD) │ - │ 19.9 │ ± 0.23866      │ 1         │ [-20.13866, -19.66134] │
+└────┴──────────────────────────────────┴──────────────────────────────────────────────────┴───┴──────┴────────────────┴───────────┴────────────────────────┘
+
+                                        REVIEWED DIMENSION: 11: stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Dist.) -19.9 ± 0.26877 @ Normal Dist. μ=-19.9, σ=0.05973
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Dim.                                                                                          ┃ Dist.                           ┃ Target Sigma ┃ Skew (k) ┃ C_p ┃ C_pk ┃ μ_eff ┃ σ_eff   ┃ Eff. Sigma ┃ Yield Prob. ┃ Reject PPM ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ 11: stacks on stacks - '6 Sigma' Analysis (assuming inputs with Normal Dist.) -19.9 ± 0.26877 │ Normal Dist. μ=-19.9, σ=0.05973 │ ± 4.5σ       │ 0.0      │ 1.5 │ 1.5  │ -19.9 │ 0.05973 │ ± 4.5σ     │ 99.99932047 │ 6.8        │
+└───────────────────────────────────────────────────────────────────────────────────────────────┴─────────────────────────────────┴──────────────┴──────────┴─────┴──────┴───────┴─────────┴────────────┴─────────────┴────────────┘
+
+                                          REQUIREMENT: stack spec
+┏━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Name       ┃ Desc. ┃ Distribution                    ┃ Median ┃ Spec. Limits ┃ Yield Prob. ┃ Reject PPM ┃
+┡━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ stack spec │       │ Normal Dist. μ=-19.9, σ=0.05973 │ 0.425  │ [0.05, 0.8]  │ 0.0         │ 1000000.0  │
+└────────────┴───────┴─────────────────────────────────┴────────┴──────────────┴─────────────┴────────────┘
+
 ```
