@@ -177,6 +177,10 @@ cp '.\\dist\\*.whl' '.\\notebooks\\pypi\\'
 
 # Acknowledgements
 
+- https://d2t1xqejof9utc.cloudfront.net/files/147765/Dimensioning%20and%20Tolerancing%20Handbook.pdf?1541238602
 - http://www.newconceptzdesign.com/stackups/
 - https://github.com/slightlynybbled/tol-stack
 - https://www.mitcalc.com/doc/tolanalysis1d/help/en/tolanalysis1d.htm
+- https://clas.iusb.edu/math-compsci/_prior-thesis/YFeng_thesis.pdf
+- https://ris.utwente.nl/ws/portalfiles/portal/6632975/Salomons96computer1.pdf
+- https://ris.utwente.nl/ws/files/6632926/Salomons96computer2.pdf
