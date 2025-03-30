@@ -56,6 +56,16 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Basic">Basic</a>
         <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_nominal">rel_nominal</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_median">rel_median</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_lower">rel_lower</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_upper">rel_upper</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_nominal">abs_nominal</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_lower">abs_lower</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper">abs_upper</a>
@@ -70,9 +80,11 @@
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.stdev_eff">stdev_eff</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.std_dev_eff">std_dev_eff</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.process_sigma_eff">process_sigma_eff</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.k">k</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a>
     </li>
@@ -96,11 +108,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.tolerance">tolerance</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.Bilateral">Bilateral</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.asymmetric">asymmetric</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.unequal">unequal</a>
+    </li>
+        </ul>
     </li>
         </ul>
     </li>
@@ -150,6 +164,11 @@
 <li><a href="#basics">Basics</a><ul>
 <li><a href="#dimstack.dim">dim</a><ul>
 <li><a href="#dimstack.dim.Basic">Basic</a><ul>
+<li><a href="#dimstack.dim.Basic.rel_nominal">rel_nominal</a></li>
+<li><a href="#dimstack.dim.Basic.rel_median">rel_median</a></li>
+<li><a href="#dimstack.dim.Basic.rel_lower">rel_lower</a></li>
+<li><a href="#dimstack.dim.Basic.rel_upper">rel_upper</a></li>
+<li><a href="#dimstack.dim.Basic.abs_nominal">abs_nominal</a></li>
 <li><a href="#dimstack.dim.Basic.abs_lower">abs_lower</a></li>
 <li><a href="#dimstack.dim.Basic.abs_upper">abs_upper</a></li>
 <li><a href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a></li>
@@ -158,8 +177,9 @@
 </li>
 <li><a href="#dimstack.dim.Reviewed">Reviewed</a><ul>
 <li><a href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a></li>
-<li><a href="#dimstack.dim.Reviewed.stdev_eff">stdev_eff</a></li>
+<li><a href="#dimstack.dim.Reviewed.std_dev_eff">std_dev_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.process_sigma_eff">process_sigma_eff</a></li>
+<li><a href="#dimstack.dim.Reviewed.k">k</a></li>
 <li><a href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a></li>
@@ -174,9 +194,11 @@
 </ul>
 </li>
 <li><a href="#dimstack.tolerance">tolerance</a><ul>
-<li><a href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a></li>
-<li><a href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></li>
-<li><a href="#dimstack.tolerance.Bilateral">Bilateral</a></li>
+<li><a href="#dimstack.tolerance.Bilateral">Bilateral</a><ul>
+<li><a href="#dimstack.tolerance.Bilateral.asymmetric">asymmetric</a></li>
+<li><a href="#dimstack.tolerance.Bilateral.unequal">unequal</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#dimstack.dist">dist</a><ul>
@@ -251,10 +273,10 @@
             </li>
             <li>
               <b><code>tol</code></b>
-                  (<code>Union[<a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a>, <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a>]</code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.tolerance.Bilateral" href="#dimstack.tolerance.Bilateral">Bilateral</a></code>)
               –
               <div class="doc-md-description">
-                <p>The tolerance of the measurement. Defaults to SymmetricBilateral(0).</p>
+                <p>The tolerance of the measurement. Defaults to Bilateral.symmetric(0).</p>
               </div>
             </li>
             <li>
@@ -264,8 +286,7 @@
 )
               –
               <div class="doc-md-description">
-                <p>The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
-                and the nominal value will be made positive.</p>
+                <p>The sensitivity of the measurement. Defaults to 1.</p>
               </div>
             </li>
             <li>
@@ -308,8 +329,113 @@
 
 
 
+<h5 id="dimstack.dim.Basic.rel_nominal" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rel_nominal</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The nominal value of the measurement. AKA, relative nominal</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.rel_median" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rel_median</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The median value of the measurement. AKA, relative median</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.rel_lower" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rel_lower</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Relative lower value of the dimension</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.rel_upper" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rel_upper</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Relative upper value of the dimension</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Basic.abs_nominal" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">abs_nominal</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The absolute nominal value of the measurement.</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h5 id="dimstack.dim.Basic.abs_lower" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">abs_lower</span></code>
+            <code class="highlight language-python"><span class="n">abs_lower</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -330,7 +456,7 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_upper" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">abs_upper</span></code>
+            <code class="highlight language-python"><span class="n">abs_upper</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -351,7 +477,7 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_lower_tol" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">abs_lower_tol</span></code>
+            <code class="highlight language-python"><span class="n">abs_lower_tol</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -372,7 +498,7 @@
 
 
 <h5 id="dimstack.dim.Basic.abs_upper_tol" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">abs_upper_tol</span></code>
+            <code class="highlight language-python"><span class="n">abs_upper_tol</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -475,7 +601,7 @@
 
 
 <h5 id="dimstack.dim.Reviewed.mean_eff" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">mean_eff</span></code>
+            <code class="highlight language-python"><span class="n">mean_eff</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -495,8 +621,8 @@
 
 
 
-<h5 id="dimstack.dim.Reviewed.stdev_eff" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">stdev_eff</span></code>
+<h5 id="dimstack.dim.Reviewed.std_dev_eff" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">std_dev_eff</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -508,7 +634,7 @@
     <div class="doc doc-contents ">
 
         <p>effective standard deviation
-"6 stdev" is the standard deviation of the distribution</p>
+"6 std_dev" is the standard deviation of the distribution</p>
     </div>
 
 </div>
@@ -518,7 +644,7 @@
 
 
 <h5 id="dimstack.dim.Reviewed.process_sigma_eff" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">process_sigma_eff</span></code>
+            <code class="highlight language-python"><span class="n">process_sigma_eff</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -529,7 +655,28 @@
 
     <div class="doc doc-contents ">
 
-        <p>calculated sigma (# of eff_stdevs away fromm USL and LSL)</p>
+        <p>calculated sigma (# of eff_std_devs away fromm USL and LSL)</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Reviewed.k" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">k</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Skew</p>
     </div>
 
 </div>
@@ -539,7 +686,7 @@
 
 
 <h5 id="dimstack.dim.Reviewed.yield_loss_probability" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
+            <code class="highlight language-python"><span class="n">yield_loss_probability</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -629,7 +776,7 @@
 
 
 <h5 id="dimstack.dim.Requirement.median" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">median</span></code>
+            <code class="highlight language-python"><span class="n">median</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -650,7 +797,7 @@
 
 
 <h5 id="dimstack.dim.Requirement.yield_loss_probability" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">yield_loss_probability</span></code>
+            <code class="highlight language-python"><span class="n">yield_loss_probability</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -671,7 +818,7 @@
 
 
 <h5 id="dimstack.dim.Requirement.R" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">R</span></code>
+            <code class="highlight language-python"><span class="n">R</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
@@ -733,8 +880,8 @@
 
 
 
-<h4 id="dimstack.tolerance.SymmetricBilateral" class="doc doc-heading">
-            <code>SymmetricBilateral</code>
+<h4 id="dimstack.tolerance.Bilateral" class="doc doc-heading">
+            <code>Bilateral</code>
 
 
 </h4>
@@ -759,126 +906,57 @@ This is the most common type of tolerancing.</p>
 
 
 
+<div class="doc doc-object doc-function">
 
 
-  </div>
+<h5 id="dimstack.tolerance.Bilateral.asymmetric" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">asymmetric</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">)</span></code>
 
-    </div>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
 
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h4 id="dimstack.tolerance.UnequalBilateral" class="doc doc-heading">
-            <code>UnequalBilateral</code>
-
-
-</h4>
+</h5>
 
 
     <div class="doc doc-contents ">
 
-
-        <p>Bilateral tolerancing is a method of specifying a tolerance that is asymmetrical about the nominal value.
-This can also be used for Unilateral tolerancing.</p>
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
+        <p>Create a bilateral tolerance with different upper and lower bounds</p>
 
     </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-<h4 id="dimstack.tolerance.Bilateral" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">Bilateral</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<h5 id="dimstack.tolerance.Bilateral.unequal" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">unequal</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">)</span></code>
 
-</h4>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Automatically determine the type of bilateral tolerance to use from the upper and lower inputs.</p>
+        <p>Create a bilateral tolerance with different upper and lower bounds
+alias for <code>asymmetric</code></p>
 
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>upper</code></b>
-                  (<code>float</code>)
-              –
-              <div class="doc-md-description">
-                <p><em>description</em></p>
-              </div>
-            </li>
-            <li>
-              <b><code>lower</code></b>
-                  (<code>float</code>, default:
-                      <code>None</code>
-)
-              –
-              <div class="doc-md-description">
-                <p><em>description</em>. Defaults to None.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><a class="autorefs autorefs-internal" title="dimstack.tolerance.SymmetricBilateral" href="#dimstack.tolerance.SymmetricBilateral">SymmetricBilateral</a> | <a class="autorefs autorefs-internal" title="dimstack.tolerance.UnequalBilateral" href="#dimstack.tolerance.UnequalBilateral">UnequalBilateral</a></code>
-              –
-              <div class="doc-md-description">
-                <p><em>description</em></p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
     </div>
 
 </div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 
 
@@ -1016,7 +1094,7 @@ This can also be used for Unilateral tolerancing.</p>
               </div>
             </li>
             <li>
-              <b><code>stdev</code></b>
+              <b><code>std_dev</code></b>
                   (<code>float</code>)
               –
               <div class="doc-md-description">
@@ -1085,7 +1163,7 @@ This can also be used for Unilateral tolerancing.</p>
               </div>
             </li>
             <li>
-              <b><code>stdev</code></b>
+              <b><code>std_dev</code></b>
                   (<code>float</code>)
               –
               <div class="doc-md-description">
