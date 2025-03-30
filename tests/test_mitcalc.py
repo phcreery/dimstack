@@ -86,7 +86,7 @@ class MITCalc(unittest.TestCase):
         # self.assertEqual(dimstack.utils.nround(stack.RSS.mean), 0.4)
         self.assertEqual(dimstack.utils.nround(dimstack.calc.RSS(stack).nominal), 0.4)
         self.assertEqual(dimstack.utils.nround(dimstack.calc.RSS(stack).tolerance.T / 2), 0.17825)
-        # self.assertEqual(dimstack.utils.nround(stack.RSS.stdev, 6), 0.059417)
+        # self.assertEqual(dimstack.utils.nround(stack.RSS.std_dev, 6), 0.059417)
 
     def test_RSS_assembly(self):
         eval = dimstack.calc.RSS(stack)
@@ -100,19 +100,19 @@ class MITCalc(unittest.TestCase):
     #     self.assertEqual(dimstack.utils.nround(stack.MRSS.nominal), 0.4)
     #     # self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.17825)
     #     self.assertEqual(dimstack.utils.nround(stack.MRSS.tolerance.T / 2), 0.2405)
-    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.stdev, 6), 0.059417)
+    #     self.assertEqual(dimstack.utils.nround(stack.MRSS.std_dev, 6), 0.059417)
 
     def test_SixSigma(self):
         self.assertEqual(dimstack.utils.nround(stack.dims[0].C_p), 2)
         self.assertEqual(dimstack.utils.nround(stack.dims[0].k), 0.25)
         self.assertEqual(dimstack.utils.nround(stack.dims[0].C_pk), 1.5)
         self.assertEqual(dimstack.utils.nround(stack.dims[0].mean_eff), 208.0)
-        self.assertEqual(dimstack.utils.nround(stack.dims[0].stdev_eff), 0.008)
+        self.assertEqual(dimstack.utils.nround(stack.dims[0].std_dev_eff), 0.008)
 
         self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).dim.nominal), 0.4)
         # self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).mean_eff), 0.4)
         self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).dim.tolerance.T / 2), 0.26433)
-        self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).distribution.stdev, 6), 0.05874)
+        self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).distribution.std_dev, 6), 0.05874)
         self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).dim.abs_lower), 0.13567)
         self.assertEqual(dimstack.utils.nround(dimstack.calc.SixSigma(stack, at=4.5).dim.abs_upper), 0.66433)
 

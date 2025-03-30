@@ -5,14 +5,14 @@ ds.display.mode("rich")
 
 k = 0.25
 target_process_sigma = 3
-stdev = 0.036 / target_process_sigma
+std_dev = 0.036 / target_process_sigma
 m1 = dim = ds.dim.Basic(
     nom=208,
     tol=ds.tol.Bilateral.symmetric(0.036),
     name="a",
     desc="Shaft",
 ).review(
-    distribution=ds.dist.Normal(208 + k * target_process_sigma * stdev, stdev),
+    distribution=ds.dist.Normal(208 + k * target_process_sigma * std_dev, std_dev),
     target_process_sigma=target_process_sigma,
 )
 m2 = dim = ds.dim.Basic(

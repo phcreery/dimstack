@@ -4,7 +4,7 @@ from typing import List
 # "6 Sigma" equations.
 
 
-def C_p(UL: float, LL: float, stdev: float) -> float:
+def C_p(UL: float, LL: float, std_dev: float) -> float:
     """
     Process capability index.
 
@@ -21,20 +21,20 @@ def C_p(UL: float, LL: float, stdev: float) -> float:
     >>> C_p(6, -6, 1)
     2.0
     """
-    return (UL - LL) / (6 * stdev)
+    return (UL - LL) / (6 * std_dev)
 
 
-def C_pk(UL: float, LL: float, mean: float, stdev: float) -> float:
+def C_pk(UL: float, LL: float, mean: float, std_dev: float) -> float:
     """
     Process capability index. adjusted for centering.
-    Cpl = (mu - L)/3*stdev
-    Cpu = (U - mu)/3*stdev
+    Cpl = (mu - L)/3*std_dev
+    Cpu = (U - mu)/3*std_dev
     C_pk = min(Cpl, Cpu) = (1 - k) * C_p
 
     Args:
         UL (float): Upper limit.
         LL (float): Lower limit.
-        stdev (float): Standard deviation.
+        std_dev (float): Standard deviation.
         mean (float): Mean.
 
     Returns:
@@ -45,14 +45,14 @@ def C_pk(UL: float, LL: float, mean: float, stdev: float) -> float:
     1.5
     """
     return min(
-        (UL - mean) / (3 * stdev),
-        (mean - LL) / (3 * stdev),
+        (UL - mean) / (3 * std_dev),
+        (mean - LL) / (3 * std_dev),
     )
     # return (1 - k) * C_p
 
 
-# def standard_deviation(stdev_i: float, n: float) -> float:
-#     return stdev_i / n**0.5
+# def standard_deviation(std_dev_i: float, n: float) -> float:
+#     return std_dev_i / n**0.5
 
 
 def rss_args(*args):
@@ -93,7 +93,7 @@ def C_f(t_rss, t_wc, n):
     return ((0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1))) + 1
 
 
-def normal_cdf(x, mean=0, stdev=1):
+def normal_cdf(x, mean=0, std_dev=1):
     """
     Cumulative distribution function for the normal distribution.
 
@@ -104,11 +104,11 @@ def normal_cdf(x, mean=0, stdev=1):
     >>> normal_cdf(2)
     0.9772498680518209
     """
-    return 0.5 * (1 + math.erf((x - mean) / (stdev * (2**0.5))))
+    return 0.5 * (1 + math.erf((x - mean) / (std_dev * (2**0.5))))
 
 
-def normal_dist(x, mean=0, stdev=1):
-    prob_density = (math.pi * stdev) * math.exp(-0.5 * ((x - mean) / stdev) ** 2)
+def normal_dist(x, mean=0, std_dev=1):
+    prob_density = (math.pi * std_dev) * math.exp(-0.5 * ((x - mean) / std_dev) ** 2)
     return prob_density
 
 

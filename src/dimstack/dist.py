@@ -45,38 +45,38 @@ class Normal:
 
     Args:
         mean (float): Mean.
-        stdev (float): Standard deviation.
+        std_dev (float): Standard deviation.
     """
 
-    def __init__(self, mean: float, stdev: float):
+    def __init__(self, mean: float, std_dev: float):
         self.mean = mean
-        self.stdev = stdev
+        self.std_dev = std_dev
         self.data = None
 
     # def __repr__(self) -> str:
-    #     return f"NormalDistribution({nround(self.mean)}, {nround(self.stdev)})"
+    #     return f"NormalDistribution({nround(self.mean)}, {nround(self.std_dev)})"
 
     def __str__(self) -> str:
-        return f"Normal Dist. μ={nround(self.mean)}, σ={nround(self.stdev)}"
+        return f"Normal Dist. μ={nround(self.mean)}, σ={nround(self.std_dev)}"
 
     @property
     def variance(self):
-        return self.stdev**2
+        return self.std_dev**2
 
     def sample(self, n: int):
-        # return np.random.normal(self.mean, self.stdev, n)
-        return norm.rvs(loc=self.mean, scale=self.stdev, size=n)
+        # return np.random.normal(self.mean, self.std_dev, n)
+        return norm.rvs(loc=self.mean, scale=self.std_dev, size=n)
 
     def pdf(self, x: float):
-        return norm.pdf(x, loc=self.mean, scale=self.stdev)
+        return norm.pdf(x, loc=self.mean, scale=self.std_dev)
 
     def cdf(self, x: float):
-        return norm.cdf(x, loc=self.mean, scale=self.stdev)
+        return norm.cdf(x, loc=self.mean, scale=self.std_dev)
 
     @classmethod
     def fit(cls, data: np.ndarray | list[float] | list[int] | list[np.float64] | pd.Series):
-        mean, stdev = norm.fit(data)
-        inst = cls(mean, stdev)
+        mean, std_dev = norm.fit(data)
+        inst = cls(mean, std_dev)
         inst.data = data
         return inst
 
@@ -86,26 +86,26 @@ class NormalScreened:
 
     Args:
         mean (float): Mean.
-        stdev (float): Standard deviation.
+        std_dev (float): Standard deviation.
         lower (float): Lower limit.
         upper (float): Upper limit.
     """
 
     # https://en.wikipedia.org/wiki/Truncated_normal_distribution
 
-    def __init__(self, mean: float, stdev: float, lower: float, upper: float):
+    def __init__(self, mean: float, std_dev: float, lower: float, upper: float):
         self.mean = mean
-        self.stdev = stdev
+        self.std_dev = std_dev
         self.lower = lower
         self.upper = upper
 
     # def __repr__(self) -> str:
-    #     return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.stdev)})"
+    #     return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.std_dev)})"
     def __str__(self) -> str:
-        return f"Normal Screened Dist. μ={nround(self.mean)}, σ={nround(self.stdev)} [{nround(self.lower)}, {nround(self.upper)}]"
+        return f"Normal Screened Dist. μ={nround(self.mean)}, σ={nround(self.std_dev)} [{nround(self.lower)}, {nround(self.upper)}]"
 
     def sample(self, n: int):
-        numbers = norm.rvs(loc=self.mean, scale=self.stdev, size=n)
+        numbers = norm.rvs(loc=self.mean, scale=self.std_dev, size=n)
         # filter out numbers that are not between lower and upper
         screenednumbers = np.extract((numbers >= self.lower) & (numbers <= self.upper), numbers)
         return screenednumbers
@@ -115,11 +115,11 @@ class NormalScreened:
             return 0
         elif x > self.upper:
             return 0
-        return norm.pdf(x, loc=self.mean, scale=self.stdev)
+        return norm.pdf(x, loc=self.mean, scale=self.std_dev)
 
     def cdf(self, x: float):
         if x < self.lower:
             return 0
         elif x > self.upper:
             return 1
-        return norm.cdf(x, loc=self.mean, scale=self.stdev)
+        return norm.cdf(x, loc=self.mean, scale=self.std_dev)

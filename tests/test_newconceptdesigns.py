@@ -56,7 +56,7 @@ class MITCalc(unittest.TestCase):
         self.assertEqual(dimstack.utils.nround(SixSigma.dim.nominal), 9.8480)
         self.assertEqual(dimstack.utils.nround(SixSigma.dim.nominal), 9.8480)
         self.assertEqual(dimstack.utils.nround(SixSigma.dim.tolerance.T / 2, 4), 0.0122)
-        self.assertEqual(dimstack.utils.nround(SixSigma.distribution.stdev * 2, 5), 0.00408)  # times 2 !?!?
+        self.assertEqual(dimstack.utils.nround(SixSigma.distribution.std_dev * 2, 5), 0.00408)  # times 2 !?!?
         self.assertEqual(dimstack.utils.nround(SixSigma.dim.abs_lower, 4), 9.8358)
         self.assertEqual(dimstack.utils.nround(SixSigma.dim.abs_upper, 4), 9.8602)
 

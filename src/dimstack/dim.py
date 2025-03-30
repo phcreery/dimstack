@@ -220,7 +220,7 @@ class Reviewed:
             "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
             "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
             "μ_eff": nround(self.mean_eff),
-            "σ_eff": nround(self.stdev_eff),
+            "σ_eff": nround(self.std_dev_eff),
             "Eff. Sigma": f"± {str(nround(self.process_sigma_eff))}σ",
             "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",
             "Reject PPM": f"{nround(self.yield_loss_probability*1000000, 2)}"
@@ -236,8 +236,8 @@ class Reviewed:
         if hasattr(self, "distribution") and self.distribution is not None:
             return self
         mean = self.mean_eff
-        stdev = (self.dim.abs_upper - self.dim.abs_lower) / (2 * self.target_process_sigma)
-        distribution = dist.Normal(mean=mean, stdev=stdev)
+        std_dev = (self.dim.abs_upper - self.dim.abs_lower) / (2 * self.target_process_sigma)
+        distribution = dist.Normal(mean=mean, std_dev=std_dev)
         self.distribution = distribution
         logging.warning(f"Assuming Normal Dist. for {self}")
         return self
@@ -247,20 +247,20 @@ class Reviewed:
         self.assume_normal_dist()
         if isinstance(self.distribution, dist.Normal):  # which it will be
             self.distribution.mean = self.distribution.mean + skew * (
-                self.distribution.stdev * self.target_process_sigma
+                self.distribution.std_dev * self.target_process_sigma
             )
         return self
 
     @property
     def C_p(self) -> float:
         if isinstance(self.distribution, dist.Normal):
-            return C_p(self.dim.rel_upper, self.dim.rel_lower, self.distribution.stdev)
+            return C_p(self.dim.rel_upper, self.dim.rel_lower, self.distribution.std_dev)
         return 0
 
     @property
     def C_pk(self) -> float:
         if isinstance(self.distribution, dist.Normal):
-            return C_pk(self.dim.abs_upper, self.dim.abs_lower, self.distribution.mean, self.distribution.stdev)
+            return C_pk(self.dim.abs_upper, self.dim.abs_lower, self.distribution.mean, self.distribution.std_dev)
         return 0
 
     @property
@@ -269,30 +269,30 @@ class Reviewed:
         return (self.dim.abs_lower + self.dim.abs_upper) / 2
 
     @property
-    def stdev_eff(self) -> float:
+    def std_dev_eff(self) -> float:
         """
         effective standard deviation
-        "6 stdev" is the standard deviation of the distribution
+        "6 std_dev" is the standard deviation of the distribution
         """
         # return abs(self.tolerance.T) / (6 * self.C_pk)
         if isinstance(self.distribution, dist.Normal):
             outer_shift = min(
                 (self.dim.abs_upper - self.distribution.mean), (self.distribution.mean - self.dim.abs_lower)
             )
-            return (self.dim.tolerance.T * self.distribution.stdev) / (2 * outer_shift)
+            return (self.dim.tolerance.T * self.distribution.std_dev) / (2 * outer_shift)
         return 0
 
     @property
     def process_sigma_eff(self) -> float:
         """
-        calculated sigma (# of eff_stdevs away fromm USL and LSL)
+        calculated sigma (# of eff_std_devs away fromm USL and LSL)
         """
-        if self.stdev_eff == 0:
+        if self.std_dev_eff == 0:
             return 0
-        # print(self.tolerance.upper, self.stdev_eff)
-        # since we are using effective stdev, either USL or LSL should work.
+        # print(self.tolerance.upper, self.std_dev_eff)
+        # since we are using effective std_dev, either USL or LSL should work.
         min_tol_gap = min((self.dim.abs_upper - self.mean_eff), (self.mean_eff - self.dim.abs_lower))
-        return (min_tol_gap) / self.stdev_eff
+        return (min_tol_gap) / self.std_dev_eff
         # return 0
 
     @property
@@ -301,9 +301,9 @@ class Reviewed:
         Skew
         """
         if isinstance(self.distribution, dist.Normal):
-            ideal_process_stdev = (self.dim.tolerance.T / 2) / self.target_process_sigma
-            skew_in_stdevs = (self.distribution.mean - self.mean_eff) / ideal_process_stdev
-            return skew_in_stdevs / self.target_process_sigma
+            ideal_process_std_dev = (self.dim.tolerance.T / 2) / self.target_process_sigma
+            skew_in_std_devs = (self.distribution.mean - self.mean_eff) / ideal_process_std_dev
+            return skew_in_std_devs / self.target_process_sigma
         return 0
 
     @property
@@ -321,7 +321,7 @@ class Reviewed:
             return 0
         UL = self.dim.abs_upper
         LL = self.dim.abs_lower
-        # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
+        # return 1 - normal_cdf(UL, self.mean_eff, self.std_dev_eff) + normal_cdf(LL, self.mean_eff, self.std_dev_eff)
         return float(self.distribution.cdf(UL) - self.distribution.cdf(LL))
 
 

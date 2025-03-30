@@ -128,9 +128,9 @@ def MRSS(self: Stack | ReviewedStack) -> Basic:
 def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
     # mean = sum([rdim.mean_eff for rdim in self.dims])
     mean = sum([rdim.dim.dir * rdim.dim.rel_median for rdim in self.dims])
-    stdev = rss([dim.stdev_eff for dim in self.dims])
-    tolerance = Bilateral.symmetric(stdev * at)
-    dist = Normal(mean, stdev)
+    std_dev = rss([dim.std_dev_eff for dim in self.dims])
+    tolerance = Bilateral.symmetric(std_dev * at)
+    dist = Normal(mean, std_dev)
     dim = Reviewed(
         Basic(
             nom=mean,
