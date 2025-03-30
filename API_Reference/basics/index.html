@@ -128,6 +128,42 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dimstack.calc">calc</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.WC">WC</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.RSS">RSS</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.MRSS">MRSS</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dimstack.stats">stats</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.stats.C_p">C_p</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.stats.C_pk">C_pk</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.stats.rss_args">rss_args</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.stats.rss">rss</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.stats.C_f">C_f</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.stats.normal_cdf">normal_cdf</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dimstack.utils">utils</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.utils.nround">nround</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.utils.sign">sign</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.utils.sign_symbol">sign_symbol</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../displaying/">Displaying</a>
@@ -205,6 +241,27 @@
 <li><a href="#dimstack.dist.Uniform">Uniform</a></li>
 <li><a href="#dimstack.dist.Normal">Normal</a></li>
 <li><a href="#dimstack.dist.NormalScreened">NormalScreened</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.calc">calc</a><ul>
+<li><a href="#dimstack.calc.WC">WC</a></li>
+<li><a href="#dimstack.calc.RSS">RSS</a></li>
+<li><a href="#dimstack.calc.MRSS">MRSS</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.stats">stats</a><ul>
+<li><a href="#dimstack.stats.C_p">C_p</a></li>
+<li><a href="#dimstack.stats.C_pk">C_pk</a></li>
+<li><a href="#dimstack.stats.rss_args">rss_args</a></li>
+<li><a href="#dimstack.stats.rss">rss</a></li>
+<li><a href="#dimstack.stats.C_f">C_f</a></li>
+<li><a href="#dimstack.stats.normal_cdf">normal_cdf</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.utils">utils</a><ul>
+<li><a href="#dimstack.utils.nround">nround</a></li>
+<li><a href="#dimstack.utils.sign">sign</a></li>
+<li><a href="#dimstack.utils.sign_symbol">sign_symbol</a></li>
 </ul>
 </li>
 </ul>
@@ -1212,6 +1269,687 @@ alias for <code>asymmetric</code></p>
 
 </div>
 
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="dimstack.calc" class="doc doc-heading">
+            <code>dimstack.calc</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.calc.WC" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">WC</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>This is a simple WC calculation. This results in a Bilateral dimension with
+a tolerance that is the sum of the component tolerances. This is similar to
+Closed but the nominal will be centered in the tolerance range
+A Worst-Case analysis ensures with any combination of tolerances,
+the combined stackup of tolerances will be within the this resulting
+tolerance.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.calc.RSS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">RSS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>This is a simple RSS calculation. This is uses the RSS calculation method in
+the Dimensioning and Tolerancing Handbook, McGraw Hill.
+It is really only useful for a Bilateral stack of same process-std_dev dims.
+The RSS result has the same uncertainty as /the measurements.
+Historically, Eq. (9.11) assumed that all of the component tolerances (t_i)
+represent a 3sigma value for their manufacturing processes. Thus, if all
+the component distributions are assumed to be normal, then the probability
+that a dimension is between ±t_i is 99.73%. If this is true, then the
+assembly gap distribution is normal and the probability that it is ±t_rss
+between is 99.73%. Although most people have assumed a value of ±3s for
+piece-part tolerances, the RSS equation works for “equal s” values.
+If the designer assumed that the input tolerances were ±4s values for the
+piece-part manufacturing processes, then the probability that the assembly
+is between ±t_rss is 99.9937 (4s). The 3s process limits using the RSS
+Model are similar to the Worst Case Model. The minimum gap is equal to the
+mean value minus the RSS variation at the gap. The maximum gap is equal to
+the mean value plus the RSS variation at the gap.</p>
+
+
+<details class="see" open>
+  <summary>See</summary>
+  <ul>
+<li>Dimensioning and Tolerancing Handbook, McGraw Hill</li>
+<li>http://files.engineering.com/getfile.aspx?folder=69759f43-e81a-4801-9090-a0c95402bfc0&amp;file=RSS_explanation.GIF</li>
+</ul>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Basic</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code>
+)              –
+              <div class="doc-md-description">
+                <p>A Bilateral dimension with the RSS tolerance of the stack.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.calc.MRSS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">MRSS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Basically RSS with a coefficient modifier to make the tolerance tighter.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Basic</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code>
+)              –
+              <div class="doc-md-description">
+                <p>A Bilateral dimension with the MRSS tolerance of the stack.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="dimstack.stats" class="doc doc-heading">
+            <code>dimstack.stats</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.stats.C_p" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">C_p</span><span class="p">(</span><span class="n">UL</span><span class="p">,</span> <span class="n">LL</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Process capability index.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>UL</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>Upper limit.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>LL</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>Lower limit.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>Standard deviation.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>float</code></b>(                  <code>float</code>
+)              –
+              <div class="doc-md-description">
+                <p>Process capability index.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>        <blockquote>
+<blockquote>
+<blockquote>
+<p>C_p(1, 0, 1)
+0.16666666666666666
+C_p(6, -6, 1)
+2.0</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.stats.C_pk" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">C_pk</span><span class="p">(</span><span class="n">UL</span><span class="p">,</span> <span class="n">LL</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Process capability index. adjusted for centering.
+Cpl = (mu - L)/3<em>std_dev
+Cpu = (U - mu)/3</em>std_dev
+C_pk = min(Cpl, Cpu) = (1 - k) * C_p</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>UL</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Upper limit.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>LL</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Lower limit.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>std_dev</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Standard deviation.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mean</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Mean.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>float</code></b>(                  <code>float</code>
+)              –
+              <div class="doc-md-description">
+                <p>Process capability index.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>        <blockquote>
+<blockquote>
+<blockquote>
+<p>from .utils import nround
+nround(C_pk(208.036, 207.964, 208.009, 0.006))
+1.5</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.stats.rss_args" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rss_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Root sum square.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>rss_args(1, 2, 3)
+3.7416573867739413</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.stats.rss" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rss</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Root sum square.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>rss([1, 2, 3])
+3.7416573867739413</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.stats.C_f" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">C_f</span><span class="p">(</span><span class="n">t_rss</span><span class="p">,</span> <span class="n">t_wc</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Correction factor used to calculate the modified RSS.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>t_rss</code></b>
+                  (<code>_type_</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+            <li>
+              <b><code>t_wc</code></b>
+                  (<code>_type_</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+            <li>
+              <b><code>n</code></b>
+                  (<code>_type_</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>_type_</code></b>              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.stats.normal_cdf" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">normal_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">std_dev</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Cumulative distribution function for the normal distribution.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>normal_cdf(0)
+0.5
+normal_cdf(1)
+0.8413447460685428
+normal_cdf(2)
+0.9772498680518209</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="dimstack.utils" class="doc doc-heading">
+            <code>dimstack.utils</code>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.utils.nround" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">nround</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">ndigits</span><span class="o">=</span><span class="n">DECIMALS</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Always round off</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>nround(4.114, 2)
+4.11
+nround(4.115, 2)
+4.12
+nround(4.116, 2)
+4.12
+nround(-0.03401, 3)
+-0.034</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.utils.sign" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the sign of x, i.e. -1, 0 or 1.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sign(0)
+0
+sign(10)
+1
+sign(-10)
+-1</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.utils.sign_symbol" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">sign_symbol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the sign of x, i.e. + or -.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sign_symbol(0)
+'+'
+sign_symbol(10)
+'+'
+sign_symbol(-10)
+'-'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>string</code></b>              –
+              <div class="doc-md-description">
+                <p>"+", "-"</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
 
 
 
