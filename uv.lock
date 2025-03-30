@@ -393,6 +393,7 @@ name = "dimstack"
 version = "0.7.1"
 source = { editable = "." }
 dependencies = [
+    { name = "jinja2" },
     { name = "pandas" },
     { name = "plotly" },
     { name = "rich" },
@@ -404,7 +405,6 @@ dev = [
     { name = "cython" },
     { name = "ipykernel" },
     { name = "ipython" },
-    { name = "jinja2" },
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
@@ -415,6 +415,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.2" },
     { name = "pandas", specifier = ">=1.5.2" },
     { name = "plotly", specifier = ">=5.14.1" },
     { name = "rich", specifier = ">=13.7.0" },
@@ -426,7 +427,6 @@ dev = [
     { name = "cython", specifier = ">=3.0.0" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "ipython", specifier = ">=8.12.3" },
-    { name = "jinja2", specifier = ">=3.1.2" },
     { name = "mkdocs", specifier = ">=1.4.3" },
     { name = "mkdocs-material", specifier = ">=9.1.9" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.21.2" },

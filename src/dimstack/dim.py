@@ -55,6 +55,9 @@ class Basic:
     def _repr_html_(self):
         return display_df([self.dict], f"DIMENSION: {self.name}", dispmode="html")
 
+    def _display_(self):
+        return display_df([self.dict], f"DIMENSION: {self.name}")
+
     def show(self):
         return display_df([self.dict], f"DIMENSION: {self.name}")
 
@@ -164,6 +167,9 @@ class Stack:
     def _repr_html_(self):
         return display_df(self.dict, f"DIMENSION STACK: {self.name}", dispmode="html")
 
+    def _display_(self):
+        return display_df(self.dict, f"DIMENSION STACK: {self.name}")
+
     def show(self, expand=False):
         return display_df(self.dict, f"DIMENSION STACK: {self.name}")
 
@@ -205,6 +211,9 @@ class Reviewed:
 
     def _repr_html_(self):
         return display_df([self.dict], f"REVIEWED DIMENSION: {self.dim.name}", dispmode="html")
+
+    def _display_(self):
+        return display_df([self.dict], f"REVIEWED DIMENSION: {self.dim.name}")
 
     def show(self):
         return display_df([self.dict], f"REVIEWED DIMENSION: {self.dim.name}")
@@ -342,6 +351,9 @@ class ReviewedStack:
     def _repr_html_(self):
         return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}", dispmode="html")
 
+    def _display_(self):
+        return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}")
+
     def show(self, expand=False):
         return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}")
 
@@ -374,6 +386,9 @@ class Requirement:
 
     def _repr_html_(self):
         return display_df(self.dict, f"REQUIREMENT: {self.name}", dispmode="html")
+
+    def _display_(self):
+        return display_df(self.dict, f"REQUIREMENT: {self.name}")
 
     def show(self):
         return display_df(self.dict, f"REQUIREMENT: {self.name}")

@@ -23,9 +23,6 @@ class Uniform:
         self.lower = lower
         self.upper = upper
 
-    # def __repr__(self) -> str:
-    #     return f"UniformDistribution({nround(self.lower)}, {nround(self.upper)})"
-
     def __str__(self) -> str:
         return f"Uniform Dist. [{nround(self.lower)}, {nround(self.upper)}]"
 
@@ -52,9 +49,6 @@ class Normal:
         self.mean = mean
         self.std_dev = std_dev
         self.data = None
-
-    # def __repr__(self) -> str:
-    #     return f"NormalDistribution({nround(self.mean)}, {nround(self.std_dev)})"
 
     def __str__(self) -> str:
         return f"Normal Dist. μ={nround(self.mean)}, σ={nround(self.std_dev)}"
@@ -99,8 +93,6 @@ class NormalScreened:
         self.lower = lower
         self.upper = upper
 
-    # def __repr__(self) -> str:
-    #     return f"Normal Screened Dist. (μ={nround(self.mean)}, σ={nround(self.std_dev)})"
     def __str__(self) -> str:
         return f"Normal Screened Dist. μ={nround(self.mean)}, σ={nround(self.std_dev)} [{nround(self.lower)}, {nround(self.upper)}]"
 

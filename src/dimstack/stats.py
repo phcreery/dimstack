@@ -51,10 +51,6 @@ def C_pk(UL: float, LL: float, mean: float, std_dev: float) -> float:
     # return (1 - k) * C_p
 
 
-# def standard_deviation(std_dev_i: float, n: float) -> float:
-#     return std_dev_i / n**0.5
-
-
 def rss_args(*args):
     """
     Root sum square.
