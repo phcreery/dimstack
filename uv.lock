@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.8"
 resolution-markers = [
     "python_full_version < '3.10'",
@@ -260,7 +261,7 @@ name = "click"
 version = "8.1.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/96/d3/f04c7bfcf5c1862a2a5b845c6b2b360488cf47af55dfa79c98f6a6bf98b5/click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de", size = 336121 }
 wheels = [
@@ -389,10 +390,9 @@ wheels = [
 
 [[package]]
 name = "dimstack"
-version = "0.6.0"
+version = "0.7.0"
 source = { editable = "." }
 dependencies = [
-    { name = "jinja2" },
     { name = "pandas" },
     { name = "plotly" },
     { name = "rich" },
@@ -404,6 +404,7 @@ dev = [
     { name = "cython" },
     { name = "ipykernel" },
     { name = "ipython" },
+    { name = "jinja2" },
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
@@ -414,7 +415,6 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "jinja2", specifier = ">=3.1.2" },
     { name = "pandas", specifier = ">=1.5.2" },
     { name = "plotly", specifier = ">=5.14.1" },
     { name = "rich", specifier = ">=13.7.0" },
@@ -426,6 +426,7 @@ dev = [
     { name = "cython", specifier = ">=3.0.0" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "ipython", specifier = ">=8.12.3" },
+    { name = "jinja2", specifier = ">=3.1.2" },
     { name = "mkdocs", specifier = ">=1.4.3" },
     { name = "mkdocs-material", specifier = ">=9.1.9" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.21.2" },
@@ -516,7 +517,7 @@ name = "ipykernel"
 version = "6.29.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "appnope", marker = "platform_system == 'Darwin'" },
+    { name = "appnope", marker = "sys_platform == 'darwin'" },
     { name = "comm" },
     { name = "debugpy" },
     { name = "ipython" },
@@ -762,7 +763,7 @@ version = "1.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "ghp-import" },
     { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
     { name = "jinja2" },

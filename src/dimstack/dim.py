@@ -5,7 +5,7 @@ from typing import Any
 
 from . import dist
 from .display import display_df
-from .tolerance import SymmetricBilateral, UnequalBilateral
+from .tolerance import Bilateral
 from .utils import POSITIVE, nround, sign, sign_symbol
 from .stats import C_p, C_pk
 
@@ -16,9 +16,8 @@ class Basic:
 
     Args:
         nom (float, optional): The nominal value of the measurement. Defaults to 0.
-        tol (Union[SymmetricBilateral, UnequalBilateral], optional): The tolerance of the measurement. Defaults to SymmetricBilateral(0).
-        a (float, optional): The sensitivity of the measurement. Defaults to 1. If the nominal value is negative, the sensitivity will be multiplied by a -1
-                            and the nominal value will be made positive.
+        tol (Bilateral, optional): The tolerance of the measurement. Defaults to Bilateral.symmetric(0).
+        a (float, optional): The sensitivity of the measurement. Defaults to 1.
         name (str, optional): The name of the measurement. Defaults to "Dimension".
         desc (str, optional): The description of the measurement. Defaults to "Dimension".
     """
@@ -28,16 +27,16 @@ class Basic:
     def __init__(
         self,
         nom: float,
-        tol: SymmetricBilateral | UnequalBilateral,
+        tol: Bilateral,
         a: float = 1,
         name: str = "Dimension",
         desc: str = "Dimension",
     ):
         self.id = Basic.newID()
-        self.dir = sign(nom) * sign(a)
+        self.dir = sign(nom)
         self.nominal = abs(nom)
         self.tolerance = tol
-        self.a = abs(a)
+        self.a = a
         self.name = name
         self.description = desc
 
@@ -74,33 +73,50 @@ class Basic:
         }
 
     @property
-    def nom_direction_sign(self):
+    def nom_direction_sign(self) -> str:
         return sign_symbol(self.dir)
 
     @property
-    def abs_nominal(self):
-        return self.dir * self.nominal
+    def rel_nominal(self) -> float:
+        """The nominal value of the measurement. AKA, relative nominal"""
+        return self.nominal
 
     @property
-    def median(self):
+    def rel_median(self) -> float:
+        """The median value of the measurement. AKA, relative median"""
         return (self.rel_lower + self.rel_upper) / 2
 
     @property
-    def abs_median(self):
+    def rel_lower(self) -> float:
+        """Relative lower value of the dimension"""
+        return self.nominal + self.tolerance.lower
+
+    @property
+    def rel_upper(self) -> float:
+        """Relative upper value of the dimension"""
+        return self.nominal + self.tolerance.upper
+
+    @property
+    def abs_nominal(self) -> float:
+        """The absolute nominal value of the measurement."""
+        return self.dir * self.nominal
+
+    @property
+    def abs_median(self) -> float:
         return (self.abs_lower + self.abs_upper) / 2
 
     @property
-    def abs_lower(self):
+    def abs_lower(self) -> float:
         """The minimum value of the measurement. AKA, absolute upper"""
-        return min(self.dir * self.nominal + self.abs_lower_tol, self.dir * self.nominal + self.abs_upper_tol)
+        return self.dir * self.nominal + self.abs_lower_tol
 
     @property
-    def abs_upper(self):
+    def abs_upper(self) -> float:
         """The maximum value of the measurement. AKA, absolute lower"""
-        return max(self.dir * self.nominal + self.abs_lower_tol, self.dir * self.nominal + self.abs_upper_tol)
+        return self.dir * self.nominal + self.abs_upper_tol
 
     @property
-    def abs_lower_tol(self):
+    def abs_lower_tol(self) -> float:
         """The absolute minimum value of the tolerance."""
         if sign_symbol(self.dir) == POSITIVE:
             return self.tolerance.lower
@@ -108,44 +124,26 @@ class Basic:
             return -self.tolerance.upper
 
     @property
-    def abs_upper_tol(self):
+    def abs_upper_tol(self) -> float:
         """The absolute maximum value of the tolerance."""
         if sign_symbol(self.dir) == POSITIVE:
             return self.tolerance.upper
         else:
             return -self.tolerance.lower
 
-    # @property
-    # def Z_min(self):
-    #     """The minimum value of the measurement. AKA, absolute upper"""
-    #     return self.abs_lower
-
-    # @property
-    # def Z_max(self):
-    #     """The maximum value of the measurement. AKA, absolute lower"""
-    #     return self.abs_upper
-
-    @property
-    def rel_lower(self):
-        return self.nominal + self.tolerance.lower
-
-    @property
-    def rel_upper(self):
-        return self.nominal + self.tolerance.upper
-
-    def convert_to_bilateral(self):
-        median = self.median
+    def convert_to_bilateral(self) -> "Basic":
+        median = self.rel_median
         tol = self.tolerance.T / 2
 
         self.nominal = median
-        self.tolerance = SymmetricBilateral(tol)
+        self.tolerance = Bilateral.symmetric(tol)
         return self
 
     def review(
         self,
         target_process_sigma: float = 3,
         distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
-    ):
+    ) -> "Reviewed":
         return Reviewed(self, target_process_sigma, distribution)
 
 
@@ -230,6 +228,9 @@ class Reviewed:
             else "",
         }
 
+    def of_basic(self, basic: Basic, target_process_sigma: float) -> "Reviewed":
+        return Reviewed(basic, target_process_sigma, None)
+
     def assume_normal_dist(self):
         """Assume a normal distribution."""
         if hasattr(self, "distribution") and self.distribution is not None:
@@ -241,7 +242,7 @@ class Reviewed:
         logging.warning(f"Assuming Normal Dist. for {self}")
         return self
 
-    def assume_normal_dist_skewed(self, skew):
+    def assume_normal_dist_skewed(self, skew) -> "Reviewed":
         """Assume a normal distribution with a skew"""
         self.assume_normal_dist()
         if isinstance(self.distribution, dist.Normal):  # which it will be
@@ -251,24 +252,24 @@ class Reviewed:
         return self
 
     @property
-    def C_p(self):
+    def C_p(self) -> float:
         if isinstance(self.distribution, dist.Normal):
             return C_p(self.dim.rel_upper, self.dim.rel_lower, self.distribution.stdev)
         return 0
 
     @property
-    def C_pk(self):
+    def C_pk(self) -> float:
         if isinstance(self.distribution, dist.Normal):
             return C_pk(self.dim.abs_upper, self.dim.abs_lower, self.distribution.mean, self.distribution.stdev)
         return 0
 
     @property
-    def mean_eff(self):
+    def mean_eff(self) -> float:
         """effective mean"""
         return (self.dim.abs_lower + self.dim.abs_upper) / 2
 
     @property
-    def stdev_eff(self):
+    def stdev_eff(self) -> float:
         """
         effective standard deviation
         "6 stdev" is the standard deviation of the distribution
@@ -282,7 +283,7 @@ class Reviewed:
         return 0
 
     @property
-    def process_sigma_eff(self):
+    def process_sigma_eff(self) -> float:
         """
         calculated sigma (# of eff_stdevs away fromm USL and LSL)
         """
@@ -295,7 +296,10 @@ class Reviewed:
         # return 0
 
     @property
-    def k(self):
+    def k(self) -> float:
+        """
+        Skew
+        """
         if isinstance(self.distribution, dist.Normal):
             ideal_process_stdev = (self.dim.tolerance.T / 2) / self.target_process_sigma
             skew_in_stdevs = (self.distribution.mean - self.mean_eff) / ideal_process_stdev
@@ -303,7 +307,7 @@ class Reviewed:
         return 0
 
     @property
-    def yield_loss_probability(self):
+    def yield_loss_probability(self) -> float:
         """
         Returns the probability of a part being out of spec.
         """
@@ -312,13 +316,13 @@ class Reviewed:
         return 1 - self.yield_probability
 
     @property
-    def yield_probability(self):
+    def yield_probability(self) -> float:
         if self.distribution is None:
             return 0
         UL = self.dim.abs_upper
         LL = self.dim.abs_lower
         # return 1 - normal_cdf(UL, self.mean_eff, self.stdev_eff) + normal_cdf(LL, self.mean_eff, self.stdev_eff)
-        return self.distribution.cdf(UL) - self.distribution.cdf(LL)
+        return float(self.distribution.cdf(UL) - self.distribution.cdf(LL))
 
 
 class ReviewedStack:
@@ -375,23 +379,23 @@ class Requirement:
         return display_df(self.dict, f"REQUIREMENT: {self.name}")
 
     @property
-    def median(self):
+    def median(self) -> float:
         """median"""
         return (self.LL + self.UL) / 2
 
     @property
-    def yield_loss_probability(self):
+    def yield_loss_probability(self) -> float:
         """
         Returns the probability of a part being out of spec.
         """
         return 1 - self.yield_probability
 
     @property
-    def yield_probability(self):
-        return self.distribution.cdf(self.UL) - self.distribution.cdf(self.LL)
+    def yield_probability(self) -> float:
+        return float(self.distribution.cdf(self.UL) - self.distribution.cdf(self.LL))
 
     @property
-    def R(self):
+    def R(self) -> float:
         """Return the yield loss probability in PPM"""
         return self.yield_loss_probability * 1000000
 
@@ -401,7 +405,7 @@ class Requirement:
             {
                 "Name": textwrap.shorten(self.name, width=10, placeholder="..."),
                 "Desc.": textwrap.shorten(self.description, width=10, placeholder="..."),
-                "Distribution": self.distribution.__str__(),
+                "Distribution": str(self.distribution),
                 "Median": nround(self.median),
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
                 "Yield Prob.": f"{nround(self.yield_probability*100, 8)}" if self.yield_probability is not None else "",

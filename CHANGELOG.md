@@ -1,12 +1,17 @@
 ## PLANNED
 
-- [ ] simplify tolerance classes to single Tol.Bilateral (like vlangs implementation)
-- [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Monte-Carlo simulation
+- [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Tolerance Optimization [Simple Arithmetic, Fig 9-9, 11-7 in McGraw Hill,](https://www.mitcalc.com/en/ui/ui_tanalysis1.htm)
-- [ ] Dimension.from_distribution() (nice to have for montecarlo)
-- [ ] Add Triangular Distribution
+- [ ] Dimension.from_distribution() (nice to have for monte carlo)
+- [ ] Add more distributions like Triangular
 - [ ] Stack combined Yield (not for stackup analysis, but combined yield)
+- [ ] Multi-dimensional tolerancing [non-goal]
+
+## 0.7.0
+
+- [x] more consistent API
+- [x] simplify tolerance classes to single Tol.Bilateral (like Rust/v-lang implementation)
 
 ## 0.6.0
 

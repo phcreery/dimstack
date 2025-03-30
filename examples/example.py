@@ -8,7 +8,7 @@ target_process_sigma = 3
 stdev = 0.036 / target_process_sigma
 m1 = dim = ds.dim.Basic(
     nom=208,
-    tol=ds.tol.SymmetricBilateral(0.036),
+    tol=ds.tol.Bilateral.symmetric(0.036),
     name="a",
     desc="Shaft",
 ).review(
@@ -17,7 +17,7 @@ m1 = dim = ds.dim.Basic(
 )
 m2 = dim = ds.dim.Basic(
     nom=-1.75,
-    tol=ds.tol.UnequalBilateral(0, 0.06),
+    tol=ds.tol.Bilateral.unequal(0, 0.06),
     name="b",
     desc="Retainer ring",
 ).review(
@@ -26,7 +26,7 @@ m2 = dim = ds.dim.Basic(
 
 m3 = dim = ds.dim.Basic(
     nom=-23,
-    tol=ds.tol.UnequalBilateral(0, 0.12),
+    tol=ds.tol.Bilateral.unequal(0, 0.12),
     name="c",
     desc="Bearing",
 ).review(
@@ -34,7 +34,7 @@ m3 = dim = ds.dim.Basic(
 )
 m4 = dim = ds.dim.Basic(
     nom=20,
-    tol=ds.tol.SymmetricBilateral(0.026),
+    tol=ds.tol.Bilateral.symmetric(0.026),
     name="d",
     desc="Bearing Sleeve",
 ).review(
@@ -42,7 +42,7 @@ m4 = dim = ds.dim.Basic(
 )
 m5 = dim = ds.dim.Basic(
     nom=-200,
-    tol=ds.tol.SymmetricBilateral(0.145),
+    tol=ds.tol.Bilateral.symmetric(0.145),
     name="e",
     desc="Case",
 ).review(
@@ -50,13 +50,13 @@ m5 = dim = ds.dim.Basic(
 )
 m6 = ds.dim.Basic(
     nom=20,
-    tol=ds.tol.SymmetricBilateral(0.026),
+    tol=ds.tol.Bilateral.symmetric(0.026),
     name="f",
     desc="Bearing Sleeve",
 )
 m7 = dim = ds.dim.Basic(
     nom=-23,
-    tol=ds.tol.UnequalBilateral(0, 0.12),
+    tol=ds.tol.Bilateral.unequal(0, 0.12),
     name="g",
     desc="Bearing",
 ).review(

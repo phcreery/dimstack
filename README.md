@@ -147,8 +147,7 @@ dimstack works great as a library in a python script, in REPL, or in JupyterLab.
 ### Testing
 
 ```
-python -m unittest
-python -m unittest discover .\tests\
+uv run python -m unittest
 ```
 
 ### Documenting

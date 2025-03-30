@@ -11,7 +11,7 @@ class PositiveDist(unittest.TestCase):
     def test_DoublePositiveBilateral(self):
         measurements = np.array([1.1, 0.9])
         measurements_dist = dimstack.dist.Normal.fit(measurements)
-        tol = dimstack.tol.SymmetricBilateral(0.3)
+        tol = dimstack.tol.Bilateral.symmetric(0.3)
         rdim = dimstack.dim.Reviewed(
             dim=dimstack.dim.Basic(
                 nom=1,
@@ -34,7 +34,7 @@ class NegativeDist(unittest.TestCase):
     def test_DoublePositiveBilateral(self):
         measurements = np.array([-1.1, -0.9])
         measurements_dist = dimstack.dist.Normal.fit(measurements)
-        tol = dimstack.tol.SymmetricBilateral(0.3)
+        tol = dimstack.tol.Bilateral.symmetric(0.3)
         rdim = dimstack.dim.Reviewed(
             dim=dimstack.dim.Basic(
                 nom=-1,

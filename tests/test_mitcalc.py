@@ -7,7 +7,7 @@ import dimstack
 m1 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=208,
-        tol=dimstack.tolerance.SymmetricBilateral(0.036),
+        tol=dimstack.tolerance.Bilateral.symmetric(0.036),
         name="a",
         desc="Shaft",
     ),
@@ -17,7 +17,7 @@ m1.assume_normal_dist_skewed(0.25)
 m2 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=-1.75,
-        tol=dimstack.tolerance.UnequalBilateral(0, -0.06),
+        tol=dimstack.tolerance.Bilateral.unequal(0, -0.06),
         name="b",
         desc="Retainer ring",
     ),
@@ -25,14 +25,14 @@ m2 = dimstack.dim.Reviewed(
 )
 m2.assume_normal_dist()
 m3 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), name="c", desc="Bearing"),
+    dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="c", desc="Bearing"),
     target_process_sigma=3,
 )
 m3.assume_normal_dist()
 m4 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=20,
-        tol=dimstack.tolerance.SymmetricBilateral(0.026),
+        tol=dimstack.tolerance.Bilateral.symmetric(0.026),
         name="d",
         desc="Bearing Sleeve",
     ),
@@ -40,14 +40,14 @@ m4 = dimstack.dim.Reviewed(
 )
 m4.assume_normal_dist()
 m5 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(nom=-200, tol=dimstack.tolerance.SymmetricBilateral(0.145), name="e", desc="Case"),
+    dim=dimstack.dim.Basic(nom=-200, tol=dimstack.tolerance.Bilateral.symmetric(0.145), name="e", desc="Case"),
     target_process_sigma=3,
 )
 m5.assume_normal_dist()
 m6 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=20,
-        tol=dimstack.tolerance.SymmetricBilateral(0.026),
+        tol=dimstack.tolerance.Bilateral.symmetric(0.026),
         name="f",
         desc="Bearing Sleeve",
     ),
@@ -55,7 +55,7 @@ m6 = dimstack.dim.Reviewed(
 )
 m6.assume_normal_dist()
 m7 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.UnequalBilateral(0, -0.12), name="g", desc="Bearing"),
+    dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="g", desc="Bearing"),
     target_process_sigma=3,
 )
 m7.assume_normal_dist()

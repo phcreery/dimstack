@@ -7,7 +7,7 @@ import dimstack
 m1 = dimstack.dim.Reviewed(
     dimstack.dim.Basic(
         nom=-0.3190,
-        tol=dimstack.tolerance.SymmetricBilateral(0.0050),
+        tol=dimstack.tolerance.Bilateral.symmetric(0.0050),
         name="PN16",
         desc="Mounting face to rt. end",
     ),
@@ -17,7 +17,7 @@ m1.assume_normal_dist()
 m2 = dimstack.dim.Reviewed(
     dimstack.dim.Basic(
         nom=10.4860,
-        tol=dimstack.tolerance.SymmetricBilateral(0.0100),
+        tol=dimstack.tolerance.Bilateral.symmetric(0.0100),
         name="PN07",
         desc="Overall width",
     ),
@@ -26,7 +26,7 @@ m2 = dimstack.dim.Reviewed(
 m2.assume_normal_dist()
 m3 = dimstack.dim.Reviewed(
     dimstack.dim.Basic(
-        nom=-0.3190, tol=dimstack.tolerance.SymmetricBilateral(0.0050), name="PN16", desc="Mounting face to rt. end"
+        nom=-0.3190, tol=dimstack.tolerance.Bilateral.symmetric(0.0050), name="PN16", desc="Mounting face to rt. end"
     ),
     target_process_sigma=6,
 )
