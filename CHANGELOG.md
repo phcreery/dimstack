@@ -7,6 +7,12 @@
 - [ ] Add more distributions like Triangular
 - [ ] Stack combined Yield (not for stackup analysis, but combined yield)
 - [ ] Multi-dimensional tolerancing [non-goal]
+- [ ] add tests for dimension sensitivity
+
+## 0.7.1
+
+- [x] fix symmetric tolerance "±" text display
+- [x] improve plotting labels
 
 ## 0.7.0
 

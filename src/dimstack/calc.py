@@ -34,9 +34,11 @@ def Closed(self: Stack | ReviewedStack) -> Basic:
 def WC(self: Stack | ReviewedStack) -> Basic:
     """
     This is a simple WC calculation. This results in a Bilateral dimension with
-    a tolerance that is the sum of the component tolerances. It states that in
-    any combination of tolerances, you can be sure the result will be within
-    the this resulting tolerance.
+    a tolerance that is the sum of the component tolerances. This is similar to
+    Closed but the nominal will be centered in the tolerance range
+    A Worst-Case analysis ensures with any combination of tolerances,
+    the combined stackup of tolerances will be within the this resulting
+    tolerance.
     """
 
     if isinstance(self, Stack):

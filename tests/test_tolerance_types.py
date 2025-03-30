@@ -8,6 +8,7 @@ class DoublePositiveBilateral(unittest.TestCase):
         t = dimstack.tolerance.Bilateral.unequal(upper=0.005, lower=0.004)
         self.assertEqual(t.upper, 0.005)
         self.assertEqual(t.lower, 0.004)
+        self.assertEqual(str(t), "+0.005 / +0.004")
 
 
 class DoubleNegativeBilateral(unittest.TestCase):
@@ -15,6 +16,7 @@ class DoubleNegativeBilateral(unittest.TestCase):
         t = dimstack.tolerance.Bilateral.unequal(upper=-0.005, lower=-0.006)
         self.assertEqual(t.upper, -0.005)
         self.assertEqual(t.lower, -0.006)
+        self.assertEqual(str(t), "-0.005 / -0.006")
 
 
 class FlippedBilateral(unittest.TestCase):
@@ -22,6 +24,7 @@ class FlippedBilateral(unittest.TestCase):
         t = dimstack.tolerance.Bilateral.unequal(upper=-0.005, lower=0.005)
         self.assertEqual(t.upper, 0.005)
         self.assertEqual(t.lower, -0.005)
+        self.assertEqual(str(t), "± 0.005")
 
 
 class AbsRelPosNeg(unittest.TestCase):

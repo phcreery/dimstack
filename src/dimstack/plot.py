@@ -7,6 +7,7 @@ from plotly.subplots import make_subplots
 
 from .dim import Basic, Stack, Reviewed, ReviewedStack
 from .dist import Normal, NormalScreened, Uniform
+from .utils import nround
 
 
 class StackPlot:
@@ -46,7 +47,7 @@ class StackPlot:
             color = self.color
 
         if title is None:
-            title = str(item)
+            title = f"{item.id}: {item.nom_direction_sign}{nround(item.nominal)} {str(item.tolerance)}"
 
         new_pos = prev_pos + item.nominal * item.dir
         ll = new_pos + item.abs_lower_tol
@@ -59,7 +60,7 @@ class StackPlot:
                 mode="lines+markers+text",
                 line=dict(color=color, width=2),
                 marker=dict(size=[0, 10]),
-                name=f"{item.name} Dimension",
+                name=f"{item.id}: {item.name} Dimension",
                 text=["", f"{title}"],
                 textposition="bottom center",
                 legendgroup=f"{item.name}",
@@ -73,7 +74,7 @@ class StackPlot:
                 mode="lines+markers+text",
                 line=dict(color="black"),
                 marker=dict(size=[0, 10], symbol="line-ns", line_width=2, line_color="black"),
-                name=f"{item.name} Upper Tol",
+                name=f"{item.id}: {item.name} Upper Tol",
                 opacity=0.5,
                 legendgroup=f"{item.name}",
             )
@@ -85,7 +86,7 @@ class StackPlot:
                 mode="lines+markers+text",
                 line=dict(color="black"),
                 marker=dict(size=[0, 10], symbol="line-ns", line_width=2, line_color="black"),
-                name=f"{item.name} Lower Tol",
+                name=f"{item.id}: {item.name} Lower Tol",
                 opacity=0.5,
                 legendgroup=f"{item.name}",
             )
@@ -98,6 +99,7 @@ class StackPlot:
         self,
         distribution: Normal | Uniform | NormalScreened,
         name: str,
+        legendgroup: str,
         start: float,
         stop: float,
         xbins_size=0.1,
@@ -118,6 +120,8 @@ class StackPlot:
             start_pos = self.start_pos
         if color is None:
             color = self.color
+        if legendgroup is None:
+            legendgroup = name
 
         xrange = np.arange(start, stop, 0.001)
         self.fig.add_trace(
@@ -126,7 +130,7 @@ class StackPlot:
                 name=f"{name} Distribution",
                 x=xrange + start_pos,
                 y=distribution.pdf(xrange),
-                legendgroup=f"{name}",
+                legendgroup=legendgroup,
             ),
             secondary_y=True,
         )
@@ -139,10 +143,27 @@ class StackPlot:
                 name=f"{name} Data",
                 marker_color=color,
                 opacity=0.5,
-                legendgroup=f"{name}",
+                legendgroup=legendgroup,
             )
 
         return self
+
+    def add_reviewed(self, item: Reviewed):
+        this_start_pos = self.start_pos
+        xbins_size = item.dim.tolerance.T / 10
+
+        title = f"{item.dim.id}: {item.dim.nom_direction_sign}{nround(item.dim.nominal)} {str(item.dim.tolerance)} @ {item.distribution}"
+        self.add_dimension(item.dim, title)
+        dist_name = f"{item.dim.id}: {item.distribution}"
+        self.add_distribution(
+            distribution=item.distribution,
+            name=dist_name,
+            legendgroup=item.dim.name,
+            start=item.dim.abs_nominal + item.dim.abs_lower_tol,
+            stop=item.dim.abs_nominal + item.dim.abs_upper_tol,
+            xbins_size=xbins_size,
+            start_pos=this_start_pos,
+        )
 
     def add_stack(self, stack: Stack):
         """Add a stack of dimensions to the plot.
@@ -169,17 +190,7 @@ class StackPlot:
             StackPlot: self
         """ """"""
         for item in stack.dims:
-            this_start_pos = self.start_pos
-            xbins_size = item.dim.tolerance.T / 10
-            self.add_dimension(item.dim, title=str(item))
-            self.add_distribution(
-                item.distribution,
-                item.dim.name,
-                item.dim.abs_nominal + item.dim.abs_lower_tol,
-                item.dim.abs_nominal + item.dim.abs_upper_tol,
-                xbins_size=xbins_size,
-                start_pos=this_start_pos,
-            )
+            self.add_reviewed(item)
             self.color = next(self.col_pal_iterator)
 
         return self
@@ -201,17 +212,7 @@ class StackPlot:
         if isinstance(item, Basic):
             self.add_dimension(item)
         elif isinstance(item, Reviewed):
-            this_start_pos = self.start_pos
-            xbins_size = item.dim.tolerance.T / 10
-            self.add_dimension(item.dim, title=str(item))
-            self.add_distribution(
-                item.distribution,
-                item.dim.name,
-                item.dim.abs_nominal + item.dim.abs_lower_tol,
-                item.dim.abs_nominal + item.dim.abs_upper_tol,
-                xbins_size=xbins_size,
-                start_pos=this_start_pos,
-            )
+            self.add_reviewed(item)
         elif isinstance(item, Stack):
             self.add_stack(item)
         elif isinstance(item, ReviewedStack):
