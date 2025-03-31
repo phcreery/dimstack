@@ -66,6 +66,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_nominal">abs_nominal</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_median">abs_median</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_lower">abs_lower</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper">abs_upper</a>
@@ -74,10 +76,24 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.convert_to_bilateral">convert_to_bilateral</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.review">review</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Stack">Stack</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.append">append</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Reviewed">Reviewed</a>
         <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.C_p">C_p</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.C_pk">C_pk</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.std_dev_eff">std_dev_eff</a>
@@ -88,9 +104,21 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.yield_probability">yield_probability</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.of_basic">of_basic</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.ReviewedStack">ReviewedStack</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.ReviewedStack.append">append</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.ReviewedStack.to_basic_stack">to_basic_stack</a>
     </li>
         </ul>
     </li>
@@ -99,6 +127,8 @@
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.median">median</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.yield_loss_probability">yield_loss_probability</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.yield_probability">yield_probability</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Requirement.R">R</a>
     </li>
@@ -110,6 +140,14 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.tolerance.Bilateral">Bilateral</a>
         <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.upper">upper</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.lower">lower</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.T">T</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.symmetric">symmetric</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.asymmetric">asymmetric</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.tolerance.Bilateral.unequal">unequal</a>
@@ -130,11 +168,15 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.calc">calc</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.Closed">Closed</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.WC">WC</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.RSS">RSS</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.MRSS">MRSS</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.calc.SixSigma">SixSigma</a>
     </li>
         </ul>
     </li>
@@ -205,25 +247,42 @@
 <li><a href="#dimstack.dim.Basic.rel_lower">rel_lower</a></li>
 <li><a href="#dimstack.dim.Basic.rel_upper">rel_upper</a></li>
 <li><a href="#dimstack.dim.Basic.abs_nominal">abs_nominal</a></li>
+<li><a href="#dimstack.dim.Basic.abs_median">abs_median</a></li>
 <li><a href="#dimstack.dim.Basic.abs_lower">abs_lower</a></li>
 <li><a href="#dimstack.dim.Basic.abs_upper">abs_upper</a></li>
 <li><a href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a></li>
 <li><a href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a></li>
+<li><a href="#dimstack.dim.Basic.convert_to_bilateral">convert_to_bilateral</a></li>
+<li><a href="#dimstack.dim.Basic.review">review</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.dim.Stack">Stack</a><ul>
+<li><a href="#dimstack.dim.Stack.append">append</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Reviewed">Reviewed</a><ul>
+<li><a href="#dimstack.dim.Reviewed.C_p">C_p</a></li>
+<li><a href="#dimstack.dim.Reviewed.C_pk">C_pk</a></li>
 <li><a href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.std_dev_eff">std_dev_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.process_sigma_eff">process_sigma_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.k">k</a></li>
 <li><a href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Reviewed.yield_probability">yield_probability</a></li>
+<li><a href="#dimstack.dim.Reviewed.of_basic">of_basic</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a></li>
+</ul>
+</li>
+<li><a href="#dimstack.dim.ReviewedStack">ReviewedStack</a><ul>
+<li><a href="#dimstack.dim.ReviewedStack.append">append</a></li>
+<li><a href="#dimstack.dim.ReviewedStack.to_basic_stack">to_basic_stack</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Requirement">Requirement</a><ul>
 <li><a href="#dimstack.dim.Requirement.median">median</a></li>
 <li><a href="#dimstack.dim.Requirement.yield_loss_probability">yield_loss_probability</a></li>
+<li><a href="#dimstack.dim.Requirement.yield_probability">yield_probability</a></li>
 <li><a href="#dimstack.dim.Requirement.R">R</a></li>
 </ul>
 </li>
@@ -231,6 +290,10 @@
 </li>
 <li><a href="#dimstack.tolerance">tolerance</a><ul>
 <li><a href="#dimstack.tolerance.Bilateral">Bilateral</a><ul>
+<li><a href="#dimstack.tolerance.Bilateral.upper">upper</a></li>
+<li><a href="#dimstack.tolerance.Bilateral.lower">lower</a></li>
+<li><a href="#dimstack.tolerance.Bilateral.T">T</a></li>
+<li><a href="#dimstack.tolerance.Bilateral.symmetric">symmetric</a></li>
 <li><a href="#dimstack.tolerance.Bilateral.asymmetric">asymmetric</a></li>
 <li><a href="#dimstack.tolerance.Bilateral.unequal">unequal</a></li>
 </ul>
@@ -244,9 +307,11 @@
 </ul>
 </li>
 <li><a href="#dimstack.calc">calc</a><ul>
+<li><a href="#dimstack.calc.Closed">Closed</a></li>
 <li><a href="#dimstack.calc.WC">WC</a></li>
 <li><a href="#dimstack.calc.RSS">RSS</a></li>
 <li><a href="#dimstack.calc.MRSS">MRSS</a></li>
+<li><a href="#dimstack.calc.SixSigma">SixSigma</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.stats">stats</a><ul>
@@ -491,6 +556,27 @@
 
 
 
+<h5 id="dimstack.dim.Basic.abs_median" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">abs_median</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The absolute median value of the measurement.</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h5 id="dimstack.dim.Basic.abs_lower" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_lower</span><span class="p">:</span> <span class="nb">float</span></code>
 
@@ -573,6 +659,92 @@
 
 
 
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Basic.convert_to_bilateral" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">convert_to_bilateral</span><span class="p">()</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert the dimension to a bilateral dimension by centering the nominal value.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Basic.review" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">review</span><span class="p">(</span><span class="n">target_process_sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert the dimension to a reviewed dimension.</p>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dim.Stack" class="doc doc-heading">
+            <code>Stack</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Stack.append" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">append</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Append a measurement to the stack.</p>
+
+    </div>
+
+</div>
+
 
 
   </div>
@@ -652,6 +824,48 @@
 
 
 
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Reviewed.C_p" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">C_p</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Process Capability</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Reviewed.C_pk" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">C_pk</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Process Capability Index</p>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-attribute">
 
@@ -759,7 +973,45 @@
 
 </div>
 
+<div class="doc doc-object doc-attribute">
 
+
+
+<h5 id="dimstack.dim.Reviewed.yield_probability" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">yield_probability</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Returns the probability of a part being in spec.</p>
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Reviewed.of_basic" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">of_basic</span><span class="p">(</span><span class="n">basic</span><span class="p">,</span> <span class="n">target_process_sigma</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create a Reviewed object from a Basic object.</p>
+
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
@@ -790,6 +1042,75 @@
     <div class="doc doc-contents ">
 
         <p>Assume a normal distribution with a skew</p>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.dim.ReviewedStack" class="doc doc-heading">
+            <code>ReviewedStack</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.ReviewedStack.append" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">append</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Append a measurement to the stack.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.ReviewedStack.to_basic_stack" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">to_basic_stack</span><span class="p">()</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert the stack to a basic stack.</p>
 
     </div>
 
@@ -866,6 +1187,27 @@
     <div class="doc doc-contents ">
 
         <p>Returns the probability of a part being out of spec.</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Requirement.yield_probability" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">yield_probability</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Returns the probability of a part being in spec.</p>
     </div>
 
 </div>
@@ -961,7 +1303,91 @@ This is the most common type of tolerancing.</p>
 
 
 
+<div class="doc doc-object doc-attribute">
 
+
+
+<h5 id="dimstack.tolerance.Bilateral.upper" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">upper</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Upper tolerance</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.tolerance.Bilateral.lower" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">lower</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Lower tolerance</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.tolerance.Bilateral.T" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">T</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Total tolerance</p>
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.tolerance.Bilateral.symmetric" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">symmetric</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create a bilateral tolerance with the same upper and lower bounds</p>
+
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
@@ -1305,6 +1731,25 @@ alias for <code>asymmetric</code></p>
 <div class="doc doc-object doc-function">
 
 
+<h4 id="dimstack.calc.Closed" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">Closed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>This is a simple Closed calculation. This results in a Bilateral dimension with
+a tolerance that is the sum of the component tolerances. This is similar to
+WC but the nominal will be the sum of the component nominals.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="dimstack.calc.WC" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">WC</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
@@ -1424,6 +1869,26 @@ the mean value plus the RSS variation at the gap.</p>
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="dimstack.calc.SixSigma" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">SixSigma</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>"6 Sigma" calculation of a Dimension stackup with distribution information of
+each. This results in a Reviewed dimension with a tolerance that is the sum
+of the component tolerances. The "6 Sigma" Analysis is a common method for
+determining the resulting distribution of a sum of distributions.</p>
+
     </div>
 
 </div>

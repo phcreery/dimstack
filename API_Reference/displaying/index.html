@@ -72,6 +72,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_distribution">add_distribution</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_reviewed">add_reviewed</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_stack">add_stack</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.plot.StackPlot.add_reviewed_stack">add_reviewed_stack</a>
@@ -124,6 +126,7 @@
 <li><a href="#dimstack.plot.StackPlot.show">show</a></li>
 <li><a href="#dimstack.plot.StackPlot.add_dimension">add_dimension</a></li>
 <li><a href="#dimstack.plot.StackPlot.add_distribution">add_distribution</a></li>
+<li><a href="#dimstack.plot.StackPlot.add_reviewed">add_reviewed</a></li>
 <li><a href="#dimstack.plot.StackPlot.add_stack">add_stack</a></li>
 <li><a href="#dimstack.plot.StackPlot.add_reviewed_stack">add_reviewed_stack</a></li>
 <li><a href="#dimstack.plot.StackPlot.add">add</a></li>
@@ -349,7 +352,7 @@
                   (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a></code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>The dimension to plot</p>
               </div>
             </li>
             <li>
@@ -359,7 +362,27 @@
 )
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>Title of the dimension</p>
+              </div>
+            </li>
+            <li>
+              <b><code>start_pos</code></b>
+                  (<code>float</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>starting position</p>
+              </div>
+            </li>
+            <li>
+              <b><code>color</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>color of the dimension</p>
               </div>
             </li>
         </ul>
@@ -400,7 +423,7 @@
                   (<code>Union[<a class="autorefs autorefs-internal" title="dimstack.dist.Normal" href="../basics/#dimstack.dist.Normal">Normal</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.Uniform" href="../basics/#dimstack.dist.Uniform">Uniform</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.NormalScreened" href="../basics/#dimstack.dist.NormalScreened">NormalScreened</a>]</code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>The distribution to plot</p>
               </div>
             </li>
             <li>
@@ -408,15 +431,61 @@
                   (<code>str</code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>name of the distribution</p>
               </div>
             </li>
             <li>
-              <b><code>xrange</code></b>
-                  (<code>_type_</code>)
+              <b><code>legendgroup</code></b>
+                  (<code>str</code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>the identifier for which group this item belongs to in the legend</p>
+              </div>
+            </li>
+            <li>
+              <b><code>start</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>start position</p>
+              </div>
+            </li>
+            <li>
+              <b><code>stop</code></b>
+                  (<code>float</code>)
+              –
+              <div class="doc-md-description">
+                <p>stop position</p>
+              </div>
+            </li>
+            <li>
+              <b><code>xbins_size</code></b>
+                  (<code>float</code>, default:
+                      <code>0.1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>size of the xbins</p>
+              </div>
+            </li>
+            <li>
+              <b><code>start_pos</code></b>
+                  (<code>float</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>starting position</p>
+              </div>
+            </li>
+            <li>
+              <b><code>color</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>color of the distribution</p>
               </div>
             </li>
         </ul>
@@ -436,9 +505,10 @@
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>_type_</code></b>              –
+<b><code>self</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.plot.StackPlot" href="#dimstack.plot.StackPlot">StackPlot</a></code>
+)              –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>self</p>
               </div>
             </li>
         </ul>
@@ -446,6 +516,23 @@
     </tr>
   </tbody>
 </table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.plot.StackPlot.add_reviewed" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_reviewed</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add a reviewed dimension to the plot.</p>
+
     </div>
 
 </div>
@@ -476,10 +563,10 @@
         <ul class="first simple">
             <li>
               <b><code>stack</code></b>
-                  (<code><span title="dimstack.dim.Stack">Stack</span></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Stack" href="../basics/#dimstack.dim.Stack">Stack</a></code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>A dimension stack item</p>
               </div>
             </li>
         </ul>
@@ -499,9 +586,9 @@
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>_type_</code></b>              –
+<b><code>StackPlot</code></b>              –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>self</p>
               </div>
             </li>
         </ul>
@@ -539,10 +626,10 @@
         <ul class="first simple">
             <li>
               <b><code>stack</code></b>
-                  (<code><span title="dimstack.dim.ReviewedStack">ReviewedStack</span></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.ReviewedStack" href="../basics/#dimstack.dim.ReviewedStack">ReviewedStack</a></code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>A reviewed dimension stack item</p>
               </div>
             </li>
         </ul>
@@ -602,10 +689,10 @@
         <ul class="first simple">
             <li>
               <b><code>item</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a> | <a class="autorefs autorefs-internal" title="dimstack.dim.Reviewed" href="../basics/#dimstack.dim.Reviewed">Reviewed</a> | BasicStack | <span title="dimstack.dim.ReviewedStack">ReviewedStack</span></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a> | <a class="autorefs autorefs-internal" title="dimstack.dim.Reviewed" href="../basics/#dimstack.dim.Reviewed">Reviewed</a> | BasicStack | <a class="autorefs autorefs-internal" title="dimstack.dim.ReviewedStack" href="../basics/#dimstack.dim.ReviewedStack">ReviewedStack</a></code>)
               –
               <div class="doc-md-description">
-                <p><em>description</em></p>
+                <p>A dimension or stack item</p>
               </div>
             </li>
         </ul>
