@@ -2,6 +2,8 @@
 
 Python library for 1D statistical tolerancing analysis and design.
 
+![PyPI - Version](https://img.shields.io/pypi/v/dimstack)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/dimstack)
 https://pypi.org/project/dimstack/
 
 ## Example (MIT Calc Demonstration Analysis)
