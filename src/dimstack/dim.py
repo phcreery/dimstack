@@ -106,6 +106,7 @@ class Basic:
 
     @property
     def abs_median(self) -> float:
+        """The absolute median value of the measurement."""
         return (self.abs_lower + self.abs_upper) / 2
 
     @property
@@ -135,6 +136,7 @@ class Basic:
             return -self.tolerance.lower
 
     def convert_to_bilateral(self) -> "Basic":
+        """Convert the dimension to a bilateral dimension by centering the nominal value."""
         median = self.rel_median
         tol = self.tolerance.T / 2
 
@@ -147,6 +149,7 @@ class Basic:
         target_process_sigma: float = 3,
         distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
     ) -> "Reviewed":
+        """Convert the dimension to a reviewed dimension."""
         return Reviewed(self, target_process_sigma, distribution)
 
 
@@ -174,6 +177,7 @@ class Stack:
         return display_df(self.dict, f"DIMENSION STACK: {self.name}")
 
     def append(self, measurement: Basic):
+        """Append a measurement to the stack."""
         self.dims.append(measurement)
 
     @property
@@ -238,6 +242,7 @@ class Reviewed:
         }
 
     def of_basic(self, basic: Basic, target_process_sigma: float) -> "Reviewed":
+        """Create a Reviewed object from a Basic object."""
         return Reviewed(basic, target_process_sigma, None)
 
     def assume_normal_dist(self):
@@ -262,12 +267,14 @@ class Reviewed:
 
     @property
     def C_p(self) -> float:
+        """Process Capability"""
         if isinstance(self.distribution, dist.Normal):
             return C_p(self.dim.rel_upper, self.dim.rel_lower, self.distribution.std_dev)
         return 0
 
     @property
     def C_pk(self) -> float:
+        """Process Capability Index"""
         if isinstance(self.distribution, dist.Normal):
             return C_pk(self.dim.abs_upper, self.dim.abs_lower, self.distribution.mean, self.distribution.std_dev)
         return 0
@@ -326,6 +333,9 @@ class Reviewed:
 
     @property
     def yield_probability(self) -> float:
+        """
+        Returns the probability of a part being in spec.
+        """
         if self.distribution is None:
             return 0
         UL = self.dim.abs_upper
@@ -358,6 +368,7 @@ class ReviewedStack:
         return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}")
 
     def append(self, measurement: Reviewed):
+        """Append a measurement to the stack."""
         self.dims.append(measurement)
 
     @property
@@ -365,6 +376,7 @@ class ReviewedStack:
         return [dim.dict for dim in self.dims]
 
     def to_basic_stack(self) -> Stack:
+        """Convert the stack to a basic stack."""
         return Stack(
             name=self.name,
             description=self.description,
@@ -407,6 +419,9 @@ class Requirement:
 
     @property
     def yield_probability(self) -> float:
+        """
+        Returns the probability of a part being in spec.
+        """
         return float(self.distribution.cdf(self.UL) - self.distribution.cdf(self.LL))
 
     @property

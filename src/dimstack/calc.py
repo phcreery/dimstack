@@ -5,6 +5,11 @@ from .dist import Normal
 
 
 def Closed(self: Stack | ReviewedStack) -> Basic:
+    """
+    This is a simple Closed calculation. This results in a Bilateral dimension with
+    a tolerance that is the sum of the component tolerances. This is similar to
+    WC but the nominal will be the sum of the component nominals.
+    """
     if isinstance(self, Stack):
         dims = self.dims
     elif isinstance(self, ReviewedStack):
@@ -128,6 +133,12 @@ def MRSS(self: Stack | ReviewedStack) -> Basic:
 
 
 def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
+    """
+    "6 Sigma" calculation of a Dimension stackup with distribution information of
+    each. This results in a Reviewed dimension with a tolerance that is the sum
+    of the component tolerances. The "6 Sigma" Analysis is a common method for
+    determining the resulting distribution of a sum of distributions.
+    """
     # mean = sum([rdim.mean_eff for rdim in self.dims])
     mean = sum([rdim.dim.dir * rdim.dim.rel_median for rdim in self.dims])
     std_dev = rss([dim.std_dev_eff for dim in self.dims])

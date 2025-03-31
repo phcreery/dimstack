@@ -32,12 +32,20 @@ class StackPlot:
         """
         return self.fig.show()
 
-    def add_dimension(self, item: Basic, title: str | None = None, start_pos: float | None = None, color=None):
+    def add_dimension(
+        self,
+        item: Basic,
+        title: str | None = None,
+        start_pos: float | None = None,
+        color=None,
+    ):
         """Add a dimension to the plot.
 
         Args:
-            item (Basic): _description_
-            title (str): _description_
+            item (Basic): The dimension to plot
+            title (str): Title of the dimension
+            start_pos (float): starting position
+            color (str): color of the dimension
         """
         if start_pos is None:
             start_pos = self.start_pos
@@ -109,12 +117,17 @@ class StackPlot:
         """Add a distribution to the plot.
 
         Args:
-            distribution (Union[Normal, Uniform, NormalScreened]): _description_
-            name (str): _description_
-            xrange (_type_): _description_
+            distribution (Union[Normal, Uniform, NormalScreened]): The distribution to plot
+            name (str): name of the distribution
+            legendgroup (str): the identifier for which group this item belongs to in the legend
+            start (float): start position
+            stop (float): stop position
+            xbins_size (float): size of the xbins
+            start_pos (float): starting position
+            color (str): color of the distribution
 
         Returns:
-            _type_: _description_
+            self (StackPlot): self
         """
         if start_pos is None:
             start_pos = self.start_pos
@@ -149,6 +162,9 @@ class StackPlot:
         return self
 
     def add_reviewed(self, item: Reviewed):
+        """
+        Add a reviewed dimension to the plot.
+        """
         this_start_pos = self.start_pos
         xbins_size = item.dim.tolerance.T / 10
 
@@ -169,10 +185,10 @@ class StackPlot:
         """Add a stack of dimensions to the plot.
 
         Args:
-            stack (Stack): _description_
+            stack (Stack): A dimension stack item
 
         Returns:
-            _type_: _description_
+            StackPlot: self
         """ """"""
         for item in stack.dims:
             self.add_dimension(item)
@@ -184,7 +200,7 @@ class StackPlot:
         """Add a stack of reviewed dimensions to the plot.
 
         Args:
-            stack (ReviewedStack): _description_
+            stack (ReviewedStack): A reviewed dimension stack item
 
         Returns:
             StackPlot: self
@@ -199,7 +215,7 @@ class StackPlot:
         """Add a dimension or stack to the plot.
 
         Args:
-            item (Basic | Reviewed | BasicStack | ReviewedStack): _description_
+            item (Basic | Reviewed | BasicStack | ReviewedStack): A dimension or stack item
 
         Raises:
             TypeError: If the item is not a Basic, Reviewed, BasicStack, or ReviewedStack

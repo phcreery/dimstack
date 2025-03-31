@@ -24,6 +24,9 @@ class Bilateral:
 
     @classmethod
     def symmetric(cls, tol: float):
+        """
+        Create a bilateral tolerance with the same upper and lower bounds
+        """
         return cls(tol, -tol)
 
     @classmethod
@@ -43,14 +46,23 @@ class Bilateral:
 
     @property
     def upper(self):
+        """
+        Upper tolerance
+        """
         return self._upper
 
     @property
     def lower(self):
+        """
+        Lower tolerance
+        """
         return self._lower
 
     @property
     def T(self):
+        """
+        Total tolerance
+        """
         return self._upper - self._lower
 
 
