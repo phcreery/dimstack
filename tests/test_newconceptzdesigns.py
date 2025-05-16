@@ -11,9 +11,8 @@ m1 = dimstack.dim.Reviewed(
         name="PN16",
         desc="Mounting face to rt. end",
     ),
-    target_process_sigma=6,
 )
-m1.assume_normal_dist()
+m1.assume_normal_dist(6)
 m2 = dimstack.dim.Reviewed(
     dimstack.dim.Basic(
         nom=10.4860,
@@ -21,16 +20,14 @@ m2 = dimstack.dim.Reviewed(
         name="PN07",
         desc="Overall width",
     ),
-    target_process_sigma=6,
 )
-m2.assume_normal_dist()
+m2.assume_normal_dist(6)
 m3 = dimstack.dim.Reviewed(
     dimstack.dim.Basic(
         nom=-0.3190, tol=dimstack.tolerance.Bilateral.symmetric(0.0050), name="PN16", desc="Mounting face to rt. end"
     ),
-    target_process_sigma=6,
 )
-m3.assume_normal_dist()
+m3.assume_normal_dist(6)
 dims = [m1, m2, m3]
 
 stack = dimstack.dim.ReviewedStack(name="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", dims=dims)

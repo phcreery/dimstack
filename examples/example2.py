@@ -1,11 +1,7 @@
 import dimstack
 from copy import deepcopy
 
-import logging
-
-logging.getLogger().disabled = True
-
-dimstack.display.mode("rich")
+dimstack.display.mode(dimstack.display.DisplayMode.RICH)
 
 m1 = dimstack.dim.Basic(
     nom=-0.375,

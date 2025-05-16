@@ -146,11 +146,10 @@ class Basic:
 
     def review(
         self,
-        target_process_sigma: float = 3,
         distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
     ) -> "Reviewed":
         """Convert the dimension to a reviewed dimension."""
-        return Reviewed(self, target_process_sigma, distribution)
+        return Reviewed(self, distribution)
 
 
 class Stack:
@@ -189,24 +188,21 @@ class Reviewed:
     """Reviewed
 
     Args:
-        target_process_sigma (float, optional): The standard deviation of the process represented as ±σ. Defaults to ±3σ.
-        k (float, optional): The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
-                            standard deviation. Defaults to 0σ.
+        dim (Basic): The basic dimension.
         distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
     """
 
+    dim: Basic
     distribution: dist.Uniform | dist.Normal | dist.NormalScreened
 
     def __init__(
         self,
         dim: Basic,
-        target_process_sigma: float = 3,
         distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
     ):
         self.dim = dim
-        self.target_process_sigma = target_process_sigma
         if distribution is None:
-            self.assume_normal_dist()
+            self.assume_normal_dist(6)
         else:
             self.distribution = distribution
 
@@ -228,8 +224,8 @@ class Reviewed:
             # **self.dim.dict,
             "Dim.": f"{self.dim}",
             "Dist.": f"{self.distribution}",
-            "Target Sigma": f"± {str(nround(self.target_process_sigma))}σ",
-            "Skew (k)": nround(self.k),
+            # "Z": nround(self.Z) if isinstance(self.distribution, dist.Normal) else "",
+            "Shift (k)": nround(self.k),
             "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
             "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
             "μ_eff": nround(self.mean_eff),
@@ -241,28 +237,20 @@ class Reviewed:
             else "",
         }
 
-    def of_basic(self, basic: Basic, target_process_sigma: float) -> "Reviewed":
-        """Create a Reviewed object from a Basic object."""
-        return Reviewed(basic, target_process_sigma, None)
-
-    def assume_normal_dist(self):
+    def assume_normal_dist(self, target_process_sigma: float):
         """Assume a normal distribution."""
-        if hasattr(self, "distribution") and self.distribution is not None:
-            return self
         mean = self.mean_eff
-        std_dev = (self.dim.abs_upper - self.dim.abs_lower) / (2 * self.target_process_sigma)
-        distribution = dist.Normal(mean=mean, std_dev=std_dev)
-        self.distribution = distribution
-        logging.warning(f"Assuming Normal Dist. for {self}")
+        std_dev = (self.dim.abs_upper - self.dim.abs_lower) / (2 * target_process_sigma)
+        self.distribution = dist.Normal(mean=mean, std_dev=std_dev)
+        # logging.warning(f"Assuming Normal Dist. for {self}")
         return self
 
-    def assume_normal_dist_skewed(self, skew) -> "Reviewed":
-        """Assume a normal distribution with a skew"""
-        self.assume_normal_dist()
-        if isinstance(self.distribution, dist.Normal):  # which it will be
-            self.distribution.mean = self.distribution.mean + skew * (
-                self.distribution.std_dev * self.target_process_sigma
-            )
+    def assume_normal_dist_shifted(self, target_process_sigma, shift) -> "Reviewed":
+        """Assume a normal distribution with a shift"""
+        self.assume_normal_dist(target_process_sigma)
+        if isinstance(self.distribution, dist.Normal):
+            # self.distribution.mean = self.distribution.mean + shift * self.distribution.std_dev
+            self.distribution.mean = self.distribution.mean + shift * self.distribution.std_dev * target_process_sigma
         return self
 
     @property
@@ -277,6 +265,13 @@ class Reviewed:
         """Process Capability Index"""
         if isinstance(self.distribution, dist.Normal):
             return C_pk(self.dim.abs_upper, self.dim.abs_lower, self.distribution.mean, self.distribution.std_dev)
+        return 0
+
+    @property
+    def Z(self) -> float:
+        """Z value"""
+        if isinstance(self.distribution, dist.Normal):
+            return (self.dim.abs_upper - self.distribution.mean) / self.distribution.std_dev
         return 0
 
     @property
@@ -314,12 +309,12 @@ class Reviewed:
     @property
     def k(self) -> float:
         """
-        Skew
+        Shift (k) of the distribution
+
+        C_pk = C_p * (1 - k)
         """
         if isinstance(self.distribution, dist.Normal):
-            ideal_process_std_dev = (self.dim.tolerance.T / 2) / self.target_process_sigma
-            skew_in_std_devs = (self.distribution.mean - self.mean_eff) / ideal_process_std_dev
-            return skew_in_std_devs / self.target_process_sigma
+            return (self.distribution.mean - self.mean_eff) / (self.dim.tolerance.T / 2)
         return 0
 
     @property

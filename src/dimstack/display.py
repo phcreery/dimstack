@@ -1,18 +1,40 @@
 from typing import Any, Iterable
+from enum import Enum
 
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
 
-DISPLAY_MODE = "text"
+
+class DisplayMode(Enum):
+    """Display modes for the stack.
+
+    Args:
+        TEXT (str): Text mode
+        STRING (str): String mode
+        HTML (str): HTML mode
+        RICH (str): Rich mode
+        NOTEBOOK (str): Notebook mode
+        DF (str): DataFrame mode
+    """
+
+    TEXT = "text"
+    STRING = "string"
+    HTML = "html"
+    RICH = "rich"
+    NOTEBOOK = "notebook"
+    DF = "df"
+
+
+DISPLAY_MODE = DisplayMode.TEXT
 FIGSIZE = (6, 3)
 
 
-def mode(dispmode: str):
+def mode(dispmode: DisplayMode | str):
     """Set the display mode for the stack.
 
     Args:
-        mode (str): "text"/"txt", "str"/"string", "html", "rich", "notebook", or "df"
+        dispmode (DisplayMode | str): Display mode to set.
     """
     global DISPLAY_MODE
     DISPLAY_MODE = dispmode
@@ -29,22 +51,22 @@ def display_df(data: Iterable[dict[Any, Any]], title: str = "", dispmode=None):
 
     df = pd.DataFrame(data).astype(str)
 
-    if dispmode == "text" or dispmode == "txt":
+    if dispmode == DisplayMode.TEXT:
         if title:
             print(f"{title}")
         print(df.to_string(index=False))
         print()
-    elif dispmode == "string" or dispmode == "str":
+    elif dispmode == DisplayMode.STRING:
         return df.to_string(index=False)
-    elif dispmode == "html":
+    elif dispmode == DisplayMode.HTML:
         return df.style.hide(axis="index").set_caption(title).set_properties(**{"text-align": "left"})
-    elif dispmode == "notebook":
+    elif dispmode == DisplayMode.NOTEBOOK:
         return df.style.hide(axis="index").set_caption(title).set_properties(**{"text-align": "left"})
     # elif dispmode == "dict":
     #     print(df.to_dict())
-    elif dispmode == "df":
+    elif dispmode == DisplayMode.DF:
         return df
-    elif dispmode == "rich":
+    elif dispmode == DisplayMode.RICH:
         console = Console()
         table = Table(title=title)
         for col in df.columns:

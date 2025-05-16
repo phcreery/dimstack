@@ -11,9 +11,8 @@ m1 = dimstack.dim.Reviewed(
         name="a",
         desc="Shaft",
     ),
-    target_process_sigma=6,
 )
-m1.assume_normal_dist_skewed(0.25)
+m1.assume_normal_dist_shifted(6, 0.25)
 m2 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=-1.75,
@@ -21,14 +20,12 @@ m2 = dimstack.dim.Reviewed(
         name="b",
         desc="Retainer ring",
     ),
-    target_process_sigma=3,
 )
-m2.assume_normal_dist()
+m2.assume_normal_dist(3)
 m3 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="c", desc="Bearing"),
-    target_process_sigma=3,
 )
-m3.assume_normal_dist()
+m3.assume_normal_dist(3)
 m4 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=20,
@@ -36,14 +33,12 @@ m4 = dimstack.dim.Reviewed(
         name="d",
         desc="Bearing Sleeve",
     ),
-    target_process_sigma=3,
 )
-m4.assume_normal_dist()
+m4.assume_normal_dist(3)
 m5 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(nom=-200, tol=dimstack.tolerance.Bilateral.symmetric(0.145), name="e", desc="Case"),
-    target_process_sigma=3,
 )
-m5.assume_normal_dist()
+m5.assume_normal_dist(3)
 m6 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(
         nom=20,
@@ -51,14 +46,12 @@ m6 = dimstack.dim.Reviewed(
         name="f",
         desc="Bearing Sleeve",
     ),
-    target_process_sigma=3,
 )
-m6.assume_normal_dist()
+m6.assume_normal_dist(3)
 m7 = dimstack.dim.Reviewed(
     dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="g", desc="Bearing"),
-    target_process_sigma=3,
 )
-m7.assume_normal_dist()
+m7.assume_normal_dist(3)
 dims = [m1, m2, m3, m4, m5, m6, m7]
 
 stack = dimstack.dim.ReviewedStack(name="stacks on stacks", dims=dims)

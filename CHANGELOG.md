@@ -1,13 +1,19 @@
 ## PLANNED
 
 - [ ] Monte-Carlo simulation
-- [ ] add Distribution.from_process_capability_index(C_p, C_pk, k) ??
 - [ ] Tolerance Optimization [Simple Arithmetic, Fig 9-9, 11-7 in McGraw Hill,](https://www.mitcalc.com/en/ui/ui_tanalysis1.htm)
 - [ ] Dimension.from_distribution() (nice to have for monte carlo)
 - [ ] Add more distributions like Triangular
 - [ ] Stack combined Yield (not for stackup analysis, but combined yield)
-- [ ] Multi-dimensional tolerancing [non-goal]
-- [ ] add tests for dimension sensitivity
+- [ ] Multi-dimensional tolerancing
+- [ ] add tests for dimension sensitivity (a)
+
+## 0.8.0 5/15/2025
+
+- [x] remove `target_process_sigma`
+- [x] more ergonomic and consistent reviewed dimension with assumption API
+- [x] clean up logs about assuming distributions
+- [x] better display mode setting API with enum
 
 ## 0.7.1
 

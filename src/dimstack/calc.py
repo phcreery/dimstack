@@ -151,7 +151,6 @@ def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
             name=f"{self.name} - '6 Sigma' Analysis",
             desc="(assuming inputs with Normal Dist.)",
         ),
-        target_process_sigma=at,
         distribution=dist,
-    )
+    ).assume_normal_dist(at)
     return dim

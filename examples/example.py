@@ -1,7 +1,6 @@
 import dimstack as ds
 
-# ds.display.mode("text")
-ds.display.mode("rich")
+ds.display.mode(ds.display.DisplayMode.RICH)
 
 k = 0.25
 target_process_sigma = 3
@@ -13,40 +12,47 @@ m1 = dim = ds.dim.Basic(
     desc="Shaft",
 ).review(
     distribution=ds.dist.Normal(208 + k * target_process_sigma * std_dev, std_dev),
-    target_process_sigma=target_process_sigma,
 )
-m2 = dim = ds.dim.Basic(
-    nom=-1.75,
-    tol=ds.tol.Bilateral.unequal(0, 0.06),
-    name="b",
-    desc="Retainer ring",
-).review(
-    target_process_sigma=3,
+m2 = dim = (
+    ds.dim.Basic(
+        nom=-1.75,
+        tol=ds.tol.Bilateral.unequal(0, 0.06),
+        name="b",
+        desc="Retainer ring",
+    )
+    .review()
+    .assume_normal_dist(3)
 )
 
-m3 = dim = ds.dim.Basic(
-    nom=-23,
-    tol=ds.tol.Bilateral.unequal(0, 0.12),
-    name="c",
-    desc="Bearing",
-).review(
-    target_process_sigma=3,
+m3 = dim = (
+    ds.dim.Basic(
+        nom=-23,
+        tol=ds.tol.Bilateral.unequal(0, 0.12),
+        name="c",
+        desc="Bearing",
+    )
+    .review()
+    .assume_normal_dist(3)
 )
-m4 = dim = ds.dim.Basic(
-    nom=20,
-    tol=ds.tol.Bilateral.symmetric(0.026),
-    name="d",
-    desc="Bearing Sleeve",
-).review(
-    target_process_sigma=3,
+m4 = dim = (
+    ds.dim.Basic(
+        nom=20,
+        tol=ds.tol.Bilateral.symmetric(0.026),
+        name="d",
+        desc="Bearing Sleeve",
+    )
+    .review()
+    .assume_normal_dist(3)
 )
-m5 = dim = ds.dim.Basic(
-    nom=-200,
-    tol=ds.tol.Bilateral.symmetric(0.145),
-    name="e",
-    desc="Case",
-).review(
-    target_process_sigma=3,
+m5 = dim = (
+    ds.dim.Basic(
+        nom=-200,
+        tol=ds.tol.Bilateral.symmetric(0.145),
+        name="e",
+        desc="Case",
+    )
+    .review()
+    .assume_normal_dist(3)
 )
 m6 = ds.dim.Basic(
     nom=20,
@@ -54,13 +60,15 @@ m6 = ds.dim.Basic(
     name="f",
     desc="Bearing Sleeve",
 )
-m7 = dim = ds.dim.Basic(
-    nom=-23,
-    tol=ds.tol.Bilateral.unequal(0, 0.12),
-    name="g",
-    desc="Bearing",
-).review(
-    target_process_sigma=3,
+m7 = dim = (
+    ds.dim.Basic(
+        nom=-23,
+        tol=ds.tol.Bilateral.unequal(0, 0.12),
+        name="g",
+        desc="Bearing",
+    )
+    .review()
+    .assume_normal_dist(3)
 )
 items = [m1, m2, m3, m4, m5, m7]
 
