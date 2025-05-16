@@ -10,10 +10,11 @@
 
 ## 0.8.0 5/15/2025
 
-- [x] remove `target_process_sigma`
-- [x] more ergonomic and consistent reviewed dimension with assumption API
-- [x] clean up logs about assuming distributions
-- [x] better display mode setting API with enum
+- [x] Remove `target_process_sigma`
+- [x] Rename Skew to Shift
+- [x] Make reviewing dimension with assumption more ergonomic and consistent
+- [x] Clean up logs about assuming distributions
+- [x] Better display mode setting API with enum
 
 ## 0.7.1
 

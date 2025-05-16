@@ -54,23 +54,23 @@ m5 = dim = (
     .review()
     .assume_normal_dist(3)
 )
-m6 = ds.dim.Basic(
-    nom=20,
-    tol=ds.tol.Bilateral.symmetric(0.026),
-    name="f",
-    desc="Bearing Sleeve",
-)
-m7 = dim = (
+m6 = (
     ds.dim.Basic(
-        nom=-23,
-        tol=ds.tol.Bilateral.unequal(0, 0.12),
-        name="g",
-        desc="Bearing",
+        nom=20,
+        tol=ds.tol.Bilateral.symmetric(0.026),
+        name="f",
+        desc="Bearing Sleeve",
     )
     .review()
     .assume_normal_dist(3)
 )
-items = [m1, m2, m3, m4, m5, m7]
+m7 = dim = ds.dim.Basic(
+    nom=-23,
+    tol=ds.tol.Bilateral.unequal(0, 0.12),
+    name="g",
+    desc="Bearing",
+).review()
+items = [m1, m2, m3, m4, m5, m6, m7]
 
 stack = ds.dim.ReviewedStack(name="stacks on stacks", dims=items)
 
