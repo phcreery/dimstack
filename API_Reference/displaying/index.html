@@ -50,12 +50,14 @@
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
               <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../basics/">Basics</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">Displaying</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.display">display</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.DisplayMode">DisplayMode</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.mode">mode</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.display.display_df">display_df</a>
@@ -117,6 +119,7 @@
 <ul>
 <li><a href="#displaying">Displaying</a><ul>
 <li><a href="#dimstack.display">display</a><ul>
+<li><a href="#dimstack.display.DisplayMode">DisplayMode</a></li>
 <li><a href="#dimstack.display.mode">mode</a></li>
 <li><a href="#dimstack.display.display_df">display_df</a></li>
 </ul>
@@ -163,6 +166,109 @@
 
 
 
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="dimstack.display.DisplayMode" class="doc doc-heading">
+            <code>DisplayMode</code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.Enum">Enum</span></code></p>
+
+
+        <p>Display modes for the stack.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>TEXT</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Text mode</p>
+              </div>
+            </li>
+            <li>
+              <b><code>STRING</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>String mode</p>
+              </div>
+            </li>
+            <li>
+              <b><code>HTML</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>HTML mode</p>
+              </div>
+            </li>
+            <li>
+              <b><code>RICH</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Rich mode</p>
+              </div>
+            </li>
+            <li>
+              <b><code>NOTEBOOK</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Notebook mode</p>
+              </div>
+            </li>
+            <li>
+              <b><code>DF</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame mode</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 <div class="doc doc-object doc-function">
 
@@ -189,11 +295,11 @@
       <td class="field-body">
         <ul class="first simple">
             <li>
-              <b><code>mode</code></b>
-                  (<code>str</code>)
+              <b><code>dispmode</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.display.DisplayMode" href="#dimstack.display.DisplayMode">DisplayMode</a> | str</code>)
               –
               <div class="doc-md-description">
-                <p>"text"/"txt", "str"/"string", "html", "rich", "notebook", or "df"</p>
+                <p>Display mode to set.</p>
               </div>
             </li>
         </ul>
@@ -349,7 +455,7 @@
         <ul class="first simple">
             <li>
               <b><code>item</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../core/#dimstack.dim.Basic">Basic</a></code>)
               –
               <div class="doc-md-description">
                 <p>The dimension to plot</p>
@@ -420,7 +526,7 @@
         <ul class="first simple">
             <li>
               <b><code>distribution</code></b>
-                  (<code>Union[<a class="autorefs autorefs-internal" title="dimstack.dist.Normal" href="../basics/#dimstack.dist.Normal">Normal</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.Uniform" href="../basics/#dimstack.dist.Uniform">Uniform</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.NormalScreened" href="../basics/#dimstack.dist.NormalScreened">NormalScreened</a>]</code>)
+                  (<code>Union[<a class="autorefs autorefs-internal" title="dimstack.dist.Normal" href="../core/#dimstack.dist.Normal">Normal</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.Uniform" href="../core/#dimstack.dist.Uniform">Uniform</a>, <a class="autorefs autorefs-internal" title="dimstack.dist.NormalScreened" href="../core/#dimstack.dist.NormalScreened">NormalScreened</a>]</code>)
               –
               <div class="doc-md-description">
                 <p>The distribution to plot</p>
@@ -563,7 +669,7 @@
         <ul class="first simple">
             <li>
               <b><code>stack</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Stack" href="../basics/#dimstack.dim.Stack">Stack</a></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Stack" href="../core/#dimstack.dim.Stack">Stack</a></code>)
               –
               <div class="doc-md-description">
                 <p>A dimension stack item</p>
@@ -626,7 +732,7 @@
         <ul class="first simple">
             <li>
               <b><code>stack</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.ReviewedStack" href="../basics/#dimstack.dim.ReviewedStack">ReviewedStack</a></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.ReviewedStack" href="../core/#dimstack.dim.ReviewedStack">ReviewedStack</a></code>)
               –
               <div class="doc-md-description">
                 <p>A reviewed dimension stack item</p>
@@ -689,7 +795,7 @@
         <ul class="first simple">
             <li>
               <b><code>item</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../basics/#dimstack.dim.Basic">Basic</a> | <a class="autorefs autorefs-internal" title="dimstack.dim.Reviewed" href="../basics/#dimstack.dim.Reviewed">Reviewed</a> | BasicStack | <a class="autorefs autorefs-internal" title="dimstack.dim.ReviewedStack" href="../basics/#dimstack.dim.ReviewedStack">ReviewedStack</a></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="../core/#dimstack.dim.Basic">Basic</a> | <a class="autorefs autorefs-internal" title="dimstack.dim.Reviewed" href="../core/#dimstack.dim.Reviewed">Reviewed</a> | BasicStack | <a class="autorefs autorefs-internal" title="dimstack.dim.ReviewedStack" href="../core/#dimstack.dim.ReviewedStack">ReviewedStack</a></code>)
               –
               <div class="doc-md-description">
                 <p>A dimension or stack item</p>
@@ -769,7 +875,7 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../basics/" class="btn btn-neutral float-left" title="Basics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../core/" class="btn btn-neutral float-left" title="Core"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -796,7 +902,7 @@
         </span>
     
     
-      <span><a href="../basics/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../core/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
   </span>

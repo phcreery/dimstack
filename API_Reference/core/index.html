@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Basics - dimstack</title>
+    <title>Core - dimstack</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Basics";
-        var mkdocs_page_input_path = "API_Reference\\basics.md";
+        var mkdocs_page_name = "Core";
+        var mkdocs_page_input_path = "API_Reference\\core.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -50,7 +50,7 @@
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Basics</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Core</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.dim">dim</a>
         <ul>
@@ -94,6 +94,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.C_pk">C_pk</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.Z">Z</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.std_dev_eff">std_dev_eff</a>
@@ -106,11 +108,9 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.yield_probability">yield_probability</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.of_basic">of_basic</a>
-    </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist_shifted">assume_normal_dist_shifted</a>
     </li>
         </ul>
     </li>
@@ -226,9 +226,9 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">API Reference</li>
-      <li class="breadcrumb-item active">Basics</li>
+      <li class="breadcrumb-item active">Core</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/phcreery/dimstack/edit/master/docs/API_Reference/basics.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/phcreery/dimstack/edit/master/docs/API_Reference/core.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -236,10 +236,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="basics">Basics</h1>
+                <h1 id="core">Core</h1>
 <div class="toc">
 <ul>
-<li><a href="#basics">Basics</a><ul>
+<li><a href="#core">Core</a><ul>
 <li><a href="#dimstack.dim">dim</a><ul>
 <li><a href="#dimstack.dim.Basic">Basic</a><ul>
 <li><a href="#dimstack.dim.Basic.rel_nominal">rel_nominal</a></li>
@@ -263,15 +263,15 @@
 <li><a href="#dimstack.dim.Reviewed">Reviewed</a><ul>
 <li><a href="#dimstack.dim.Reviewed.C_p">C_p</a></li>
 <li><a href="#dimstack.dim.Reviewed.C_pk">C_pk</a></li>
+<li><a href="#dimstack.dim.Reviewed.Z">Z</a></li>
 <li><a href="#dimstack.dim.Reviewed.mean_eff">mean_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.std_dev_eff">std_dev_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.process_sigma_eff">process_sigma_eff</a></li>
 <li><a href="#dimstack.dim.Reviewed.k">k</a></li>
 <li><a href="#dimstack.dim.Reviewed.yield_loss_probability">yield_loss_probability</a></li>
 <li><a href="#dimstack.dim.Reviewed.yield_probability">yield_probability</a></li>
-<li><a href="#dimstack.dim.Reviewed.of_basic">of_basic</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a></li>
-<li><a href="#dimstack.dim.Reviewed.assume_normal_dist_skewed">assume_normal_dist_skewed</a></li>
+<li><a href="#dimstack.dim.Reviewed.assume_normal_dist_shifted">assume_normal_dist_shifted</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.ReviewedStack">ReviewedStack</a><ul>
@@ -680,7 +680,7 @@
 
 
 <h5 id="dimstack.dim.Basic.review" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">review</span><span class="p">(</span><span class="n">target_process_sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">review</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h5>
 
@@ -781,22 +781,11 @@
       <td class="field-body">
         <ul class="first simple">
             <li>
-              <b><code>target_process_sigma</code></b>
-                  (<code>float</code>, default:
-                      <code>3</code>
-)
+              <b><code>dim</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code>)
               –
               <div class="doc-md-description">
-                <p>The standard deviation of the process represented as ±σ. Defaults to ±3σ.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>k</code></b>
-                  (<code>float</code>)
-              –
-              <div class="doc-md-description">
-                <p>The ratio of the amount the center of the distribution is shifted from the mean represented as a multiple of the process
-                standard deviation. Defaults to 0σ.</p>
+                <p>The basic dimension.</p>
               </div>
             </li>
             <li>
@@ -863,6 +852,27 @@
     <div class="doc doc-contents ">
 
         <p>Process Capability Index</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Reviewed.Z" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">Z</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Z value</p>
     </div>
 
 </div>
@@ -947,7 +957,8 @@
 
     <div class="doc doc-contents ">
 
-        <p>Skew</p>
+        <p>Shift (k) of the distribution</p>
+<p>C_pk = C_p * (1 - k)</p>
     </div>
 
 </div>
@@ -999,25 +1010,8 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="dimstack.dim.Reviewed.of_basic" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">of_basic</span><span class="p">(</span><span class="n">basic</span><span class="p">,</span> <span class="n">target_process_sigma</span><span class="p">)</span></code>
-
-</h5>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Create a Reviewed object from a Basic object.</p>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h5 id="dimstack.dim.Reviewed.assume_normal_dist" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">assume_normal_dist</span><span class="p">()</span></code>
+            <code class="highlight language-python"><span class="n">assume_normal_dist</span><span class="p">(</span><span class="n">target_process_sigma</span><span class="p">)</span></code>
 
 </h5>
 
@@ -1033,15 +1027,15 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="dimstack.dim.Reviewed.assume_normal_dist_skewed" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">assume_normal_dist_skewed</span><span class="p">(</span><span class="n">skew</span><span class="p">)</span></code>
+<h5 id="dimstack.dim.Reviewed.assume_normal_dist_shifted" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">assume_normal_dist_shifted</span><span class="p">(</span><span class="n">target_process_sigma</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span></code>
 
 </h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Assume a normal distribution with a skew</p>
+        <p>Assume a normal distribution with a shift</p>
 
     </div>
 
