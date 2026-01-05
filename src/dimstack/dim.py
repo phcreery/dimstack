@@ -1,13 +1,14 @@
 import itertools
-import logging
 import textwrap
 from typing import Any
 
 from . import dist
 from .display import display_df
+from .stats import C_p, C_pk
 from .tolerance import Bilateral
 from .utils import POSITIVE, nround, sign, sign_symbol
-from .stats import C_p, C_pk
+
+DESC_WIDTH = 30
 
 
 class Basic:
@@ -42,13 +43,12 @@ class Basic:
 
     def __str__(self) -> str:
         # return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
-        desc_width = 30
         return (
             textwrap.shorten(
                 f"{self.id}: {self.name} {self.description} ",
-                width=desc_width,
+                width=DESC_WIDTH,
                 placeholder="...",
-            ).ljust(desc_width)
+            ).ljust(DESC_WIDTH)
             + f" {self.nom_direction_sign}{str(nround(self.nominal)).rjust(6)} {str(self.tolerance)}"
         )
 
@@ -428,8 +428,8 @@ class Requirement:
     def dict(self) -> list[dict[str, Any]]:
         return [
             {
-                "Name": textwrap.shorten(self.name, width=10, placeholder="..."),
-                "Desc.": textwrap.shorten(self.description, width=10, placeholder="..."),
+                "Name": textwrap.shorten(self.name, width=DESC_WIDTH, placeholder="..."),
+                "Desc.": textwrap.shorten(self.description, width=DESC_WIDTH, placeholder="..."),
                 "Distribution": str(self.distribution),
                 "Median": nround(self.median),
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
