@@ -1,7 +1,7 @@
-from .dim import Basic, Stack, Reviewed, ReviewedStack
+from .dim import Basic, Reviewed, ReviewedStack, Stack
+from .dist import Normal
 from .stats import rss
 from .tolerance import Bilateral
-from .dist import Normal
 
 
 def Closed(self: Stack | ReviewedStack) -> Basic:

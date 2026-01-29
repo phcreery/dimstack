@@ -70,7 +70,7 @@ class Basic:
             "±": self.nom_direction_sign,
             "Nom.": nround(self.nominal),
             "Tol.": (str(self.tolerance)).ljust(14, " "),
-            "Sens. (a)": str(self.a),
+            "Sens. (a)": str(nround(self.a)),
             # "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
             "Abs. Bounds": f"[{nround(self.abs_lower)}, {nround(self.abs_upper)}]",
         }
@@ -102,7 +102,7 @@ class Basic:
     @property
     def abs_nominal(self) -> float:
         """The absolute nominal value of the measurement."""
-        return self.dir * self.nominal
+        return self.a * self.dir * self.nominal
 
     @property
     def abs_median(self) -> float:
@@ -112,28 +112,28 @@ class Basic:
     @property
     def abs_lower(self) -> float:
         """The minimum value of the measurement. AKA, absolute upper"""
-        return self.dir * self.nominal + self.abs_lower_tol
+        return self.a * self.dir * self.nominal + self.abs_lower_tol
 
     @property
     def abs_upper(self) -> float:
         """The maximum value of the measurement. AKA, absolute lower"""
-        return self.dir * self.nominal + self.abs_upper_tol
+        return self.a * self.dir * self.nominal + self.abs_upper_tol
 
     @property
     def abs_lower_tol(self) -> float:
         """The absolute minimum value of the tolerance."""
         if sign_symbol(self.dir) == POSITIVE:
-            return self.tolerance.lower
+            return self.a * self.tolerance.lower
         else:
-            return -self.tolerance.upper
+            return self.a * -self.tolerance.upper
 
     @property
     def abs_upper_tol(self) -> float:
         """The absolute maximum value of the tolerance."""
         if sign_symbol(self.dir) == POSITIVE:
-            return self.tolerance.upper
+            return self.a * self.tolerance.upper
         else:
-            return -self.tolerance.lower
+            return self.a * -self.tolerance.lower
 
     def convert_to_bilateral(self) -> "Basic":
         """Convert the dimension to a bilateral dimension by centering the nominal value."""
