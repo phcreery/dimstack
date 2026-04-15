@@ -4,8 +4,16 @@ DECIMALS = 5
 POSITIVE = "+"
 NEGATIVE = "-"
 
+def set_decimals(decimals: int):
+    """Set the number of decimals to round to.
 
-def nround(number, ndigits=DECIMALS):
+    Args:
+        decimals (int): Number of decimals to round to.
+    """
+    global DECIMALS
+    DECIMALS = decimals
+
+def nround(number, ndigits=None):
     """
     Always round off
     >>> nround(4.114, 2)
@@ -17,6 +25,9 @@ def nround(number, ndigits=DECIMALS):
     >>> nround(-0.03401, 3)
     -0.034
     """
+    
+    if ndigits is None:
+        ndigits = DECIMALS
     # return round(number, ndigits)
 
     # https://stackoverflow.com/questions/43851273/how-to-round-float-0-5-up-to-1-0-while-still-rounding-0-45-to-0-0-as-the-usual

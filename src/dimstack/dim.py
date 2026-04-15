@@ -314,6 +314,8 @@ class Reviewed:
         C_pk = C_p * (1 - k)
         """
         if isinstance(self.distribution, dist.Normal):
+            if self.dim.tolerance.T == 0:
+                return 0.0
             return (self.distribution.mean - self.mean_eff) / (self.dim.tolerance.T / 2)
         return 0
 
