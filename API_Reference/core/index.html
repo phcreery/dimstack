@@ -80,6 +80,10 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.review">review</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.reverse">reverse</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.sensitivity">sensitivity</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Stack">Stack</a>
@@ -198,6 +202,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.utils">utils</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.utils.set_decimals">set_decimals</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.utils.nround">nround</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#dimstack.utils.sign">sign</a>
@@ -254,6 +260,8 @@
 <li><a href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a></li>
 <li><a href="#dimstack.dim.Basic.convert_to_bilateral">convert_to_bilateral</a></li>
 <li><a href="#dimstack.dim.Basic.review">review</a></li>
+<li><a href="#dimstack.dim.Basic.reverse">reverse</a></li>
+<li><a href="#dimstack.dim.Basic.sensitivity">sensitivity</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Stack">Stack</a><ul>
@@ -324,6 +332,7 @@
 </ul>
 </li>
 <li><a href="#dimstack.utils">utils</a><ul>
+<li><a href="#dimstack.utils.set_decimals">set_decimals</a></li>
 <li><a href="#dimstack.utils.nround">nround</a></li>
 <li><a href="#dimstack.utils.sign">sign</a></li>
 <li><a href="#dimstack.utils.sign_symbol">sign_symbol</a></li>
@@ -390,15 +399,15 @@
                   (<code>float</code>)
               –
               <div class="doc-md-description">
-                <p>The nominal value of the measurement. Defaults to 0.</p>
+                <p>The nominal value of the measurement.</p>
               </div>
             </li>
             <li>
               <b><code>tol</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.tolerance.Bilateral" href="#dimstack.tolerance.Bilateral">Bilateral</a></code>)
+                  (<code>float | <a class="autorefs autorefs-internal" title="dimstack.tolerance.Bilateral" href="#dimstack.tolerance.Bilateral">Bilateral</a></code>)
               –
               <div class="doc-md-description">
-                <p>The tolerance of the measurement. Defaults to Bilateral.symmetric(0).</p>
+                <p>The tolerance of the measurement.</p>
               </div>
             </li>
             <li>
@@ -424,11 +433,11 @@
             <li>
               <b><code>desc</code></b>
                   (<code>str</code>, default:
-                      <code>&#39;Dimension&#39;</code>
+                      <code>&#39;&#39;</code>
 )
               –
               <div class="doc-md-description">
-                <p>The description of the measurement. Defaults to "Dimension".</p>
+                <p>The description of the measurement. Defaults to "".</p>
               </div>
             </li>
         </ul>
@@ -688,6 +697,40 @@
     <div class="doc doc-contents ">
 
         <p>Convert the dimension to a reviewed dimension.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Basic.reverse" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">reverse</span><span class="p">()</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Reverse the direction of the dimension.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="dimstack.dim.Basic.sensitivity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">sensitivity</span><span class="p">(</span><span class="n">new_a</span><span class="p">)</span></code>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Change the sensitivity of the dimension.</p>
 
     </div>
 
@@ -2302,8 +2345,49 @@ normal_cdf(2)
 <div class="doc doc-object doc-function">
 
 
+<h4 id="dimstack.utils.set_decimals" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">set_decimals</span><span class="p">(</span><span class="n">decimals</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Set the number of decimals to round to.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>decimals</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of decimals to round to.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="dimstack.utils.nround" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">nround</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">ndigits</span><span class="o">=</span><span class="n">DECIMALS</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">nround</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">ndigits</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h4>
 
