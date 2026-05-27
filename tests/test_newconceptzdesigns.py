@@ -30,7 +30,7 @@ m3 = dimstack.dim.Reviewed(
 m3.assume_normal_dist(6)
 dims = [m1, m2, m3]
 
-stack = dimstack.dim.ReviewedStack(name="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", dims=dims)
+stack = dimstack.ReviewedStack(name="PN16/NJ210E - gap between cover and bearing (shaft pushed rt.)", dims=dims)
 
 
 class MITCalc(unittest.TestCase):

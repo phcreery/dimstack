@@ -21,7 +21,7 @@ class Negative(unittest.TestCase):
             desc="",
         )
 
-        stack = ds.dim.Stack(name="stacks on stacks", dims=[d1, d2])
+        stack = ds.Stack(name="stacks on stacks", dims=[d1, d2])
         c = ds.calc.Closed(stack)
 
         self.assertAlmostEqual(c.abs_upper, -0.95)
@@ -54,7 +54,7 @@ class Negative(unittest.TestCase):
         self.assertAlmostEqual(d1.abs_upper_tol, 0.05)
         self.assertAlmostEqual(d1.abs_lower_tol, 0)
 
-        stack = ds.dim.Stack(name="stacks on stacks", dims=[d1, d2])
+        stack = ds.Stack(name="stacks on stacks", dims=[d1, d2])
         c = ds.calc.Closed(stack)
 
         self.assertAlmostEqual(c.abs_nominal, -1)

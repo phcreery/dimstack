@@ -8,6 +8,10 @@
 - [ ] Multi-dimensional tolerancing
 - [ ] add tests for dimension sensitivity (a)
 
+## 0.9.0 5/27/2026
+
+- [x] move `ds.dim.Stack/ReviewedStack` to `ds.stack.*`
+
 ## 0.8.1 5/26/2026
 
 - [x] Rename `description` to `desc`. This affects init of ReviewedStack and Requirement but fields of Basic Dim, Stack, ReviewedStack, and Requirement

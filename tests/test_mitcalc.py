@@ -54,7 +54,7 @@ m7 = dimstack.dim.Reviewed(
 m7.assume_normal_dist(3)
 dims = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = dimstack.dim.ReviewedStack(name="stacks on stacks", dims=dims)
+stack = dimstack.ReviewedStack(name="stacks on stacks", dims=dims)
 
 
 class MITCalc(unittest.TestCase):

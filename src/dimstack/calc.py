@@ -1,4 +1,5 @@
-from .dim import Basic, Reviewed, ReviewedStack, Stack
+from .dim import Basic, Reviewed
+from .stack import ReviewedStack, Stack
 from .dist import Normal
 from .stats import rss
 from .tolerance import Bilateral

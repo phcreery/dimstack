@@ -7,7 +7,8 @@ from rich.table import Table
 
 
 class DisplayMode(Enum):
-    """Display modes for the stack.
+    """
+    Display modes for the stack.
 
     Args:
         TEXT (str): Text mode
@@ -31,7 +32,8 @@ FIGSIZE = (6, 3)
 
 
 def mode(dispmode: DisplayMode | str):
-    """Set the display mode for the stack.
+    """
+    Set the display mode for the stack.
 
     Args:
         dispmode (DisplayMode | str): Display mode to set.
@@ -41,10 +43,13 @@ def mode(dispmode: DisplayMode | str):
 
 
 def display_df(data: Iterable[dict[Any, Any]], title: str = "", dispmode=None):
-    """Display a dataframe.
+    """
+    Display a dataframe.
 
     Args:
-        df (pd.DataFrame): _description_
+        data (Iterable[dict[Any, Any]]): Data to display.
+        title (str): Title of the dataframe.
+        dispmode (DisplayMode | str, optional): Display mode to use. Defaults to None.
     """
     if dispmode is None:
         dispmode = DISPLAY_MODE
@@ -62,8 +67,6 @@ def display_df(data: Iterable[dict[Any, Any]], title: str = "", dispmode=None):
         return df.style.hide(axis="index").set_caption(title).set_properties(**{"text-align": "left"})
     elif dispmode == DisplayMode.NOTEBOOK:
         return df.style.hide(axis="index").set_caption(title).set_properties(**{"text-align": "left"})
-    # elif dispmode == "dict":
-    #     print(df.to_dict())
     elif dispmode == DisplayMode.DF:
         return df
     elif dispmode == DisplayMode.RICH:

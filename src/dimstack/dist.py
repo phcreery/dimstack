@@ -99,8 +99,8 @@ class NormalScreened:
     def sample(self, n: int):
         numbers = norm.rvs(loc=self.mean, scale=self.std_dev, size=n)
         # filter out numbers that are not between lower and upper
-        screenednumbers = np.extract((numbers >= self.lower) & (numbers <= self.upper), numbers)
-        return screenednumbers
+        screened_numbers = np.extract((numbers >= self.lower) & (numbers <= self.upper), numbers)
+        return screened_numbers
 
     def pdf(self, x: float):
         if x < self.lower:

@@ -5,7 +5,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from .dim import Basic, Stack, Reviewed, ReviewedStack
+from .dim import Basic, Reviewed
+from .stack import Stack, ReviewedStack
 from .dist import Normal, NormalScreened, Uniform
 from .utils import nround
 

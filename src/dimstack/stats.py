@@ -76,7 +76,8 @@ def rss(args: List[float]):
 
 
 def C_f(t_rss, t_wc, n):
-    """Correction factor used to calculate the modified RSS.
+    """
+    Correction factor used to calculate the modified RSS.
 
     Args:
         t_rss (_type_): _description_
