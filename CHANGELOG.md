@@ -8,6 +8,13 @@
 - [ ] Multi-dimensional tolerancing
 - [ ] add tests for dimension sensitivity (a)
 
+## 0.8.1 5/26/2026
+
+- [x] rename description to desc. This affects init of ReviewedStack and Requirement but fields of Basic Dim, Stack, ReviewedStack, and Requirement
+- [x] shorthand for basic dimension tolerance
+- [x] improve string interpolation & printing dimensions
+- [x] add helpful methods to BAsic Dim: .reverse(), .sensitivity()
+
 ## 0.8.0 5/15/2025
 
 - [x] Remove `target_process_sigma`

@@ -31,7 +31,7 @@ def Closed(self: Stack | ReviewedStack) -> Basic:
     return Basic(
         nominal,
         tolerance,
-        name=f"{self.name} - Closed Analysis",
+        name=f"Closed Analysis -- {self.name}",
         desc="",
     )
 
@@ -57,7 +57,7 @@ def WC(self: Stack | ReviewedStack) -> Basic:
     return Basic(
         nom=mean,
         tol=tolerance,
-        name=f"{self.name} - WC Analysis",
+        name=f"WC Analysis -- {self.name}",
         desc="",
     )
 
@@ -94,13 +94,17 @@ def RSS(self: Stack | ReviewedStack) -> Basic:
     elif isinstance(self, ReviewedStack):
         dims = [rdim.dim for rdim in self.dims]
 
+    # check for n<3 dims, if so, print warning that RSS is not appropriate
+    if len(dims) < 3:
+        print("Warning: RSS analysis is not appropriate for less than 3 dimensions.")
+
     d_g = sum([dim.dir * dim.rel_median * dim.a for dim in dims])
     t_rss = rss([dim.dir * (dim.tolerance.T / 2) * dim.a for dim in dims])
     tolerance = Bilateral.symmetric(t_rss)
     return Basic(
         nom=d_g,
         tol=tolerance,
-        name=f"{self.name} - RSS Analysis",
+        name=f"RSS Analysis -- {self.name}",
         desc="(assuming inputs with Normal Dist. & uniform SD)",
     )
 
@@ -117,6 +121,9 @@ def MRSS(self: Stack | ReviewedStack) -> Basic:
     elif isinstance(self, ReviewedStack):
         dims = [rdim.dim for rdim in self.dims]
 
+    if len(dims) < 3:
+        print("Warning: MRSS analysis is not appropriate for less than 3 dimensions.")
+
     d_g = sum([dim.dir * dim.rel_median * dim.a for dim in dims])
     t_wc = sum([abs(dim.dir * (dim.tolerance.T / 2) * dim.a) for dim in dims])
     t_rss = rss([dim.dir * dim.a * (dim.tolerance.T / 2) for dim in dims])
@@ -127,7 +134,7 @@ def MRSS(self: Stack | ReviewedStack) -> Basic:
     return Basic(
         nom=d_g,
         tol=tolerance,
-        name=f"{self.name} - MRSS Analysis",
+        name=f"MRSS Analysis -- {self.name}",
         desc="(assuming inputs with Normal Dist. & uniform SD)",
     )
 
@@ -148,7 +155,7 @@ def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
         Basic(
             nom=mean,
             tol=tolerance,
-            name=f"{self.name} - '6 Sigma' Analysis",
+            name=f"'6 Sigma' Analysis -- {self.name}",
             desc="(assuming inputs with Normal Dist.)",
         ),
         distribution=dist,

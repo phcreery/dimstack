@@ -16,11 +16,11 @@ class Basic:
     A measurement is a single measurement of a part.
 
     Args:
-        nom (float, optional): The nominal value of the measurement. Defaults to 0.
-        tol (Bilateral, optional): The tolerance of the measurement. Defaults to Bilateral.symmetric(0).
+        nom (float, optional): The nominal value of the measurement.
+        tol (float | Bilateral, optional): The tolerance of the measurement.
         a (float, optional): The sensitivity of the measurement. Defaults to 1.
         name (str, optional): The name of the measurement. Defaults to "Dimension".
-        desc (str, optional): The description of the measurement. Defaults to "Dimension".
+        desc (str, optional): The description of the measurement. Defaults to "".
     """
 
     newID = itertools.count().__next__
@@ -28,29 +28,26 @@ class Basic:
     def __init__(
         self,
         nom: float,
-        tol: Bilateral,
+        tol: float | Bilateral,
         a: float = 1,
         name: str = "Dimension",
-        desc: str = "Dimension",
+        desc: str = "",
     ):
         self.id = Basic.newID()
         self.dir = sign(nom)
         self.nominal = abs(nom)
-        self.tolerance = tol
+        # self.tolerance = tol
+        if isinstance(tol, (int, float)):
+            self.tolerance = Bilateral.symmetric(tol)
+        else:
+            self.tolerance = tol
         self.a = a
         self.name = name
-        self.description = desc
+        self.desc = desc
 
     def __str__(self) -> str:
-        # return f"{self.id}: {self.name} {self.description} {self.nom_direction_sign}{nround(self.nominal)} {str(self.tolerance)}"
-        return (
-            textwrap.shorten(
-                f"{self.id}: {self.name} {self.description} ",
-                width=DESC_WIDTH,
-                placeholder="...",
-            ).ljust(DESC_WIDTH)
-            + f" {self.nom_direction_sign}{str(nround(self.nominal)).rjust(6)} {str(self.tolerance)}"
-        )
+        direction_sign = "" if self.nom_direction_sign == "+" else self.nom_direction_sign
+        return f"{direction_sign}{str(nround(self.nominal))} {str(self.tolerance)}"
 
     def _repr_html_(self):
         return display_df([self.dict], f"DIMENSION: {self.name}", dispmode="html")
@@ -66,7 +63,7 @@ class Basic:
         return {
             "ID": self.id,
             "Name": self.name,
-            "Desc.": (self.description),
+            "Desc.": (self.desc),
             "±": self.nom_direction_sign,
             "Nom.": nround(self.nominal),
             "Tol.": (str(self.tolerance)).ljust(14, " "),
@@ -151,20 +148,41 @@ class Basic:
         """Convert the dimension to a reviewed dimension."""
         return Reviewed(self, distribution)
 
+    def reverse(self) -> "Basic":
+        """Reverse the direction of the dimension."""
+        return Basic(
+            nom=-self.nominal,
+            tol=self.tolerance,
+            a=self.a,
+            name=self.name,
+            desc=self.desc,
+        )
+
+    def sensitivity(self, new_a: float) -> "Basic":
+        """Change the sensitivity of the dimension."""
+        return Basic(
+            nom=self.nominal,
+            tol=self.tolerance,
+            a=new_a,
+            name=self.name,
+            desc=self.desc,
+        )
+
 
 class Stack:
     def __init__(
         self,
+        dims: list[Basic],
         name: str = "Stack",
-        description: str = "",
-        dims: list[Basic] = [],
+        desc: str = "",
     ):
         self.name = name
-        self.description = description
+        self.desc = desc
         self.dims = dims
 
     def __str__(self) -> str:
-        return f"{self.name}: {self.dims}"
+        dim_array = "\n".join([f"{dim}" for dim in self.dims])
+        return f"{self.name} ({len(self.dims)} dims)\n{dim_array}"
 
     def _repr_html_(self):
         return display_df(self.dict, f"DIMENSION STACK: {self.name}", dispmode="html")
@@ -224,7 +242,6 @@ class Reviewed:
             # **self.dim.dict,
             "Dim.": f"{self.dim}",
             "Dist.": f"{self.distribution}",
-            # "Z": nround(self.Z) if isinstance(self.distribution, dist.Normal) else "",
             "Shift (k)": nround(self.k),
             "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",
             "C_pk": nround(self.C_pk) if isinstance(self.distribution, dist.Normal) else "",
@@ -242,14 +259,12 @@ class Reviewed:
         mean = self.mean_eff
         std_dev = (self.dim.abs_upper - self.dim.abs_lower) / (2 * target_process_sigma)
         self.distribution = dist.Normal(mean=mean, std_dev=std_dev)
-        # logging.warning(f"Assuming Normal Dist. for {self}")
         return self
 
     def assume_normal_dist_shifted(self, target_process_sigma, shift) -> "Reviewed":
         """Assume a normal distribution with a shift"""
         self.assume_normal_dist(target_process_sigma)
         if isinstance(self.distribution, dist.Normal):
-            # self.distribution.mean = self.distribution.mean + shift * self.distribution.std_dev
             self.distribution.mean = self.distribution.mean + shift * self.distribution.std_dev * target_process_sigma
         return self
 
@@ -300,11 +315,9 @@ class Reviewed:
         """
         if self.std_dev_eff == 0:
             return 0
-        # print(self.tolerance.upper, self.std_dev_eff)
         # since we are using effective std_dev, either USL or LSL should work.
         min_tol_gap = min((self.dim.abs_upper - self.mean_eff), (self.mean_eff - self.dim.abs_lower))
         return (min_tol_gap) / self.std_dev_eff
-        # return 0
 
     @property
     def k(self) -> float:
@@ -344,16 +357,23 @@ class Reviewed:
 class ReviewedStack:
     def __init__(
         self,
-        name: str = "Stack",
-        description: str = "",
+        name: str = "Reviewed Stack",
+        desc: str = "",
         dims: list[Reviewed] = [],
     ):
         self.name = name
-        self.description = description
+        self.desc = desc
+
+        # ensure all dims are Reviewed
+        for dim in dims:
+            if not isinstance(dim, Reviewed):
+                raise ValueError("All dims must be Reviewed dimensions.")
+
         self.dims = dims
 
     def __str__(self) -> str:
-        return f"{self.name}: {self.dims}"
+        dim_array = "\n".join([f"{dim}" for dim in self.dims])
+        return f"{self.name} ({len(self.dims)} dims)\n{dim_array}"
 
     def _repr_html_(self):
         return display_df(self.dict, f"REVIEWED DIMENSION STACK: {self.name}", dispmode="html")
@@ -376,15 +396,22 @@ class ReviewedStack:
         """Convert the stack to a basic stack."""
         return Stack(
             name=self.name,
-            description=self.description,
+            desc=self.desc,
             dims=[rdim.dim for rdim in self.dims],
         )
 
 
 class Requirement:
-    def __init__(self, name, description, distribution: dist.Uniform | dist.Normal | dist.NormalScreened, LL, UL):
+    def __init__(
+        self,
+        LL,
+        UL,
+        distribution: dist.Uniform | dist.Normal | dist.NormalScreened,
+        name="Requirement",
+        desc="",
+    ):
         self.name = name
-        self.description = description
+        self.desc = desc
         # self.dim = dim
         self.distribution = distribution
         self.LL = LL
@@ -430,8 +457,8 @@ class Requirement:
     def dict(self) -> list[dict[str, Any]]:
         return [
             {
-                "Name": textwrap.shorten(self.name, width=DESC_WIDTH, placeholder="..."),
-                "Desc.": textwrap.shorten(self.description, width=DESC_WIDTH, placeholder="..."),
+                "Name": textwrap.shorten(self.name, width=10, placeholder="..."),
+                "Desc.": textwrap.shorten(self.desc, width=10, placeholder="..."),
                 "Distribution": str(self.distribution),
                 "Median": nround(self.median),
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
