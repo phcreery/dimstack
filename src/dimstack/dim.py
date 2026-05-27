@@ -457,8 +457,8 @@ class Requirement:
     def dict(self) -> list[dict[str, Any]]:
         return [
             {
-                "Name": textwrap.shorten(self.name, width=10, placeholder="..."),
-                "Desc.": textwrap.shorten(self.desc, width=10, placeholder="..."),
+                "Name": textwrap.shorten(self.name, width=DESC_WIDTH, placeholder="..."),
+                "Desc.": textwrap.shorten(self.desc, width=DESC_WIDTH, placeholder="..."),
                 "Distribution": str(self.distribution),
                 "Median": nround(self.median),
                 "Spec. Limits": f"[{nround(self.LL)}, {nround(self.UL)}]",
