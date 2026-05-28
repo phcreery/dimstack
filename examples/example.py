@@ -5,7 +5,7 @@ ds.display.mode(ds.display.DisplayMode.RICH)
 k = 0.25
 target_process_sigma = 3
 std_dev = 0.036 / target_process_sigma
-m1 = dim = ds.dim.Dim(
+m1 = ds.Dim(
     nom=208,
     tol=ds.tol.Bilateral.symmetric(0.036),
     name="a",
@@ -13,8 +13,8 @@ m1 = dim = ds.dim.Dim(
 ).review(
     distribution=ds.dist.Normal(208 + k * target_process_sigma * std_dev, std_dev),
 )
-m2 = dim = (
-    ds.dim.Dim(
+m2 = (
+    ds.Dim(
         nom=-1.75,
         tol=ds.tol.Bilateral.unequal(0, 0.06),
         name="b",
@@ -24,8 +24,8 @@ m2 = dim = (
     .assume_normal_dist(3)
 )
 
-m3 = dim = (
-    ds.dim.Dim(
+m3 = (
+    ds.Dim(
         nom=-23,
         tol=ds.tol.Bilateral.unequal(0, 0.12),
         name="c",
@@ -34,8 +34,8 @@ m3 = dim = (
     .review()
     .assume_normal_dist(3)
 )
-m4 = dim = (
-    ds.dim.Dim(
+m4 = (
+    ds.Dim(
         nom=20,
         tol=ds.tol.Bilateral.symmetric(0.026),
         name="d",
@@ -44,8 +44,8 @@ m4 = dim = (
     .review()
     .assume_normal_dist(3)
 )
-m5 = dim = (
-    ds.dim.Dim(
+m5 = (
+    ds.Dim(
         nom=-200,
         tol=ds.tol.Bilateral.symmetric(0.145),
         name="e",
@@ -55,7 +55,7 @@ m5 = dim = (
     .assume_normal_dist(3)
 )
 m6 = (
-    ds.dim.Dim(
+    ds.Dim(
         nom=20,
         tol=ds.tol.Bilateral.symmetric(0.026),
         name="f",
@@ -64,12 +64,16 @@ m6 = (
     .review()
     .assume_normal_dist(3)
 )
-m7 = dim = ds.dim.Dim(
-    nom=-23,
-    tol=ds.tol.Bilateral.unequal(0, 0.12),
-    name="g",
-    desc="Bearing",
-).review()
+m7 = (
+    ds.Dim(
+        nom=-23,
+        tol=ds.tol.Bilateral.unequal(0, 0.12),
+        name="g",
+        desc="Bearing",
+    )
+    .review()
+    .assume_normal_dist(3)
+)
 items = [m1, m2, m3, m4, m5, m6, m7]
 
 stack = ds.stack.ReviewedStack(name="stacks on stacks", dims=items)
