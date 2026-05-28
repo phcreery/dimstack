@@ -54,41 +54,39 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#dimstack.dim">dim</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Basic">Basic</a>
+    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Dim">Dim</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_nominal">rel_nominal</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.dir">dir</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_median">rel_median</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.nominal">nominal</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_lower">rel_lower</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.rel_nominal">rel_nominal</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.rel_upper">rel_upper</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.rel_median">rel_median</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_nominal">abs_nominal</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.rel_lower">rel_lower</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_median">abs_median</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.rel_upper">rel_upper</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_lower">abs_lower</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.abs_nominal">abs_nominal</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper">abs_upper</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.abs_median">abs_median</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.abs_lower">abs_lower</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.abs_upper">abs_upper</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.convert_to_bilateral">convert_to_bilateral</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.abs_lower_tol">abs_lower_tol</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.review">review</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.abs_upper_tol">abs_upper_tol</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.reverse">reverse</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.convert_to_bilateral">convert_to_bilateral</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Basic.sensitivity">sensitivity</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.review">review</a>
     </li>
-        </ul>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.reverse">reverse</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.Stack">Stack</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Stack.append">append</a>
+    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Dim.sensitivity">sensitivity</a>
     </li>
         </ul>
     </li>
@@ -115,14 +113,6 @@
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.Reviewed.assume_normal_dist_shifted">assume_normal_dist_shifted</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#dimstack.dim.ReviewedStack">ReviewedStack</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.ReviewedStack.append">append</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#dimstack.dim.ReviewedStack.to_basic_stack">to_basic_stack</a>
     </li>
         </ul>
     </li>
@@ -247,25 +237,23 @@
 <ul>
 <li><a href="#core">Core</a><ul>
 <li><a href="#dimstack.dim">dim</a><ul>
-<li><a href="#dimstack.dim.Basic">Basic</a><ul>
-<li><a href="#dimstack.dim.Basic.rel_nominal">rel_nominal</a></li>
-<li><a href="#dimstack.dim.Basic.rel_median">rel_median</a></li>
-<li><a href="#dimstack.dim.Basic.rel_lower">rel_lower</a></li>
-<li><a href="#dimstack.dim.Basic.rel_upper">rel_upper</a></li>
-<li><a href="#dimstack.dim.Basic.abs_nominal">abs_nominal</a></li>
-<li><a href="#dimstack.dim.Basic.abs_median">abs_median</a></li>
-<li><a href="#dimstack.dim.Basic.abs_lower">abs_lower</a></li>
-<li><a href="#dimstack.dim.Basic.abs_upper">abs_upper</a></li>
-<li><a href="#dimstack.dim.Basic.abs_lower_tol">abs_lower_tol</a></li>
-<li><a href="#dimstack.dim.Basic.abs_upper_tol">abs_upper_tol</a></li>
-<li><a href="#dimstack.dim.Basic.convert_to_bilateral">convert_to_bilateral</a></li>
-<li><a href="#dimstack.dim.Basic.review">review</a></li>
-<li><a href="#dimstack.dim.Basic.reverse">reverse</a></li>
-<li><a href="#dimstack.dim.Basic.sensitivity">sensitivity</a></li>
-</ul>
-</li>
-<li><a href="#dimstack.dim.Stack">Stack</a><ul>
-<li><a href="#dimstack.dim.Stack.append">append</a></li>
+<li><a href="#dimstack.dim.Dim">Dim</a><ul>
+<li><a href="#dimstack.dim.Dim.dir">dir</a></li>
+<li><a href="#dimstack.dim.Dim.nominal">nominal</a></li>
+<li><a href="#dimstack.dim.Dim.rel_nominal">rel_nominal</a></li>
+<li><a href="#dimstack.dim.Dim.rel_median">rel_median</a></li>
+<li><a href="#dimstack.dim.Dim.rel_lower">rel_lower</a></li>
+<li><a href="#dimstack.dim.Dim.rel_upper">rel_upper</a></li>
+<li><a href="#dimstack.dim.Dim.abs_nominal">abs_nominal</a></li>
+<li><a href="#dimstack.dim.Dim.abs_median">abs_median</a></li>
+<li><a href="#dimstack.dim.Dim.abs_lower">abs_lower</a></li>
+<li><a href="#dimstack.dim.Dim.abs_upper">abs_upper</a></li>
+<li><a href="#dimstack.dim.Dim.abs_lower_tol">abs_lower_tol</a></li>
+<li><a href="#dimstack.dim.Dim.abs_upper_tol">abs_upper_tol</a></li>
+<li><a href="#dimstack.dim.Dim.convert_to_bilateral">convert_to_bilateral</a></li>
+<li><a href="#dimstack.dim.Dim.review">review</a></li>
+<li><a href="#dimstack.dim.Dim.reverse">reverse</a></li>
+<li><a href="#dimstack.dim.Dim.sensitivity">sensitivity</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Reviewed">Reviewed</a><ul>
@@ -280,11 +268,6 @@
 <li><a href="#dimstack.dim.Reviewed.yield_probability">yield_probability</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist">assume_normal_dist</a></li>
 <li><a href="#dimstack.dim.Reviewed.assume_normal_dist_shifted">assume_normal_dist_shifted</a></li>
-</ul>
-</li>
-<li><a href="#dimstack.dim.ReviewedStack">ReviewedStack</a><ul>
-<li><a href="#dimstack.dim.ReviewedStack.append">append</a></li>
-<li><a href="#dimstack.dim.ReviewedStack.to_basic_stack">to_basic_stack</a></li>
 </ul>
 </li>
 <li><a href="#dimstack.dim.Requirement">Requirement</a><ul>
@@ -371,8 +354,8 @@
 
 
 
-<h4 id="dimstack.dim.Basic" class="doc doc-heading">
-            <code>Basic</code>
+<h4 id="dimstack.dim.Dim" class="doc doc-heading">
+            <code>Dim</code>
 
 
 </h4>
@@ -460,7 +443,51 @@
 
 
 
-<h5 id="dimstack.dim.Basic.rel_nominal" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.dir" class="doc doc-heading">
+            <code class="highlight language-python"><span class="nb">dir</span><span class="p">:</span> <span class="nb">int</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The direction of the measurement. +1 for positive, -1 for negative.</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Dim.nominal" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">nominal</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
+  </span>
+
+</h5>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The nominal value of the measurement.</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="dimstack.dim.Dim.rel_nominal" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">rel_nominal</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -481,7 +508,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.rel_median" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.rel_median" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">rel_median</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -502,7 +529,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.rel_lower" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.rel_lower" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">rel_lower</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -523,7 +550,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.rel_upper" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.rel_upper" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">rel_upper</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -544,7 +571,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.abs_nominal" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.abs_nominal" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_nominal</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -565,7 +592,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.abs_median" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.abs_median" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_median</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -586,7 +613,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.abs_lower" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.abs_lower" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_lower</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -607,7 +634,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.abs_upper" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.abs_upper" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_upper</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -628,7 +655,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.abs_lower_tol" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.abs_lower_tol" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_lower_tol</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -649,7 +676,7 @@
 
 
 
-<h5 id="dimstack.dim.Basic.abs_upper_tol" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.abs_upper_tol" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">abs_upper_tol</span><span class="p">:</span> <span class="nb">float</span></code>
 
   <span class="doc doc-labels">
@@ -671,7 +698,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="dimstack.dim.Basic.convert_to_bilateral" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.convert_to_bilateral" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">convert_to_bilateral</span><span class="p">()</span></code>
 
 </h5>
@@ -688,7 +715,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="dimstack.dim.Basic.review" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.review" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">review</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h5>
@@ -705,7 +732,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="dimstack.dim.Basic.reverse" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.reverse" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">reverse</span><span class="p">()</span></code>
 
 </h5>
@@ -722,7 +749,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="dimstack.dim.Basic.sensitivity" class="doc doc-heading">
+<h5 id="dimstack.dim.Dim.sensitivity" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">sensitivity</span><span class="p">(</span><span class="n">new_a</span><span class="p">)</span></code>
 
 </h5>
@@ -731,58 +758,6 @@
     <div class="doc doc-contents ">
 
         <p>Change the sensitivity of the dimension.</p>
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h4 id="dimstack.dim.Stack" class="doc doc-heading">
-            <code>Stack</code>
-
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h5 id="dimstack.dim.Stack.append" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">append</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span></code>
-
-</h5>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Append a measurement to the stack.</p>
 
     </div>
 
@@ -825,7 +800,7 @@
         <ul class="first simple">
             <li>
               <b><code>dim</code></b>
-                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code>)
+                  (<code><a class="autorefs autorefs-internal" title="dimstack.dim.Dim" href="#dimstack.dim.Dim">Dim</a></code>)
               –
               <div class="doc-md-description">
                 <p>The basic dimension.</p>
@@ -838,7 +813,7 @@
 )
               –
               <div class="doc-md-description">
-                <p>The distribution of the measurement. Defaults to "Normal".</p>
+                <p>The distribution of the measurement. Defaults to "Normal" with 6 sigma.</p>
               </div>
             </li>
         </ul>
@@ -1079,75 +1054,6 @@
     <div class="doc doc-contents ">
 
         <p>Assume a normal distribution with a shift</p>
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h4 id="dimstack.dim.ReviewedStack" class="doc doc-heading">
-            <code>ReviewedStack</code>
-
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h5 id="dimstack.dim.ReviewedStack.append" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">append</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span></code>
-
-</h5>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Append a measurement to the stack.</p>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h5 id="dimstack.dim.ReviewedStack.to_basic_stack" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">to_basic_stack</span><span class="p">()</span></code>
-
-</h5>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Convert the stack to a basic stack.</p>
 
     </div>
 
@@ -1855,7 +1761,7 @@ the mean value plus the RSS variation at the gap.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>Basic</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code>
+<b><code>Basic</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.dim.Dim" href="#dimstack.dim.Dim">Dim</a></code>
 )              –
               <div class="doc-md-description">
                 <p>A Bilateral dimension with the RSS tolerance of the stack.</p>
@@ -1895,7 +1801,7 @@ the mean value plus the RSS variation at the gap.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>Basic</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.dim.Basic" href="#dimstack.dim.Basic">Basic</a></code>
+<b><code>Basic</code></b>(                  <code><a class="autorefs autorefs-internal" title="dimstack.dim.Dim" href="#dimstack.dim.Dim">Dim</a></code>
 )              –
               <div class="doc-md-description">
                 <p>A Bilateral dimension with the MRSS tolerance of the stack.</p>
