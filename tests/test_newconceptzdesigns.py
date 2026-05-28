@@ -5,7 +5,7 @@ import dimstack
 # this test is a copy of "My First Stackup" in newconceptzdesign http://www.newconceptzdesign.com/tutorial/Tutorial-My_first_stackup.html
 
 m1 = dimstack.dim.Reviewed(
-    dimstack.dim.Basic(
+    dimstack.dim.Dim(
         nom=-0.3190,
         tol=dimstack.tolerance.Bilateral.symmetric(0.0050),
         name="PN16",
@@ -14,7 +14,7 @@ m1 = dimstack.dim.Reviewed(
 )
 m1.assume_normal_dist(6)
 m2 = dimstack.dim.Reviewed(
-    dimstack.dim.Basic(
+    dimstack.dim.Dim(
         nom=10.4860,
         tol=dimstack.tolerance.Bilateral.symmetric(0.0100),
         name="PN07",
@@ -23,7 +23,7 @@ m2 = dimstack.dim.Reviewed(
 )
 m2.assume_normal_dist(6)
 m3 = dimstack.dim.Reviewed(
-    dimstack.dim.Basic(
+    dimstack.dim.Dim(
         nom=-0.3190, tol=dimstack.tolerance.Bilateral.symmetric(0.0050), name="PN16", desc="Mounting face to rt. end"
     ),
 )

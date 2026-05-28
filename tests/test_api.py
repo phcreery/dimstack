@@ -3,13 +3,13 @@ import unittest
 import dimstack as ds
 
 
-class API(unittest.TestCase):
+class ShortHandAPI(unittest.TestCase):
     def test_dim(self):
         """
         test inferred symmetric tolerance
         and root alias
         """
-        d = ds.Basic(10, 0.1)
+        d = ds.Dim(10, 0.1)
         self.assertEqual(d.nominal, 10)
         self.assertEqual(d.tolerance.upper, 0.1)
         self.assertEqual(d.tolerance.lower, -0.1)
@@ -18,7 +18,7 @@ class API(unittest.TestCase):
         """
         test print result
         """
-        d = ds.Basic(10, 0.1)
+        d = ds.Dim(10, 0.1)
         self.assertEqual(f"{d}", "10 ± 0.1")
         d.nominal = -10
         self.assertEqual(f"{d}", "-10 ± 0.1")
@@ -27,8 +27,8 @@ class API(unittest.TestCase):
         """
         test print result
         """
-        d1 = ds.Basic(10, 0.1)
-        d2 = ds.Basic(-10, 0.1)
+        d1 = ds.Dim(10, 0.1)
+        d2 = ds.Dim(-10, 0.1)
         stack = ds.Stack(name="test stack", dims=[d1, d2])
         expected = "test stack (2 dims)\n10 ± 0.1\n-10 ± 0.1"
         self.assertEqual(f"{stack}", expected)
@@ -37,7 +37,7 @@ class API(unittest.TestCase):
         """
         test print result
         """
-        d = ds.Basic(10, 0.1)
+        d = ds.Dim(10, 0.1)
         r = ds.Reviewed(d)
         self.assertEqual(f"{r}", "10 ± 0.1 @ Normal Dist. μ=10.0, σ=0.01667")
 
@@ -45,8 +45,8 @@ class API(unittest.TestCase):
         """
         test print result
         """
-        d1 = ds.Basic(10, 0.1)
-        d2 = ds.Basic(-10, 0.1)
+        d1 = ds.Dim(10, 0.1)
+        d2 = ds.Dim(-10, 0.1)
         r1 = ds.Reviewed(d1)
         r2 = ds.Reviewed(d2)
         stack = ds.ReviewedStack(name="test reviewed stack", dims=[r1, r2])
@@ -57,6 +57,50 @@ class API(unittest.TestCase):
         """
         test print result
         """
-        measurement = ds.Basic(11, 0.1).review()
+        measurement = ds.Dim(11, 0.1).review()
         r = ds.Requirement(LL=9, UL=11, name="spec", desc="", distribution=measurement.distribution)
         self.assertEqual(f"{r}", "spec [9, 11] Normal Dist. μ=11.0, σ=0.01667")
+
+
+class StressAPI(unittest.TestCase):
+    def test_dim_reverse(self):
+        d = ds.Dim(10, 0.1)
+
+        # override nominal attribute to test reverse
+        d.nominal = -10
+        self.assertEqual(d.abs_nominal, -10)
+        self.assertEqual(d.nominal, 10)
+        self.assertEqual(d.tolerance.upper, 0.1)
+        self.assertEqual(d.tolerance.lower, -0.1)
+        self.assertEqual(d.abs_lower_tol, -0.1)
+        self.assertEqual(d.abs_upper_tol, 0.1)
+        self.assertEqual(d.abs_lower, -10.1)
+        self.assertEqual(d.abs_upper, -9.9)
+
+        # use reverse api
+        d = d.reverse()
+        self.assertEqual(d.abs_nominal, 10)
+        self.assertEqual(d.nominal, 10)
+        self.assertEqual(d.tolerance.upper, 0.1)
+        self.assertEqual(d.tolerance.lower, -0.1)
+        self.assertEqual(d.abs_lower_tol, -0.1)
+        self.assertEqual(d.abs_upper_tol, 0.1)
+        self.assertEqual(d.abs_lower, 9.9)
+        self.assertEqual(d.abs_upper, 10.1)
+
+        # again
+        d = d.reverse()
+        self.assertEqual(d.abs_nominal, -10)
+        self.assertEqual(d.nominal, 10)
+        self.assertEqual(d.tolerance.upper, 0.1)
+        self.assertEqual(d.tolerance.lower, -0.1)
+        self.assertEqual(d.abs_lower_tol, -0.1)
+        self.assertEqual(d.abs_upper_tol, 0.1)
+        self.assertEqual(d.abs_lower, -10.1)
+        self.assertEqual(d.abs_upper, -9.9)
+
+        # override dir attribute to test reverse
+        d.dir = 1
+        self.assertEqual(d.abs_nominal, 10)
+        d.dir = -1
+        self.assertEqual(d.abs_nominal, -10)

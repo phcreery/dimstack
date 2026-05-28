@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from .dim import Basic, Reviewed
+from .dim import Dim, Reviewed
 from .stack import Stack, ReviewedStack
 from .dist import Normal, NormalScreened, Uniform
 from .utils import nround
@@ -35,7 +35,7 @@ class StackPlot:
 
     def add_dimension(
         self,
-        item: Basic,
+        item: Dim,
         title: str | None = None,
         start_pos: float | None = None,
         color=None,
@@ -212,7 +212,7 @@ class StackPlot:
 
         return self
 
-    def add(self, item: Basic | Reviewed | Stack | ReviewedStack):
+    def add(self, item: Dim | Reviewed | Stack | ReviewedStack):
         """Add a dimension or stack to the plot.
 
         Args:
@@ -226,7 +226,7 @@ class StackPlot:
         """
         self.color = next(self.col_pal_iterator)
 
-        if isinstance(item, Basic):
+        if isinstance(item, Dim):
             self.add_dimension(item)
         elif isinstance(item, Reviewed):
             self.add_reviewed(item)

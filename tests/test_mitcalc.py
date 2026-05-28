@@ -5,7 +5,7 @@ import dimstack
 # this test is a copy of MITCalc User Interface diagram
 
 m1 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(
+    dim=dimstack.dim.Dim(
         nom=208,
         tol=dimstack.tolerance.Bilateral.symmetric(0.036),
         name="a",
@@ -14,7 +14,7 @@ m1 = dimstack.dim.Reviewed(
 )
 m1.assume_normal_dist_shifted(6, 0.25)
 m2 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(
+    dim=dimstack.dim.Dim(
         nom=-1.75,
         tol=dimstack.tolerance.Bilateral.unequal(0, -0.06),
         name="b",
@@ -23,11 +23,11 @@ m2 = dimstack.dim.Reviewed(
 )
 m2.assume_normal_dist(3)
 m3 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="c", desc="Bearing"),
+    dim=dimstack.dim.Dim(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="c", desc="Bearing"),
 )
 m3.assume_normal_dist(3)
 m4 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(
+    dim=dimstack.dim.Dim(
         nom=20,
         tol=dimstack.tolerance.Bilateral.symmetric(0.026),
         name="d",
@@ -36,11 +36,11 @@ m4 = dimstack.dim.Reviewed(
 )
 m4.assume_normal_dist(3)
 m5 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(nom=-200, tol=dimstack.tolerance.Bilateral.symmetric(0.145), name="e", desc="Case"),
+    dim=dimstack.dim.Dim(nom=-200, tol=dimstack.tolerance.Bilateral.symmetric(0.145), name="e", desc="Case"),
 )
 m5.assume_normal_dist(3)
 m6 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(
+    dim=dimstack.dim.Dim(
         nom=20,
         tol=dimstack.tolerance.Bilateral.symmetric(0.026),
         name="f",
@@ -49,7 +49,7 @@ m6 = dimstack.dim.Reviewed(
 )
 m6.assume_normal_dist(3)
 m7 = dimstack.dim.Reviewed(
-    dim=dimstack.dim.Basic(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="g", desc="Bearing"),
+    dim=dimstack.dim.Dim(nom=-23, tol=dimstack.tolerance.Bilateral.unequal(0, -0.12), name="g", desc="Bearing"),
 )
 m7.assume_normal_dist(3)
 dims = [m1, m2, m3, m4, m5, m6, m7]

@@ -8,7 +8,7 @@ class Positive(unittest.TestCase):
         t = ds.tolerance.Bilateral.unequal(upper=0.005, lower=-0.004)
         self.assertEqual(t.upper, 0.005)
         self.assertEqual(t.lower, -0.004)
-        d = ds.dim.Basic(
+        d = ds.dim.Dim(
             nom=1,
             tol=t,
             name="a",
@@ -22,7 +22,7 @@ class Positive(unittest.TestCase):
 class Negative(unittest.TestCase):
     def test_Negative_Bilateral_unequal(self):
         t = ds.tolerance.Bilateral.unequal(upper=0.005, lower=-0.004)
-        d = ds.dim.Basic(
+        d = ds.dim.Dim(
             nom=-1,
             tol=t,
             name="a",
@@ -44,7 +44,7 @@ class Negative(unittest.TestCase):
 class Reviewed(unittest.TestCase):
     def test_Reviewed(self):
         d1 = ds.dim.Reviewed(
-            dim=ds.dim.Basic(
+            dim=ds.dim.Dim(
                 nom=1,
                 tol=ds.tolerance.Bilateral.symmetric(1),
                 name="a",
@@ -55,7 +55,7 @@ class Reviewed(unittest.TestCase):
         self.assertAlmostEqual(d1.distribution.std_dev, 0.33333333)
 
         d2 = ds.dim.Reviewed(
-            dim=ds.dim.Basic(
+            dim=ds.dim.Dim(
                 nom=1,
                 tol=ds.tolerance.Bilateral.symmetric(1),
                 name="a",

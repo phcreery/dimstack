@@ -29,7 +29,7 @@ class FlippedBilateral(unittest.TestCase):
 
 class AbsRelPosNeg(unittest.TestCase):
     def test_Positive_Abs(self):
-        d = dimstack.dim.Basic(
+        d = dimstack.dim.Dim(
             nom=0.1,
             tol=dimstack.tolerance.Bilateral.symmetric(0.2),
             name="B",
@@ -42,7 +42,7 @@ class AbsRelPosNeg(unittest.TestCase):
         self.assertEqual(d.rel_lower, -0.1)
 
     def test_Negative_Abs(self):
-        d = dimstack.dim.Basic(
+        d = dimstack.dim.Dim(
             nom=-0.1,
             tol=dimstack.tolerance.Bilateral.symmetric(0.2),
             name="B",
@@ -55,7 +55,7 @@ class AbsRelPosNeg(unittest.TestCase):
         # self.assertEqual(d.rel_lower, -0.1)
 
     def test_Positive_Rel(self):
-        d = dimstack.dim.Basic(
+        d = dimstack.dim.Dim(
             nom=0.5,
             tol=dimstack.tolerance.Bilateral.unequal(upper=0.1, lower=-0.2),
             name="B",
@@ -65,7 +65,7 @@ class AbsRelPosNeg(unittest.TestCase):
         self.assertAlmostEqual(d.rel_lower, 0.3)
 
     def test_Negative_Rel(self):
-        d = dimstack.dim.Basic(
+        d = dimstack.dim.Dim(
             nom=-0.5,
             tol=dimstack.tolerance.Bilateral.unequal(upper=0.1, lower=-0.2),
             name="B",

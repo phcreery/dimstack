@@ -11,6 +11,9 @@
 ## 0.9.0 5/27/2026
 
 - [x] move `ds.dim.Stack/ReviewedStack` to `ds.stack.*`
+- [x] Rename `ds.dim.Basic` to `ds.dim.Dim`
+- [x] Fix state dependency from setting to `Dim.nominal` and `Dim.dir`
+- [x] Simpler dim and stack printing
 
 ## 0.8.1 5/26/2026
 

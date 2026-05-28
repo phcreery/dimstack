@@ -11,7 +11,7 @@ from .utils import POSITIVE, nround, sign, sign_symbol
 DESC_WIDTH = 30
 
 
-class Basic:
+class Dim:
     """
     A measurement is a single measurement of a part.
 
@@ -33,9 +33,9 @@ class Basic:
         name: str = "Dimension",
         desc: str = "",
     ):
-        self.id = Basic.newID()
-        self.dir = sign(nom)
-        self.nominal = abs(nom)
+        self.id = Dim.newID()
+        self._dir = sign(nom)
+        self._nominal = abs(nom)
         # self.tolerance = tol
         if isinstance(tol, (int, float)):
             self.tolerance = Bilateral.symmetric(tol)
@@ -61,7 +61,7 @@ class Basic:
     @property
     def dict(self) -> dict[str, Any]:
         return {
-            "ID": self.id,
+            # "ID": self.id,
             "Name": self.name,
             "Desc.": (self.desc),
             "±": self.nom_direction_sign,
@@ -71,6 +71,29 @@ class Basic:
             # "Rel. Bounds": f"[{nround(self.rel_lower)}, {nround(self.rel_upper)}]",
             "Abs. Bounds": f"[{nround(self.abs_lower)}, {nround(self.abs_upper)}]",
         }
+
+    @property
+    def dir(self) -> int:
+        """The direction of the measurement. +1 for positive, -1 for negative."""
+        return self._dir
+
+    @dir.setter
+    def dir(self, value: int):
+        """Set the direction of the measurement. +1 for positive, -1 for negative."""
+        if value not in (1, -1):
+            raise ValueError("Direction must be either +1 or -1.")
+        self._dir = value
+
+    @property
+    def nominal(self) -> float:
+        """The nominal value of the measurement."""
+        return self._nominal
+
+    @nominal.setter
+    def nominal(self, value: float):
+        """Set the nominal value of the measurement."""
+        self.dir = sign(value)
+        self._nominal = abs(value)
 
     @property
     def nom_direction_sign(self) -> str:
@@ -132,7 +155,7 @@ class Basic:
         else:
             return self.a * -self.tolerance.lower
 
-    def convert_to_bilateral(self) -> "Basic":
+    def convert_to_bilateral(self) -> "Dim":
         """Convert the dimension to a bilateral dimension by centering the nominal value."""
         median = self.rel_median
         tol = self.tolerance.T / 2
@@ -148,19 +171,19 @@ class Basic:
         """Convert the dimension to a reviewed dimension."""
         return Reviewed(self, distribution)
 
-    def reverse(self) -> "Basic":
+    def reverse(self) -> "Dim":
         """Reverse the direction of the dimension."""
-        return Basic(
-            nom=-self.nominal,
+        return Dim(
+            nom=-(self.dir * self.nominal),
             tol=self.tolerance,
             a=self.a,
             name=self.name,
             desc=self.desc,
         )
 
-    def sensitivity(self, new_a: float) -> "Basic":
+    def sensitivity(self, new_a: float) -> "Dim":
         """Change the sensitivity of the dimension."""
-        return Basic(
+        return Dim(
             nom=self.nominal,
             tol=self.tolerance,
             a=new_a,
@@ -173,16 +196,16 @@ class Reviewed:
     """Reviewed
 
     Args:
-        dim (Basic): The basic dimension.
-        distribution (str, optional): The distribution of the measurement. Defaults to "Normal".
+        dim (Dim): The basic dimension.
+        distribution (str, optional): The distribution of the measurement. Defaults to "Normal" with 6 sigma.
     """
 
-    dim: Basic
+    dim: Dim
     distribution: dist.Uniform | dist.Normal | dist.NormalScreened
 
     def __init__(
         self,
-        dim: Basic,
+        dim: Dim,
         distribution: dist.Uniform | dist.Normal | dist.NormalScreened | None = None,
     ):
         self.dim = dim
@@ -207,7 +230,20 @@ class Reviewed:
     def dict(self) -> dict[str, Any]:
         return {
             # **self.dim.dict,
-            "Dim.": f"{self.dim}",
+            # "Dim.": f"{self.dim}",
+            #
+            # "Name": self.dim.name,
+            # "Desc.": (self.dim.desc),
+            # "±": self.dim.nom_direction_sign,
+            # "Nom.": nround(self.dim.nominal),
+            # "Tol.": (str(self.dim.tolerance)).ljust(14, " "),
+            #
+            "Dim.": textwrap.shorten(
+                f"{self.dim.name} {self.dim.desc} ",
+                width=DESC_WIDTH,
+                placeholder="...",
+            ).ljust(DESC_WIDTH)
+            + f" {self.dim.nom_direction_sign}{str(nround(self.dim.nominal)).rjust(6)} {str(self.dim.tolerance)}",
             "Dist.": f"{self.distribution}",
             "Shift (k)": nround(self.k),
             "C_p": nround(self.C_p) if isinstance(self.distribution, dist.Normal) else "",

@@ -5,7 +5,7 @@ ds.display.mode(ds.display.DisplayMode.RICH)
 k = 0.25
 target_process_sigma = 3
 std_dev = 0.036 / target_process_sigma
-m1 = dim = ds.dim.Basic(
+m1 = dim = ds.dim.Dim(
     nom=208,
     tol=ds.tol.Bilateral.symmetric(0.036),
     name="a",
@@ -14,7 +14,7 @@ m1 = dim = ds.dim.Basic(
     distribution=ds.dist.Normal(208 + k * target_process_sigma * std_dev, std_dev),
 )
 m2 = dim = (
-    ds.dim.Basic(
+    ds.dim.Dim(
         nom=-1.75,
         tol=ds.tol.Bilateral.unequal(0, 0.06),
         name="b",
@@ -25,7 +25,7 @@ m2 = dim = (
 )
 
 m3 = dim = (
-    ds.dim.Basic(
+    ds.dim.Dim(
         nom=-23,
         tol=ds.tol.Bilateral.unequal(0, 0.12),
         name="c",
@@ -35,7 +35,7 @@ m3 = dim = (
     .assume_normal_dist(3)
 )
 m4 = dim = (
-    ds.dim.Basic(
+    ds.dim.Dim(
         nom=20,
         tol=ds.tol.Bilateral.symmetric(0.026),
         name="d",
@@ -45,7 +45,7 @@ m4 = dim = (
     .assume_normal_dist(3)
 )
 m5 = dim = (
-    ds.dim.Basic(
+    ds.dim.Dim(
         nom=-200,
         tol=ds.tol.Bilateral.symmetric(0.145),
         name="e",
@@ -55,7 +55,7 @@ m5 = dim = (
     .assume_normal_dist(3)
 )
 m6 = (
-    ds.dim.Basic(
+    ds.dim.Dim(
         nom=20,
         tol=ds.tol.Bilateral.symmetric(0.026),
         name="f",
@@ -64,7 +64,7 @@ m6 = (
     .review()
     .assume_normal_dist(3)
 )
-m7 = dim = ds.dim.Basic(
+m7 = dim = ds.dim.Dim(
     nom=-23,
     tol=ds.tol.Bilateral.unequal(0, 0.12),
     name="g",
@@ -72,7 +72,7 @@ m7 = dim = ds.dim.Basic(
 ).review()
 items = [m1, m2, m3, m4, m5, m6, m7]
 
-stack = ds.dim.ReviewedStack(name="stacks on stacks", dims=items)
+stack = ds.stack.ReviewedStack(name="stacks on stacks", dims=items)
 
 stack.to_basic_stack().show()
 stack.show()

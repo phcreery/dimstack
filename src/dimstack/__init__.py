@@ -1,7 +1,7 @@
 from . import calc, dim, stack, display, dist, plot, stats, tolerance, utils
 from . import tolerance as tol
 
-from .dim import Basic, Reviewed, Requirement
+from .dim import Dim, Reviewed, Requirement
 from .stack import Stack, ReviewedStack
 from .dist import Normal, Uniform
 

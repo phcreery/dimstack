@@ -1,13 +1,13 @@
 from typing import Any
 
 from .display import display_df
-from .dim import Basic, Reviewed
+from .dim import Dim, Reviewed
 
 
 class Stack:
     def __init__(
         self,
-        dims: list[Basic],
+        dims: list[Dim],
         name: str = "Stack",
         desc: str = "",
     ):
@@ -28,7 +28,7 @@ class Stack:
     def show(self, expand=False):
         return display_df(self.dict, f"DIMENSION STACK: {self.name}")
 
-    def append(self, measurement: Basic):
+    def append(self, measurement: Dim):
         """Append a measurement to the stack."""
         self.dims.append(measurement)
 

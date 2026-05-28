@@ -13,7 +13,7 @@ class PositiveDist(unittest.TestCase):
         measurements_dist = dimstack.dist.Normal.fit(measurements)
         tol = dimstack.tol.Bilateral.symmetric(0.3)
         rdim = dimstack.dim.Reviewed(
-            dim=dimstack.dim.Basic(
+            dim=dimstack.dim.Dim(
                 nom=1,
                 tol=tol,
                 name="1",
@@ -36,7 +36,7 @@ class NegativeDist(unittest.TestCase):
         measurements_dist = dimstack.dist.Normal.fit(measurements)
         tol = dimstack.tol.Bilateral.symmetric(0.3)
         rdim = dimstack.dim.Reviewed(
-            dim=dimstack.dim.Basic(
+            dim=dimstack.dim.Dim(
                 nom=-1,
                 tol=tol,
                 name="1",

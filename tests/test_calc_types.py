@@ -6,7 +6,7 @@ import dimstack as ds
 class Negative(unittest.TestCase):
     def test_Negative_Closed(self):
         t = ds.tolerance.Bilateral.unequal(upper=0.05, lower=0)
-        d1 = ds.dim.Basic(
+        d1 = ds.dim.Dim(
             nom=1,
             tol=t,
             name="a",
@@ -14,7 +14,7 @@ class Negative(unittest.TestCase):
         )
 
         t = ds.tolerance.Bilateral.unequal(upper=0.05, lower=0)
-        d2 = ds.dim.Basic(
+        d2 = ds.dim.Dim(
             nom=-2,
             tol=t,
             name="a",
@@ -29,7 +29,7 @@ class Negative(unittest.TestCase):
 
     def test_Negative_Closed1(self):
         t = ds.tolerance.Bilateral.unequal(upper=0.05, lower=0)
-        d1 = ds.dim.Basic(
+        d1 = ds.dim.Dim(
             nom=1,
             tol=t,
             name="a",
@@ -41,7 +41,7 @@ class Negative(unittest.TestCase):
         self.assertAlmostEqual(d1.abs_lower_tol, 0)
 
         t = ds.tolerance.Bilateral.unequal(upper=0, lower=-0.05)
-        d2 = ds.dim.Basic(
+        d2 = ds.dim.Dim(
             nom=-2,
             tol=t,
             name="a",

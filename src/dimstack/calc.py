@@ -1,11 +1,11 @@
-from .dim import Basic, Reviewed
+from .dim import Dim, Reviewed
 from .stack import ReviewedStack, Stack
 from .dist import Normal
 from .stats import rss
 from .tolerance import Bilateral
 
 
-def Closed(self: Stack | ReviewedStack) -> Basic:
+def Closed(self: Stack | ReviewedStack) -> Dim:
     """
     This is a simple Closed calculation. This results in a Bilateral dimension with
     a tolerance that is the sum of the component tolerances. This is similar to
@@ -29,7 +29,7 @@ def Closed(self: Stack | ReviewedStack) -> Basic:
             sum(dim.abs_lower_tol for dim in dims),
         )
 
-    return Basic(
+    return Dim(
         nominal,
         tolerance,
         name=f"Closed Analysis -- {self.name}",
@@ -37,7 +37,7 @@ def Closed(self: Stack | ReviewedStack) -> Basic:
     )
 
 
-def WC(self: Stack | ReviewedStack) -> Basic:
+def WC(self: Stack | ReviewedStack) -> Dim:
     """
     This is a simple WC calculation. This results in a Bilateral dimension with
     a tolerance that is the sum of the component tolerances. This is similar to
@@ -55,7 +55,7 @@ def WC(self: Stack | ReviewedStack) -> Basic:
     mean = sum([dim.dir * dim.rel_median * dim.a for dim in dims])
     t_wc = sum([abs((dim.tolerance.T / 2) * dim.a) for dim in dims])
     tolerance = Bilateral.symmetric(t_wc)
-    return Basic(
+    return Dim(
         nom=mean,
         tol=tolerance,
         name=f"WC Analysis -- {self.name}",
@@ -63,7 +63,7 @@ def WC(self: Stack | ReviewedStack) -> Basic:
     )
 
 
-def RSS(self: Stack | ReviewedStack) -> Basic:
+def RSS(self: Stack | ReviewedStack) -> Dim:
     """
     This is a simple RSS calculation. This is uses the RSS calculation method in
     the Dimensioning and Tolerancing Handbook, McGraw Hill.
@@ -102,7 +102,7 @@ def RSS(self: Stack | ReviewedStack) -> Basic:
     d_g = sum([dim.dir * dim.rel_median * dim.a for dim in dims])
     t_rss = rss([dim.dir * (dim.tolerance.T / 2) * dim.a for dim in dims])
     tolerance = Bilateral.symmetric(t_rss)
-    return Basic(
+    return Dim(
         nom=d_g,
         tol=tolerance,
         name=f"RSS Analysis -- {self.name}",
@@ -110,7 +110,7 @@ def RSS(self: Stack | ReviewedStack) -> Basic:
     )
 
 
-def MRSS(self: Stack | ReviewedStack) -> Basic:
+def MRSS(self: Stack | ReviewedStack) -> Dim:
     """
     Basically RSS with a coefficient modifier to make the tolerance tighter.
 
@@ -132,7 +132,7 @@ def MRSS(self: Stack | ReviewedStack) -> Basic:
     C_f = (0.5 * (t_wc - t_rss)) / (t_rss * (n**0.5 - 1)) + 1
     t_mrss = C_f * t_rss
     tolerance = Bilateral.symmetric(t_mrss)
-    return Basic(
+    return Dim(
         nom=d_g,
         tol=tolerance,
         name=f"MRSS Analysis -- {self.name}",
@@ -153,7 +153,7 @@ def SixSigma(self: ReviewedStack, at: float = 3) -> Reviewed:
     tolerance = Bilateral.symmetric(std_dev * at)
     dist = Normal(mean, std_dev)
     dim = Reviewed(
-        Basic(
+        Dim(
             nom=mean,
             tol=tolerance,
             name=f"'6 Sigma' Analysis -- {self.name}",
