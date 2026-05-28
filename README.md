@@ -6,6 +6,8 @@ PyPI: https://pypi.org/project/dimstack/
 
 Docs: https://phcreery.github.io/dimstack/
 
+Demo: https://phcreery.github.io/dimstack-marimo/
+
 ![PyPI - Version](https://img.shields.io/pypi/v/dimstack)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/dimstack)
 
